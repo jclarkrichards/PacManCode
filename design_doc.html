@@ -36,9 +36,13 @@
       <li><a href="#gamestartlink">Game Start</a></li>
       <li><a href="#mapslink">Maps</a></li>
       <ul>
-	<li><a href="#pelletslink">Pellets</a></li>
-	<li><a href="#ghosthomelink">Ghost Home</a></li>
       </ul>
+      <li><a href="#pelletslink">Pellets</a></li>
+      <ul>
+	<li>Normal Pellets</li>
+	<li>Power Pellets</li>
+      </ul>
+      <li><a href="#ghosthomelink">Ghost Home</a></li>
       <li><a href="#pacmanlink">Pacman</a></li>
       <li><a href="#ghostslink">Ghosts</a></li>
       <ul>
@@ -47,40 +51,98 @@
 	<li><a href="#inkylink">Inky</a></li>
 	<li><a href="#clydelink">Clyde</a></li>
       </ul>
+      <li>Ghost Modes</li>
+      <ul>
+	<li>Chase</li>
+	<li>Scatter</li>
+	<li>Freight</li>
+	<li>Spawn</li>
+      </ul>
       <li><a href="#bonuslink">Bonus Fruit</a></li>
+      <ul>
+	<li>Cherry</li>
+	<li>Banana</li>
+	<li>Apple</li>
+	<li>Watermelon</li>
+	<li>Lemon</li>
+	<li>Pineapple</li>
+      </ul>
       <li><a href="#liveslink">Lives</a></li>
       <li><a href="#gameoverlink">Game Over</a></li>
     </ul>
 
     <div class="container">
       <ul>
-	<li id="overviewlink"><h3>Overview<a href="#tableofcontents">back</a></h3><p>This gives an overview of the game</p></li>
+	<li id="overviewlink">
+	  <h3>Overview<a href="#tableofcontents">back</a></h3>
+	  <p>For the most part I think anybody reading this knows how a game of Pacman plays out.  If you don't, then I would highly suggest that you stop reading this and go play a few games of Pacman so you can get an idea of the game.  Like I mentioned before, my goal is not to get the most accurate representation of Pacman, but just to get something that plays similar to it.  Certain rules might be different than the actual game.  For example, all of the bonus fruit in the original game only appear on certain levels and award the player with predefined points.  The cherry, for example, gives the player 100 points and appears in the first level.  My point system for the bonuses will be different and I'll be using different fruits like pineapples and lemons.  I also won't have the Galaxian ship as a bonus.  The point is that my game won't be a carbon copy of the original.  </p>
+	</li>
 	<hr/>
-	<li id="gamestartlink"><h3>Game Start<a href="#tableofcontents">back</a></h3><p></p></li>
+	<li id="gamestartlink">
+	  <h3>Game Start<a href="#tableofcontents">back</a></h3>
+	  <p>At the start of the game Pacman appears between two nodes.  Those two nodes depend on the map being used and will be described later.  Pacman also starts facing to the left.  The ghosts start in the ghost home, except for Blinky who starts directly above the home.  The home can only fit three ghosts and from left to right they are Inky, Pinky, and Clyde.  The game starts with the game paused so that the player can choose when to start the game.  The player would just need to press the spacebar in order to start the game.  When the player presses the spacebar Pacman will automatically move towards the left.  Blinky will automatically move towards the left as well.  Pinky will automatically leave the ghost home.  Inky and Clyde will move up and down inside the ghost home.  </p>
+	</li>
+
 	<hr/>
-	<li id="mapslink"><h3>Maps<a href="#tableofcontents">back</a></h3></li>
+	<li id="mapslink">
+	  <h3>Maps<a href="#tableofcontents">back</a></h3>
+	  <p>There will be several maps instead of just one.  The original Pacman game only had one map.  Ms. Pacman had 5 maps I think.  This game will have the original Pacman map and the Ms. Pacman maps.  There may or may not be more maps that I will define myself.  So as of this writing there will only be a total of 6 maps.  The maps will rotate as the level increases.  The maps will change every other level or on every odd level.  So, the player will play the first map on levels 1 and 2, the second map on levels 3 and 4, the third map on levels 5 and 6, and so on.  So if the level is an odd numbered level and is not the first level, then we increment the maps.  If we were on the last map, then we go back to the first map.  It would also be nice to be able to generate random maps on the fly.  As of this writing that is not possible, but is one of the goals.  Each map also has at least one pair of portals which are always on the edges of the screen.  The first map, for example, has one pair of portals on the left and right edges of the screen.  The portals allow Pacman and the ghosts to travel from one side of the screen to the other side.  When the ghosts move towards or away from portals, they will move at half of their max speed.  Portals always come in pairs and can also be placed at the top and bottom edges of the screen.  </p>
+	</li>
 	<hr/>
-	<li id="pelletslink"><h3>Pellets<a href="#tableofcontents">back</a></h3></li>
+	<li id="pelletslink">
+	  <h3>Pellets<a href="#tableofcontents">back</a></h3>
+	  <p>Each maze should have 244 total pellets.  There are 240 normal pellets which are worth 10 points each.  There are also 4 power pellets which are worth 50 points each.  The power pellets need to be placed in the four corners on each maze.  The exact locations of those corners are defined for each maze and can't be specified here.  When Pacman eats a power pellet, the ghosts enter Freight mode.  If Pacman eats another power pellet while the ghosts are in Freight mode, then the Freight mode timer resets instead of the Freight mode time being added to the previous Freight mode time.  All of that is explained in the Freight mode section.  The power pellets also flash on and off every half of a second to make it easy for the player to see how many power pellets are left.</p>
+	</li>
 	<hr/>
-	<li id="ghosthomelink"><h3>Ghost Home<a href="#tableofcontents">back</a></li>
+	<li id="ghosthomelink">
+	  <h3>Ghost Home<a href="#tableofcontents">back</a></h3>
+	  <p>This is the area of the screen that only the ghosts can enter.  Pacman is not allowed to enter the ghost home ever.</p>
+	</li>
 	<hr/>
-	<li id="pacmanlink"><h3>Pacman<a href="#tableofcontents">back</a></li>
+	<li id="pacmanlink">
+	  <h3>Pacman<a href="#tableofcontents">back</a></h3>
+	  <p>The player-controlled character.  The player controls Pacman using the UP, DOWN, LEFT, and RIGHT keys on the keyboard.  Pacman automatically moves in the direction he is facing.  So the player does not need to hold down a direction key in order to move Pacman.  In order to change direction, the player needs to be holding down the key he wishes to move when Pacman enters a node.  If that direction exists, then Pacman will start moving in that direction.  If that direction does not exist, then Pacman will just continue in his current direction.  If Pacman cannot continue in his current direction and no keys are being pressed, then Pacman comes to a rest.  He can only rest on a node and not between nodes.  When Pacman is at rest, his mouth remains open in the direction he is facing.  Pacman only collides with Ghosts, Pellets, and Bonus Fruit.  </p>
+	</li>
 	<hr/>
-	<li id="ghostslink"><h3>Ghosts<a href="#tableofcontents">back</a></li>
+	<li id="ghostslink">
+	  <h3>Ghosts<a href="#tableofcontents">back</a></h3>
+	  <p></p>
+	</li>
 	<hr/>
-	<li id="blinkylink"><h3>Blinky<a href="#tableofcontents">back</a></li>
+	<li id="blinkylink">
+	  <h3>Blinky<a href="#tableofcontents">back</a></h3>
+	  <p></p>
+	</li>
 	<hr/>
-	<li id="pinkylink"><h3>Pinky<a href="#tableofcontents">back</a></li>
+	<li id="pinkylink">
+	  <h3>Pinky<a href="#tableofcontents">back</a></h3>
+	  <p></p>
+	</li>
 	<hr/>
-	<li id="inkylink"><h3>Inky<a href="#tableofcontents">back</a></li>
+	<li id="inkylink">
+	  <h3>Inky<a href="#tableofcontents">back</a></h3>
+	  <p></p>
+	</li>
 	<hr/>
-	<li id="clydelink"><h3>Clyde<a href="#tableofcontents">back</a></li>
+	<li id="clydelink">
+	  <h3>Clyde<a href="#tableofcontents">back</a></h3>
+	  <p></p>
+	</li>
 	<hr/>
-	<li id="bonuslink"><h3>Bonus Fruit<a href="#tableofcontents">back</a></li>
+	<li id="bonuslink">
+	  <h3>Bonus Fruit<a href="#tableofcontents">back</a></h3>
+	  <p></p>
+	</li>
 	<hr/>
-	<li id="liveslink"><h3>Lives<a href="#tableofcontents">back</a></li>
+	<li id="liveslink">
+	  <h3>Lives<a href="#tableofcontents">back</a></h3>
+	  <p>Pacman starts the game with 3 extra lives.  The extra lives show up at the bottom left of the screen.  The location of the extra life icons is not dependant on the maps.  There can only be a maximum of 5 extra lives.  When Pacman collides with a ghost and the ghost is not in Freight mode, then Pacman will lose a life and one of the life icons at the bottom of the screen will disappear.  When there are no more extra life icons at the bottom of the screen and Pacman collides with a ghost while the ghost is not in Freight mode, then the game is over.  Pacman can gain an extra life every 5,000 points.  That number is subject to change.  I'm not sure if that is too frequent or not frequent enough.  The player shouldn't be gaining extra lives on every level.  </p>
+	</li>
 	<hr/>
-	<li id="gameoverlink"><h3>Game Over<a href="#tableofcontents">back</a></li>
+	<li id="gameoverlink">
+	  <h3>Game Over<a href="#tableofcontents">back</a></h3>
+	  <p>The game is over when Pacman has no more extra lives and collides with a ghost while the ghost is not in Freight mode.  When this occurs the game is paused, Pacman performs his death animations, and the words Game Over will appear in the middle of the screen.  After a few seconds, the player will automatically be taken to the title screen.  Then the player can decide to either play again, or quit the game.</p>
+	</li>
       </ul>
       
     </div>
