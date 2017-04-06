@@ -2,18 +2,26 @@
     /*border: 1px dashed black;*/
 }
 
-.container li {
+p {
+    line-height: 140%;
+}
+
+.containerTest li {
     list-style-type: none;
 }
 
-.container li h3 {
+.containerTest li h3 {
     border: 1px dashed red;
 }
 
-.container li h3 a {
+.containerTest li h3 a {
     font-size: 0.5em;
     float: right;
     width: 100px;
+}
+
+.containerTest h3 {
+    color: rgb(150,150,0);
 }
 
 .page {
@@ -74,6 +82,18 @@
     margin-bottom: 40px;
     overflow: auto;
     border-radius: 20px 0px 20px;
+}
+
+.containerTest {
+    background-color: black;
+    color: green;
+    padding: 20px;
+    border: 10px double blue;
+    margin: 20px auto;
+    overflow: auto;
+    border-radius: 20px;
+    width: 60%;
+    box-sizing: border-box;
 }
 
 .containerLeft {

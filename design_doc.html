@@ -28,7 +28,7 @@
 
     <hr />
     <h2>Design Document</h2>
-    <div class="container">
+    <div class="containerTest">
       <p>The document explains the logic and rules that we need in order to code the game.  It's a good idea to start with a document like this one before we start to code the game so we can refer to it in order to make sure we've included everything that we initially intended.  You won't find any code here, just English.  You can read the document from start to finish, or use the navigation below to jump to different sections.  </p>
     </div>
     <ul id="tableofcontents">
@@ -51,12 +51,12 @@
 	<li><a href="#inkylink">Inky</a></li>
 	<li><a href="#clydelink">Clyde</a></li>
       </ul>
-      <li>Ghost Modes</li>
+      <li><a href="#modeslink">Ghost Modes</a></li>
       <ul>
-	<li>Chase</li>
-	<li>Scatter</li>
-	<li>Freight</li>
-	<li>Spawn</li>
+	<li><a href="#chaselink">Chase Mode</a></li>
+	<li><a href="#scatterlink">Scatter Mode</a></li>
+	<li><a href="#freightlink">Freight Mode</a></li>
+	<li><a href="#spawnlink">Spawn Mode</a></li>
       </ul>
       <li><a href="#bonuslink">Bonus Fruit</a></li>
       <ul>
@@ -71,7 +71,7 @@
       <li><a href="#gameoverlink">Game Over</a></li>
     </ul>
 
-    <div class="container">
+    <div class="containerTest">
       <ul>
 	<li id="overviewlink">
 	  <h3>Overview<a href="#tableofcontents">back</a></h3>
@@ -96,7 +96,7 @@
 	<hr/>
 	<li id="ghosthomelink">
 	  <h3>Ghost Home<a href="#tableofcontents">back</a></h3>
-	  <p>This is the area of the screen that only the ghosts can enter.  Pacman is not allowed to enter the ghost home ever.</p>
+	  <p>This is the area of the screen that only the ghosts can enter.  Pacman is not allowed to enter the ghost home ever.  Pinky, Inky, and Clyde start the game inside the ghost home.  After the ghosts leave the home, they can only reenter after Pacman eats them during Freight mode.  At the start of the game Pinky exits the home immediately.  Inky leaves the home only after Pacman has eaten 30 pellets.  Clyde leaves the home after Pacman has eaten 60 pellets.  If, however, Pacman is not eating any pellets, then Inky will leave if 5 seconds passes without any pellets being eaten.  The same thing applies to Clyde, except only after Inky has left.  While Inky and Clyde are inside the ghost home waiting to leave, they move up and down.  The ghosts never stop moving.</p>
 	</li>
 	<hr/>
 	<li id="pacmanlink">
@@ -106,12 +106,12 @@
 	<hr/>
 	<li id="ghostslink">
 	  <h3>Ghosts<a href="#tableofcontents">back</a></h3>
-	  <p></p>
+	  <p>The main thing to say about the ghosts is that they are only interested in reaching a position.  That position might be Pacman's position or some other unreachable position.  The position that they are trying to reach depends on the mode in which they are in.  For more information on the modes, check out the mode section.  The ghosts don't move as fast as Pacman initially.  For the first few levels they're speed is slightly slower than Pacman's.  But after the fifth level they're speed is just as fast as Pacman's for the remainder of the game.  </p>
 	</li>
 	<hr/>
 	<li id="blinkylink">
 	  <h3>Blinky<a href="#tableofcontents">back</a></h3>
-	  <p></p>
+	  <p>Blinky is the red ghost.  Blinky starts each level on top of the ghost house facing towards the left.  </p>
 	</li>
 	<hr/>
 	<li id="pinkylink">
@@ -129,9 +129,47 @@
 	  <p></p>
 	</li>
 	<hr/>
+	<li id="modeslink">
+	  <h3>Ghost Modes<a href="#tableofcontents">back</a></h3>
+	  <p>There are four modes that the ghosts can be in.  At any one time during the game, the ghosts can be in any of these modes.  Any of the ghosts does not have to be in the same mode as any of the other ghosts.  Most of the modes have time limits, only the Spawn mode does not have a time limit.  The main difference between the modes is the point of interest assigned to each of the ghosts.  The point of interest tells the ghost where he needs to be, and the ghost will try to get there.  This point of interest does not have to be reachable by the ghost.  The points of interest is what gives the ghosts their AI.</p>
+	</li>
+	<hr/>
+	<li id="scatterlink">
+	  <h3>Scatter Mode<a href="#tableofcontents">back</a></h3>
+	  <p>During the scatter mode the ghosts retreat to their respective corners of the maze.  This mode occurs 4 times during any level.  This mode only lasts for 7 seconds.  The ghosts are given points of interest to accomplish this as described below.  If the ghosts remained in scatter mode then they would just circle around their respective corners of the maze.
+	    <ul>
+	      <li>Blinky:  The point of interest is the top right corner.</li>
+	      <li>Pinky:  The point of interest is the top left corner.</li>
+	      <li>Inky:  The point of interest is the bottom right corner.</li>
+	      <li>Clyde:  The point of interest is the bottom left corner.</li>
+	  </ul></p>
+	</li>
+	<hr/>
+	<li id="chaselink">
+	  <h3>Chase Mode<a href="#tableofcontents">back</a></h3>
+	  <p>The points of interest for each ghost in this mode are a bit more complicated than the other modes.
+	    <ul>
+	      <li>Blinky:</li>
+	      <li>Pinky:</li>
+	      <li>Inky:</li>
+	      <li>Clyde:</li>
+	    </ul>
+	  </p>
+	</li>
+	<hr/>
+	<li id="freightlink">
+	  <h3>Freight Mode<a href="#tableofcontents">back</a></h3>
+	  <p>The ghosts enter freight mode only after Pacman eats a power pellet.  Since there are only four power pellets in any level, the ghosts can only enter freight mode four times during a level.  During freight mode the ghosts don't have points of interest.  Whenever they reach a junction they randomly decide which direction to move in.  You can think of this mode as the confusion mode for the ghosts.  They also move a lot slower in this mode.  They'll move at 50% of their maximum speed.  This mode lasts for 7 seconds for the first few levels, and then steadily decreases by one second after level 5, and then remains at 1 second for the rest of the game.  During this mode the ghosts will also change color so that they are all the same color.  This is the only time Pacman can eat the ghosts.  If Pacman eats a ghost during freight mode the game pauses for half a second and both Pacman and the ghost disappear while a small score is displayed.  After that little pause, Pacman reappears and the ghost enters spawn mode.  The points for eating each ghost doubles for each consecutive ghost on a single power pellet.  So if Pacman can successfully eat all four ghosts on a single Power pellet, then he is awarded 200, 400, 800, and 1600 points for each ghost respectively.  Since there are four power pellets on each level, the player can achieve this four times.  </p>
+	</li>
+	<hr/>
+	<li id="spawnlink">
+	  <h3>Spawn Mode<a href="#tableofcontents">back</a></h3>
+	  <p>The ghosts enter spawn mode only if they were previously in freight mode and were eaten by Pacman.  During this mode only their eyes are displayed and their point of interest is the ghost home.  This is also the only time they are allowed to re-enter the ghost home.  Once they arrive at the ghost home they are given their body back and they immediately exit the home and enter into whatever mode they were in prior to entering freight mode.  So once they exit the ghost home they will be in either chase mode or scatter mode.  The ghosts also move much faster during this mode, say 150% of their maximum speed.  The point is to get them home as quickly as possible so they can get back to the action.</p>
+	</li>
+	<hr/>
 	<li id="bonuslink">
 	  <h3>Bonus Fruit<a href="#tableofcontents">back</a></h3>
-	  <p></p>
+	  <p>Twice per level a fruit will appear in a predetermined location in the maze.  This location might be different depending on the maze.  The bonus fruit is stationary and does not move.  The first bonus fruit appears after Pacman has eaten 70 pellets.  The second bonus fruit will appear after Pacman has eaten 170 pellets.  The bonus fruit will remain until either Pacman collides with the bonus fruit or after 10 seconds has passed.  In either case the bonus fruit disappears.  If Pacman collides with the bonus fruit, then the value of the bonus fruit will be added to the score.  If Pacman dies while the bonus fruit is being displayed, then it goes away and Pacman loses the chance to collect it.  If Pacman successfully collects the bonus fruit, then each unique fruit will appear in the bottom right corner of the screen.  If Pacman collects two or more apples, then only one apple will appear in the bottom right corner of the screen.  Below is a short description of each fruit and the number of points associated with each fruit.  </p>
 	</li>
 	<hr/>
 	<li id="liveslink">
