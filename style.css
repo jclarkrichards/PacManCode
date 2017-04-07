@@ -1,27 +1,11 @@
+/*The most basic classes and ids appear at the top.  The further you 
+get into this document the narrower these become.  The one below the 
+one on top will always override whether it's in the same block, same 
+document or same folder.
+*/
+
 * {
     /*border: 1px dashed black;*/
-}
-
-p {
-    line-height: 140%;
-}
-
-.containerTest li {
-    list-style-type: none;
-}
-
-.containerTest li h3 {
-    border: 1px dashed red;
-}
-
-.containerTest li h3 a {
-    font-size: 0.5em;
-    float: right;
-    width: 100px;
-}
-
-.containerTest h3 {
-    color: rgb(150,150,0);
 }
 
 .page {
@@ -35,7 +19,27 @@ p {
     z-index: 10;
 }
 
-.columnContent {
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Press Start 2P";
+    text-align: center;
+    color: rgb(150, 150, 0);
+}
+
+.pelletBorder {
+    width: auto;
+    border-left: 16px dotted rgb(150,150,0);
+    border-right: 16px dotted rgb(150,150,0);
+    margin-left: 48px;
+    margin-right: 48px;
+}
+
+p {
+    line-height: 140%;
+}
+
+
+
+.threeColumnContent {
     column-count: 3;
 }
 
@@ -43,48 +47,19 @@ p {
     column-count: 2;
 }
 
-.contentLeft {
-    width: 50%;
-    float: left;
-}
-
-.contentRight {
-    width: 50%;
-    float: right;
-}
-
 .nofloat {
     clear: left;
-}
-
-.test  {
-    display: block;
-    float: left;
-    border: 1px dashed red;
-    margin: 2em;
-}
-
-.test2 li {
-    float: left;
 }
 
 @media only screen and (max-width: 1000px) {
     .containerLeft { display: none;}
 }
 
-.container {
-    background-color: black;
-    color: white;
-    box-sizing: border-box;
-    padding: 20px;
-    border: 10px double blue;
-    margin: 20px;
-    margin-bottom: 40px;
-    overflow: auto;
-    border-radius: 20px 0px 20px;
-}
 
-.containerTest {
+/*===================================================
+======================CONTAINERS=====================
+=====================================================*/
+.container {
     background-color: black;
     color: green;
     padding: 20px;
@@ -92,38 +67,56 @@ p {
     margin: 20px auto;
     overflow: auto;
     border-radius: 20px;
-    width: 60%;
+    width: 80%;
     box-sizing: border-box;
 }
 
 .containerLeft {
-    float: left;
-    background-color: black;
-    color: white;
-    box-sizing: border-box;
-    padding: 20px;
-    border: 10px double blue;
-    margin: 20px;
-    overflow: auto;
-    border-radius: 20px 0px 20px;
     width: 20%;
+    float: left;
+    margin: 20px;
 }
 
 
 .middleContainer {
     width: 50%;
     float: left;
-    background-color: black;
-    color: white;
-    box-sizing: border-box;
-    padding: 20px;
-    border: 10px double blue;
-    overflow: auto;
-    border-radius: 20px 0px 20px;
     margin: 20px;
     margin-bottom: 2em;
     column-count: 2;
 }
+
+.contentLeft {
+    width: 70%;
+    float: left;
+    margin: 20px;
+}
+
+.contentRight {
+    width: 20%;
+    float: right;
+    margin: 20px;
+}
+
+.container li {
+    list-style-type: none;
+}
+
+.container li h3 {
+    border: 1px dashed red;
+}
+
+.container li h3 a {
+    font-size: 0.5em;
+    float: right;
+    width: 100px;
+}
+
+.container h3 {
+    color: rgb(150,150,0);
+}
+
+
 
 .navigation {
     box-sizing: border-box;
@@ -134,10 +127,6 @@ p {
     margin: 20px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: "Press Start 2P";
-    text-align: center;
-}
 
 h1 {
     color: yellow;
@@ -225,6 +214,7 @@ footer {
 
 p img {
     float: right;
+    padding: 10px;
 }
 
 .floatRight {
