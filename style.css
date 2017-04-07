@@ -55,6 +55,9 @@ p {
     .containerLeft { display: none;}
 }
 
+.timestamp {
+    color: rgb(150, 150, 0);
+}
 
 /*===================================================
 ======================CONTAINERS=====================
@@ -99,7 +102,7 @@ p {
 }
 
 .container li {
-    list-style-type: none;
+    /*list-style-type: none;*/
 }
 
 .container li h3 {
@@ -228,6 +231,9 @@ p img {
 }
 
 hr {
+    margin: 2em 5em;
+    
+    margin-bottom: 2em;
     clear: both;
 }
 
