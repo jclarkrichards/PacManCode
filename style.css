@@ -349,3 +349,8 @@ input[type="submit"]:focus, input[type="submit"]:hover {
     border: 5px solid black;
     box-shadow: 1em 1em 5em;
 }
+
+.equations {
+    color: red;
+    
+}

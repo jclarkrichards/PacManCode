@@ -29,21 +29,14 @@
     <hr />
     <h2>Code Home</h2>
     <div class="container">
-      <p>This is the main page for the coding section of this site.  Choose below where you want to go from here.  If you're just starting out, then start at the Design Document where I explain how I interpret the Pac-Man game.  There's not any code there, but is necessary to understand why I do what I do in the actual code.  After that, go to the preliminaries section and learn about simple data structures like vectors and stacks.  </p>
+      <p>Before we can actually get to writing a proper Pacman game, there's a few things we need to understand first.  There are two data structures that we are going to make good use of:  vectors and stacks.  First off, neither one of these data structures is necessary to write the game.  However, they do make handling your data a lot less messy and they'll make some difficult problems a lot easier.  </p>
     </div>
 
     <hr />
     <div class="container codeNav">
       <ul>
-	<li><a href="design_doc.html">Design Document</a></li>
-	<li><a href="preliminaries.html">Preliminaries</a></li>
-	<ul>
-	  <li>Vectors</li>
-	  <li>Stacks</li>
-	</ul>
-	<li><a href="">Phase I</a></li>
-	<li><a href="">Phase II</a></li>
-	<li><a href="">Phase III</a></li>
+	<li><a href="">Vectors</a></li>
+	<li><a href="">Stacks</a></li>
       </ul>
     </div>
 

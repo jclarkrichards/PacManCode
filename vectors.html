@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+    <div class="navigation">
+      <header>
+	<h1><img src="pacman.png"/>... Pacman Code ...<img src="pacman.png"/></h1>
+	<hr />
+	<nav>
+	  <ul>
+	    <li><a href="index.html">Home</a></li>
+	    <li><a href="code.html">Code</a></li>
+	    <li><a href="clones.html">Clones</a></li>
+	    <li><a href="discuss.html">Discuss</a></li>
+	    <li><a href="about.html">About</a></li>
+	    <li><a href="contact.html">Contact</a></li>
+	  </ul>
+	</nav>
+      </header>
+    </div>
+
+    <hr />
+    <h2>Vectors</h2>
+    <div class="container">
+      <p>Vectors are useful in storing information like position and velocity.  By the end of this section we'll have a vector class that we can use not only in this game, but any game we write that needs 2D vectors.</p>
+      <p>A vector is something that describes both magnitude and direction.  Both of those are necessary in describing a vector.  In order to illustrate this idea imagine that you live in a city with a grid-based system.  You're located at point A and you're trying to get to point B.  You're new in town so you stop somebody on the street and ask the how to get to point B.  The person tells you that you need to go 3 blocks East, then 2 blocks South.  The person gave you two sets of information and each set of information contained a distance and a direction.  One set was 3 blocks East, and the other set was 2 blocks South.  This is all a vector is, it's really that simple.  In this case the person gave you two vectors to follow.  Notice that both pieces of each vector are necessary in order for you to reach your destination.  If the person had just told you to go three blocks, then two blocks, you'd naturally want to know in which direction you should travel those distances.  Likewise, if he had told you to go East, then South, you'd want to know how far to travel in each direction.  Vectors require both a magnitude (or length) and a direction.  You should also notice that the order in which he gave you the directions doesn't matter.  He could have just as easily told you to go 2 blocks South first, then 3 blocks East.  He could have also sent you in all sorts of directions before reaching your destination, so you can see that there are actually an infinite number of paths to travel from A to B.</p>
+
+      <hr/>
+      <h3>Vector Arithmetic</h3>
+      <p>It would have been a lot easier if you could just go straight to point B cutting across all of the blocks.  This is always the shortest path and usually the one we're most interested in.  But this vector isn't purely East and it isn't purely South.  It's a combination of both of these directions.  If we could use shorthand to describe this vector it would be <span class="equations">3E + 2S</span> for 3 blocks East and 2 blocks South.  Don't let the addition symbol confuse you, this isn't like adding <span class="equations">2 + 2</span> where we get a single result.  We can add vectors together as we'll see below, but we can't add orthogonal directions such as East and South so we keep them separated with the addition symbol.  We can add same directions together like <span class="equations">3N + 5N = 8N</span> and if the directions are opposite each other then we can add them together as well like <span class="equations">4N + 6S = 2S</span>.  Adding opposite directions is basically subtraction.  We don't even need special symbols for South and West since <span class="equations">South = -North</span> and <span class="equations">West = -East</span>.  Then it makes more sense how we got the previous result if we write it as <span class="equations">4N - 6N = -2N</span>.</p>
+      <p>Before we continue with this discussion let's change our coordinate system.  It made sense to use North and South directions when introducting the concept of vectors with the map example above.  But we can use any coordinate system we want so let's use the Cartesian coordinate system since that's the one most people are familiar with and the one we'll use in the game.  The Cartesian coordinate system is just the x and y coordinate system.  You can define any point by using any combination of x and y pairs.  Points are also called scalar quantities</p>
+    </div>
+
+    <hr />
+    
+    <h2>Coding Example</h2>
+    <div class="container">
+      <p><span class="pseudoCode">Throughout the site you'll see sections such as this one with text on the left and code on the right.  The text on the left will explain what the code on the right is doing.  It's like having comments in your code, but more detailed.</span>  <span class="codeText">This side shows the actual code that needs to be included in your program.<br><code>
+
+import pygame<br>
+<strong>from numpy import *</strong><br>
+class Pacman(object):</code></span></p><br>
+
+    </div>
+    </div>
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="#top">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="#top">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
