@@ -360,7 +360,27 @@ input[type="submit"]:focus, input[type="submit"]:hover {
     padding-left: 2em;
 }
 
-.kw { color: lightskyblue; }
+/* For python color markup */
+.kw { color: aqua; } /*key words*/
 .str { color: red; }
-.var { color: lightblue; }
-.py { color: lightseagreen; }
+.var { color: goldenrod; }
+.py { color: orchid; } 
+.cn { color: coral; } /*class name*/
+.mn { color: mediumslateblue; }/*method name*/
+
+
+figure {
+    display: table;
+    border: 1px dashed red;
+    float: right;
+    padding: 10px;
+    text-align: center;
+    margin: 10px auto;
+    
+}
+
+figcaption {
+    display: table-caption;
+    caption-side: bottom;
+    color: yellow;
+}

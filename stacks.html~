@@ -36,7 +36,7 @@
       <hr/>
       <h3>Vector Arithmetic</h3>
       <p>It would have been a lot easier if you could just go straight to point B cutting across all of the blocks.  This is always the shortest path and usually the one we're most interested in.  But this vector isn't purely East and it isn't purely South.  It's a combination of both of these directions.  If we could use shorthand to describe this vector it would be <span class="equations">3E + 2S</span> for 3 blocks East and 2 blocks South.  Don't let the addition symbol confuse you, this isn't like adding <span class="equations">2 + 2</span> where we get a single result.  We can add vectors together as we'll see below, but we can't add orthogonal directions such as East and South so we keep them separated with the addition symbol.  We can add same directions together like <span class="equations">3N + 5N = 8N</span> and if the directions are opposite each other then we can add them together as well like <span class="equations">4N + 6S = 2S</span>.  Adding opposite directions is basically subtraction.  We don't even need special symbols for South and West since <span class="equations">South = -North</span> and <span class="equations">West = -East</span>.  Then it makes more sense how we got the previous result if we write it as <span class="equations">4N - 6N = -2N</span>.</p>
-      <p>Before we continue with this discussion let's change our coordinate system.  It made sense to use North and South directions when introducting the concept of vectors with the map example above.  But we can use any coordinate system we want so let's use the Cartesian coordinate system since that's the one most people are familiar with and the one we'll use in the game.  The Cartesian coordinate system is just the x and y coordinate system.  You can define any point by using any combination of x and y pairs.  Points are also called scalar quantities and we'll write them within parenthesis like <span class="equations">(x, y)</span>.  We'll use a similar notation when writing our vectors except we'll use angle brackets like this: <span class="equations">&ltx, y&gt</span>.  In both cases the x value will always go first.  <img src="vectorGraph1.png" alt="a vector and a point" width=200 height=200/>.  Hopefully the image on the right will make this notation clear.  Adding and subtracting vectors is really easy.  All we have to do is add like directions together.  For example, <span class="equations">&lt4, 8&gt + &lt2, 3&gt = &lt6, 11&gt</span>.  For subtracting you just subtract the two numbers.  You can also lengthen or shrink a vector by multiplying it by a scalar.  For example, <span class="equations">5 * &lt2, 6&gt = &lt10, 30&gt</span>.  In order to shrink the vector the scalar should be between the values of 0 and 1.  </p>
+      <p>Before we continue with this discussion let's change our coordinate system.  It made sense to use North and South directions when introducting the concept of vectors with the map example above.  But we can use any coordinate system we want so let's use the Cartesian coordinate system since that's the one most people are familiar with and the one we'll use in the game.  The Cartesian coordinate system is just the x and y coordinate system.  You can define any point by using any combination of x and y pairs.  Points are also called scalar quantities and we'll write them within parenthesis like <span class="equations">(x, y)</span>.  We'll use a similar notation when writing our vectors except we'll use angle brackets like this: <span class="equations">&ltx, y&gt</span>.  In both cases the x value will always go first.  <img src="vectorGraph1.png" alt="a vector and a point" width=25% height=25%/>.  Hopefully the image on the right will make this notation clear.  Adding and subtracting vectors is really easy.  All we have to do is add like directions together.  For example, <span class="equations">&lt4, 8&gt + &lt2, 3&gt = &lt6, 11&gt</span>.  For subtracting you just subtract the two numbers.  You can also lengthen or shrink a vector by multiplying it by a scalar.  For example, <span class="equations">5 * &lt2, 6&gt = &lt10, 30&gt</span>.  In order to shrink the vector the scalar should be between the values of 0 and 1.  </p>
 
     </div>
 
@@ -51,44 +51,44 @@
       <div class="codeText">
 	<code>
 	  <span class="kw">import</span> <span class="py">math</span><br>
-	  <span class="kw">class</span> <span class="cn">Vector2D</span>(<span class="kw">object</span>):<br>
+	  class Vector2D(object):<br>
 	  <div class="tabLeft">
-	    <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, x, y):<br>
+	    <span class="kw">def</span> __init__(self, x, y):<br>
 	    <div class="tabLeft">
-	      <span class="kw">self</span>.x = x[0]<br>
-	      <span class="kw">self</span>.y = y[0]<br><br>
+	      self.x = x[0]<br>
+	      self.y = y[0]<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">toTuple</span>(<span class="kw">self</span>):<br>
+	    <span class="kw">def</span> toTuple(self):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> (<span class="kw">self</span>.x, <span class="kw">self</span>.y)<br><br>
+	      <span class="kw">return</span> (self.x, self.y)<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">magnitude</span>(<span class="kw">self</span>):<br>
+	    <span class="kw">def</span> magnitude(self):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="py">math.sqrt</span>(<span class="kw">self</span>.x**2 + <span class="kw">self</span>.y**2)<br><br>
+	      <span class="kw">return</span> <span class="py">math.sqrt</span>(self.x**2 + self.y**2)<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">magnitudeSquared</span>(<span class="kw">self</span>):<br>
+	    <span class="kw">def</span> magnitudeSquared(self):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="kw">self</span>.x**2 + <span class="kw">self</span>.y**2<br><br>
+	      <span class="kw">return</span> self.x**2 + self.y**2<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">__add__</span>(<span class="kw">self</span>, rhs):<br>
+	    <span class="kw">def</span> __add__(self, rhs):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="cn">Vector2D</span>(<span class="kw">self</span>.x + rhs.x, <span class="kw">self</span>.y + rhs.y)<br><br>
+	      <span class="kw">return</span> Vector2D(self.x + rhs.x, self.y + rhs.y)<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">__sub__</span>(<span class="kw">self</span>, rhs):<br>
+	    <span class="kw">def</span> __sub__(self, rhs):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="cn">Vector2D</span>(<span class="kw">self</span>.x - rhs.x, <span class="kw">self</span>.y - rhs.y)<br><br>
+	      <span class="kw">return</span> Vector2D(self.x - rhs.x, self.y - rhs.y)<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">__neg__</span>(<span class="kw">self</span>, rhs):<br>
+	    <span class="kw">def</span> __neg__(self, rhs):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="cn">Vector2D</span>(-<span class="kw">self</span>.x, -<span class="kw">self</span>.y)<br><br>
+	      <span class="kw">return</span> Vector2D(-self.x, -self.y)<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">__mul__</span>(<span class="kw">self</span>, scalar):<br>
+	    <span class="kw">def</span> __mul__(self, scalar):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="cn">Vector2D</span>(<span class="kw">self</span>.x * scalar, <span class="kw">self</span>.y * scalar)<br><br>
+	      <span class="kw">return</span> Vector2D(self.x * scalar, self.y * scalar)<br><br>
 	    </div>
-	    <span class="kw">def</span> <span class="mn">__div__</span>(<span class="kw">self</span>, scalar):<br>
+	    <span class="kw">def</span> __div__(self, scalar):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="cn">Vector2D</span>(<span class="kw">self</span>.x / scalar, <span class="kw">self</span>.y / scalar)<br>
+	      <span class="kw">return</span> Vector2D(self.x / scalar, self.y / scalar)<br>
 	    </div>
 	  </div>
 	</code>
@@ -101,9 +101,9 @@
     <footer>
       <div class="bottomNav">
 	<ul>
-	  <li><a href="preliminaries.html">Previous</a></li>
+	  <li><a href="#top">Previous</a></li>
 	  <li><a href="#top">Top</a></li>
-	  <li><a href="stacks.html">Next</a></li>
+	  <li><a href="#top">Next</a></li>
 	</ul>
       </div>
     </footer>
