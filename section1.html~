@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+    <div class="navigation">
+      <header>
+	<h1><img src="pacman.png"/>... Pacman Code ...<img src="pacman.png"/></h1>
+	<hr />
+	<nav>
+	  <ul>
+	    <li><a href="index.html">Home</a></li>
+	    <li><a href="code.html">Code</a></li>
+	    <li><a href="clones.html">Clones</a></li>
+	    <li><a href="discuss.html">Discuss</a></li>
+	    <li><a href="about.html">About</a></li>
+	    <li><a href="contact.html">Contact</a></li>
+	  </ul>
+	</nav>
+      </header>
+    </div>
+
+    <hr />
+    <h2>Section 1: Moving Around the Screen</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>Alright, so we got a blank window to pop up for us.  Now lets actually draw something to the screen and move it around with the keyboard keys.  We're going to use the four directional keys on the keyboard, but you can just as easily use the WASD keys or any other key combination.  I figure the directional keys make the most sense for Pacman because we can only move him in one of four directions anyways.  The main idea behind movement is that you're just changing the object's pixel position by a certain amount and redrawing the object at that location.  With each iteration through the game loop how many pixels should we move the object?  The larger that number, the faster the object will move.  However, that's not a good solution because then the speed of the object will depend on how fast the user's computer is.  If the user has a top of the line super fast computer, then it will be able to go through the game loop more often than a slower computer.  We would rather have something that allows the objects to move at the same speed no matter how fast or slow the user's computer is.  So instead of specifying how many pixels to move the object during each game loop iteration, we need to calculate how many pixels to move the object for each iteration of the game loop.  On faster computers, that distance will be shorter during each iteration, and on slower computers that distance will be longer.  So how do we calculate the distance we need the object to move during each game loop iteration?  We can simply use basic physics.  If you remember back to your physics classes (assuming you've taken at least one year of physics), then you'll remember that there were 3 basic equations in order to calculate an objects position and velocity at some future time.  The main equation we're concerned with is: </p>
+      <p><b><span class="equations">s(t) = s<sub>0</sub> + v&Delta;t + &frac12;*a&Delta;t<sup>2</sup></span></b></p>
+      <p>So in the equation above we're saying that s<sub>0</sub> is our current position.  This equation will calculate what our next position will be given our velocity (v), acceleration (a), and the time it takes to get us there (&Delta;t).  We can simplify this because in Pacman we're not concerned with acceleration.  He's not slowing down or speeding up when he moves.  His speed is either 0 or max speed in most situations.  So his acceleration is 0 which means the equation simplifies to:</p>
+      <p><b><span class="equations">s(t) = s<sub>0</sub> + v&Delta;t</span></b></p>
+      <p>So to calculate his new position all we need is his current velocity and the time it takes to get to the new position.  Figuring out the time is really easy since Python includes some timing methods for us to use in order to keep track of time.  In fact, there's a method that will calculate how long each iteration through our game loop takes, which is exactly what we need for our equation.</p>
+
+      <div class="pseudoCode">
+	<p>What we need to do is initialize a clock.  We add this line of code in our <span class="mn">__init__</span> method in the gamecontrol.py file.  </p>
+      </div>
+      <div class="codeText">
+	<span class="kw">self</span>.clock = pygame.time.Clock()
+      </div>
+      <hr/>
+      <div class="pseudoCode">
+	<p>Now in our <span class="mn">update</span> method in the gamecontrol.py file we'll add the following.  We divide it by 1000.0 because clock.tick returns the time in milliseconds and we want our &Delta;t to be in seconds.</p>
+      </div>
+      <div class="codeText">
+	dt = <span class="kw">self</span>.clock.tick(30) / 1000.0
+      </div>
+      <hr/>
+      <p>How do we deal with the velocity in our equation?  Well, velocity is a vector and we've already covered vectors and have a Vector2D class waiting for us to use.  The magnitude of velocity is speed, and the direction of velocity is just whatever direction we're moving in.  We can rewrite velocity as speed * direction where direction is a unit vector.  So our equation now becomes:</p>
+      <p><b><span class="equations">s(t) = s<sub>0</sub> + speed*direction*&Delta;t</span></b></p>
+      <p>Speed is just some scalar value that we'll have to play around with in order to find the right value.  The direction is a unit vector that has a length of 1 and points in the direction we need to move the object.  Luckily for us Pacman can only move in one of four possible directions:  UP, DOWN, LEFT, or RIGHT.  These directions never change so lets add them to our constants.py file.  </p>
+      
+      <hr/>
+      <div class="pseudoCode">
+	<p>First off, in order to use vectors we'll have to import the Vector2D class.  So that line goes on the top of the file.  The rest can go anywhere in the file, they don't have to come directly after the <span class="kw">import</span>.  Notice that I also included a <span class="var">STOP</span> vector which is a zero vector.  We'll need that because sometimes Pacman isn't moving, and giving him this vector will stop him in his tracks.  I also went ahead and declared another color:  <span class="var">YELLOW</span>.  Because that's the color we're going to make our Pacman object.</p>
+      </div>
+      <div class="codeText">
+	<span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br>
+	<span class="var">UP</span> Vector2D(0, -1)<br>
+	<span class="var">DOWN</span> Vector2D(0, 1)<br>
+	<span class="var">LEFT</span> Vector2D(-1, 0)<br>
+	<span class="var">RIGHT</span> Vector2D(1, 0)<br>
+	<span class="var">STOP</span> Vector2D()<br><br>
+	<span class="var">YELLOW</span> = (255, 255, 0)
+      </div>
+      <hr/>
+      <p></p>
+      <p>Right now this doesn't do anything useful because we don't have an object to apply it to.  Let's create an object called Pacman, that is the whole point of this website after all.  We're going to create a new file called pacman.py and add the following to it.</p>
+      <hr/>
+      
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<p></p>
+      </div>
+      <hr/>
+      
+      
+    </div>
+
+    <hr />
+    <h2>Code and Discussion</h2>
+    <div class="container">
+      <div class="pseudoCode">
+	<p>Alright, we're going to get down and dirty and write our first code for the game.  Actually it isn't the first code in the game, since we should have our Vector2D and Stack classes already written.  You don't have those yet?  Well, go back to the <a href="vectors.html">vectors</a> and <a href="stacks.html">stacks</a> sections and complete them before doing this.  Ok, I'm assuming you have those written and saved in their respective files.  You also have you your folder structure all set up and you're ready to add another file to it.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">class</span> <span class="cn">Stack</span>(<span class="kw">object</span>):<br>
+	  <div class="tabLeft">
+	    <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>):<br>
+	    <div class="tabLeft">
+	      <span class="kw">self</span>.items = []<br><br>
+	    </div>
+	    <span class="kw">def</span> <span class="mn">isEmpty</span>(<span class="kw">self</span>):<br>
+	    <div class="tabLeft">
+	      <span class="kw">if</span> <span class="mn">len</span>(<span class="kw">self</span>.items) > 0:<br>
+	      <div class="tabLeft"><span class="kw">return</span> <span class="py">False</span><br></div>
+	      <span class="kw">return</span> <span class="py">True</span><br><br>
+	    </div>
+	    <span class="kw">def</span> <span class="mn">length</span>(self):<br>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> <span class="mn">len</span>(<span class="kw">self</span>.items)<br><br>
+	    </div>
+	    <span class="kw">def</span> <span class="mn">clear</span>(<span class="kw">self</span>):<br>
+	    <div class="tabLeft">
+	      <span class="kw">self</span>.items = []<br><br>
+	    </div>
+	    <span class="kw">def</span> <span class="mn">push</span>(<span class="kw">self</span>, item):<br>
+	    <div class="tabLeft">
+	      <span class="kw">self</span>.items.<span class="mn">append</span>(item)<br><br>
+	    </div>
+	    <span class="kw">def</span> <span class="mn">pop</span>(self):<br>
+	    <div class="tabLeft">
+	      <span class="kw">if</span> <span class="mn">len</span>(<span class="kw">self</span>.items) > 0:<br>
+	      <div class="tabLeft">
+		<span class="var">removedItem</span> = <span class="kw">self</span>.items.<span class="mn">pop</span>(<span class="mn">len</span>(<span class="kw">self</span>.items)-1)<br>
+		<span class="kw">return</span> <span class="var">removedItem</span><br>
+	      </div>
+	      <span class="kw">return</span> <span class="py">None</span><br><br>
+	    </div>
+	    <span class="kw">def</span> <span class="mn">peek</span>(self):<br>
+	    <div class="tabLeft">
+	      <span class="kw">if</span> <span class="mn">len</span>(<span class="kw">self</span>.items) > 0:<br>
+	      <div class="tabLeft">
+		<span class="kw">return</span> <span class="kw">self</span>.items[<span class="mn">len</span>(<span class="kw">self</span>.items)-1]<br>
+	      </div>
+	      <span class="kw">return</span> <span class="py">None</span><br><br>
+	    </div>
+
+	  </div>
+	</code>
+      </div>
+      
+    </div>
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>gamecontrol.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	</ul>
+      </ul>
+    </div>
+
+    </div>
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="vectors.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="#top">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
