@@ -32,15 +32,138 @@
       <h3>Basics</h3>
       <p>Like I mentioned in the previous section, Pacman is currently able to move anywhere he wants to move.  This isn't the kind of movement we want though.  If you've played Pacman before, and I'm sure you have if you're reading this, then you know that he can only move around within a maze.  So we need to figure out a way to constrain his movement.  When I first wrote a Pacman game I did this by checking for wall collisions.  I defined the maze to be a bunch of walls and checked if Pacman was colliding with the walls and basically just keeping him in between the walls.  This may seem like a good solution, but it's not.  I ran into a lot of issues that I won't discuss here, but I eventually thought of a way better method.  That method is defining the maze as a map of connected nodes.  That was a huge revelation for me and it solved all of the issues I was facing with collision detection.  I'll go over what I mean by a "map of connected nodes" below and we'll generate a simple maze for Pacman to traverse as we're learning the basics of this.</p>
       <h3>Node Maps</h3>
-      <p>Maybe you've studied data structures, but it's more than likely you haven't.  That's fine, you don't need a degree in computer science to understand this stuff, I don't have one.  Let's start off with defining what a Node is.  A Node is really anything you want it to be.  It's a very abstract thing.  It's basically an abstract object that contains information.  Usually when you're talking about nodes in video games, one of the most important pieces of information is the position of the node.  You can also represent a node any way you like, we're going to represent a node as a red circle.  Nodes by themselves aren't that interesting.  They become way more interesting when you start linking them up together.  When we have two nodes that are directly linked together we say that they are neighbors.  Being a neighbor to any particular node has nothing to do with proximity.  Two nodes can be right next to each other, but if they are not linked together, then they are not neighbors.  If two nodes are connected to each other, then they are connected by a path.  <img src="Images/node_basic.png" alt="" width=300 height=350/>We'll represent a path by a straight line that joins two nodes together.  That's how we can know visually that two nodes are connected to each other.  When you have a bunch of nodes linked together in various ways, then that is called a node map.  You've probably seen node maps before, they can be used in various ways.  For example, representing a network of computers like the internet.  Node maps can look like of meshy.  Our node map that we'll make for our game will be a simplified version.  The main restriction we'll place on our node map is that each node can only have a maximum of 4 neighbors.  This is because Pacman can only move in four directions:  UP, DOWN, LEFT, and RIGHT.  So a node can be connected to four other nodes in those four directions.  Also a node can only have a maximum of one neighbor in any one direction.  By that I mean a node cannot be connected to two or more nodes to the RIGHT of him, for example.  If he is connected to a node on his RIGHT, there can only be one node to his RIGHT.  </p>
+      <p>Maybe you've studied data structures, but it's more than likely you haven't.  That's fine, you don't need a degree in computer science to understand this stuff, I don't have one.  Let's start off with defining what a Node is.  A Node is really anything you want it to be.  It's a very abstract thing.  It's basically an abstract object that contains information.  Usually when you're talking about nodes in video games, one of the most important pieces of information is the position of the node.  You can also represent a node any way you like, we're going to represent a node as a red circle.  Nodes by themselves aren't that interesting.  They become way more interesting when you start linking them up together.  When we have two nodes that are directly linked together we say that they are neighbors.  Being a neighbor to any particular node has nothing to do with proximity.  Two nodes can be right next to each other, but if they are not linked together, then they are not neighbors.  If two nodes are connected to each other, then they are connected by a path.  <img src="Images/node_basic.png" alt="" width=300 height=370/>We'll represent a path by a straight line that joins two nodes together.  That's how we can know visually that two nodes are connected to each other.  When you have a bunch of nodes linked together in various ways, then that is called a node map.  You've probably seen node maps before, they can be used in various ways.  For example, representing a network of computers like the internet.  Node maps can look like of meshy.  Our node map that we'll make for our game will be a simplified version.  The main restriction we'll place on our node map is that each node can only have a maximum of 4 neighbors.  This is because Pacman can only move in four directions:  UP, DOWN, LEFT, and RIGHT.  So a node can be connected to four other nodes in those four directions.  Also a node can only have a maximum of one neighbor in any one direction.  By that I mean a node cannot be connected to two or more nodes to the RIGHT of him, for example.  If he is connected to a node on his RIGHT, there can only be one node to his RIGHT.  </p>
       <p>The image on the right shows 7 nodes labeled A-G.  These nodes are connected together with white lines that represent the paths between these nodes.  As you can see node A has two neighbors:  nodes B and C.  Node D has three neighbors:  nodes B, C, and E.  The numbers on the edges show what row and column each node is in.  Node B, for example is in row 2, column 4.  We are going to write up some code in order to draw these nodes onto our screen.</p>
 
+      <hr/>
+      <h3>Code</h3>
+      <p>Alright, so in order to get some nodes up on the screen we'll start by creating a Node class.  We'll create a file called nodes.py and add the following class to it.</p>
+      <dir class="pseudoCode">
+	<p>We import pygame, Vector2D, and everything in our constants.py file.  When we create a Node we pass in the x and y pixel position we want to place the Node on the screen.  We also set up the neighbors as a dictionary.  This way it's really easy to know which node is in which direction to this Node.  Then all we need to do is render the Node so it appears on the screen.  We draw all of the paths to the neighbors first as WHITE lines, and we draw the Node itself as a RED circle.  When we're finished with the game we don't actually draw the nodes, but we draw them now while we're developing the game.</p>
+      </dir>
+      
+      <dir class="codeText">
+	<code>
+	<span class="kw">import</span> pygame<br>
+	<span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br>
+	<span class="kw">from</span> constants <span class="kw">import</span> *<br><br>
+	<span class="kw">class</span> <span class="cn">Node</span>(<span class="mn">object</span>):<br>
+	<dir class="tabLeft">
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, x, y):<br>
+	  <dir class="tabLeft">
+	    <span class="kw">self</span>.position = Vector2D(x, y)<br>
+	    <span class="kw">self</span>.neighbors = {UP:<span class="py">None</span>, DOWN:<span class="py">None</span>, LEFT:<span class="py">None</span>, RIGHT:<span class="py">None</span>}<br>
+	  </dir>
 
+	  <span class="kw">def</span> <span class="mn">render</span>(<span class="kw">self</span>, screen):
+	  <dir class="tabLeft">
+	    <span class="kw">for</span> n <span class="kw">in self</span>.neighbors.keys():<br>
+	    <dir class="tabLeft">
+	      <span class="kw">if self</span>.neighbors[n] <span class="kw">is not</span> <span class="py">None</span>:<br>
+	      <dir class="tabLeft">
+		pygame.draw.line(screen, WHITE, <span class="kw">self</span>.position.toTuple(), <span class="kw">self</span>.neighbors[n].position.toTuple(), 4)<br>
+		pygame.draw.circle(screen, RED, <span class="kw">self</span>.position.toTuple(), 12)
+	      </dir>
+	    </dir>
+	  </dir>
+	</dir>
+	</code>
+      </dir>
 
+      <hr/>
+      <p>You may have noticed that we added more colors, so we'll need to add them to the constants.py file.</p>
+      <dir class="pseudoCode">
+	<p>We'll just add the colors as we need them.  You can put these anywhere in the file, but try and keep all of the colors in one place so it's easy to find them.</p>
+      </dir>
+      <dir class="codeText">
+	<span class="var">WHITE</span> = (255, 255, 255)<br>
+	<span class="var">RED</span> = (255, 0, 0)	
+      </dir>
+      <hr/>
+      <p>Having a Node class is great when dealing with individual nodes, but we're going to be dealing with a lot of nodes.  It would be better if we grouped all of the nodes together so let's create another class in the nodes.py file where we actually create all of the individual nodes.  This class needs to be placed after the <span class="cn">Nodes</span> class.</p>
+      <dir class="pseudoCode">
+	<p>We're going to keep all of our Node objects in a list called nodeList, which starts out empty.  After we create our NodeGroup object we'll call a method called <span class="mn">setupTestNodes</span> which is just a temporary method we're using to show how we manually create and link up the nodes together.  When creating each Node you need to pass in the location you want to place the Node in pixels.  Then, after the nodes have been created, we need to link them up together by adding nodes to the neighbors dictionary of each node.  Finally, we add all of the nodes to the nodeList.  When we want to draw all of the nodes we call the <span class="mn">render</span> method which just loops through the nodeList and calls that nodes <span class="mn">render</span> method.</p>
+      </dir>
+      <dir class="codeText">
+	<code>
+	<span class="kw">class</span> <span class="cn">NodeGroup</span>(<span class="mn">object</span>):<br>
+	
+	<dir class="tabLeft">
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>):<br>
+	  <dir class="tabLeft">
+	    <span class="kw">self</span>.nodeList = []<br>
+	  </dir>
 
+	  <span class="kw">def</span> <span class="mn">setupTestNodes</span>(<span class="kw">self</span>):<br>
+	  <dir class="tabLeft">
+	    <span class="var">nodeA</span> = Node(5*WIDTH, 5*HEIGHT)<br>
+	    <span class="var">nodeB</span> = Node(10*WIDTH, 5*HEIGHT)<br>
+	    <span class="var">nodeC</span> = Node(5*WIDTH, 10*HEIGHT)<br>
+	    <span class="var">nodeD</span> = Node(10*WIDTH, 10*HEIGHT)<br>
+	    <span class="var">nodeE</span> = Node(13*WIDTH, 10*HEIGHT)<br>
+	    <span class="var">nodeF</span> = Node(5*WIDTH, 20*HEIGHT)<br>
+	    <span class="var">nodeG</span> = Node(13*WIDTH, 20*HEIGHT)<br>
+	    <span class="var">nodeA.neighbors</span>[RIGHT] = nodeB<br>
+	    <span class="var">nodeA.neighbors</span>[DOWN] = nodeC<br>
+	    <span class="var">nodeB.neighbors</span>[LEFT] = nodeA<br>
+	    <span class="var">nodeB.neighbors</span>[DOWN] = nodeD<br>
+	    <span class="var">nodeC.neighbors</span>[UP] = nodeA<br>
+	    <span class="var">nodeC.neighbors</span>[RIGHT] = nodeD<br>
+	    <span class="var">nodeC.neighbors</span>[DOWN] = nodeF<br>
+	    <span class="var">nodeD.neighbors</span>[UP] = nodeB<br>
+	    <span class="var">nodeD.neighbors</span>[LEFT] = nodeC<br>
+	    <span class="var">nodeD.neighbors</span>[RIGHT] = nodeE<br>
+	    <span class="var">nodeE.neighbors</span>[LEFT] = nodeD<br>
+	    <span class="var">nodeE.neighbors</span>[DOWN] = nodeG<br>
+	    <span class="var">nodeF.neighbors</span>[UP] = nodeC<br>
+	    <span class="var">nodeF.neighbors</span>[RIGHT] = nodeG<br>
+	    <span class="var">nodeG.neighbors</span>[UP] = nodeE<br>
+	    <span class="var">nodeG.neighbors</span>[LEFT] = nodeF<br>
+	    <span class="kw">self</span>.nodeList = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG]:<br><br>
+	    
+	  </dir>
+	  <span class="kw">def</span> <span class="mn">render</span>(<span class="kw">self</span>, screen):<br>
+	  <dir class="tabLeft">
+	    <span class="kw">for</span> node <span class="kw">in self</span>.nodeList:<br>
+	    <dir class="tabLeft">
+	      node.render(screen)
+	    </dir>
+	  </dir>
+				     
+				     
+	</dir>
+	</code>
+      </dir>
+      <hr/>
+      <p>Now that we have the <span class="cn">NodeGroup</span> class written we can create an instance of it in the <span class="cn">GameController</span>.  So add the following code to the gamecontrol.py file.</p>
+      <dir class="pseudoCode">
+	<p>In order to use the <span class="cn">NodeGroup</span> class we'll need to import it first.</p>
+      </dir>
+      <dir class="codeText">
+	<span class="kw">from</span> nodes <span class="kw">import</span> NodeGroup
+      </dir>
+      <hr/>
 
+      <dir class="pseudoCode">
+	<p>Add these two lines to the <span class="mn">startGame</span> method.</p>
+      </dir>
+      <dir class="codeText">
+	<span class="kw">self</span>.nodes = NodeGroup()<br>
+	<span class="kw">self</span>.nodes.setupTestNodes()
+      </dir>
+      <hr/>
+
+      <dir class="pseudoCode">
+	<p>Finally, we want to draw the nodes to the screen.  Add this to the <span class="mn">render</span> method.  The order in which you place things here matter.  It depends if you want objects to appear on top or behind other objects.  Place this code before drawing the Pacman object so that Pacman will appear in front of the nodes.  </p>
+      </dir>
+      <dir class="codeText">
+	<span class="kw">self</span>.nodes.render(<span class="kw">self</span>.screen)
+      </dir>
+      <hr/>
+
+      <hr/>
       <h3>Conclusion</h3>
-      <p><img src="Images/nodes_simple.png" alt="" width=300 height=400/>So we have a Pacman object that is able to move around the screen.  That's at least more exciting than the last section, right?  We still don't have a game here, just a yellow circle that responds to certain keys.  Right now, Pacman is able to move anywhere he wants on the screen.  Last time I checked Pacman was constrained to only be able to move within a maze.  In the next section I'm going to show you how to constrain his movement by having him move on a predefined grid.</p>
+      <p><img src="Images/nodes_simple.png" alt="" width=300 height=400/>So we have a Pacman object that is able to move around the screen.  That's at least more exciting than the last section, right?  We still don't have a game here, just a yellow circle that responds to certain keys.  Right now, Pacman is able to move anywhere he wants on the screen.  Last time I checked Pacman was constrained to only be able to move within a maze.  In the next section I'm going to show you how to constrain his movement by having him move on a predefined grid.  We'll just use the same grid we made in this section.</p>
     </div> <!--End of the main container-->
 
     <hr />
