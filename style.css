@@ -332,7 +332,7 @@ input[type="submit"]:focus, input[type="submit"]:hover {
     width: 45%;
     padding: 0.5em;
     overflow: auto;
-    
+    margin-bottom: 2em;
 
 }
 
@@ -342,6 +342,8 @@ input[type="submit"]:focus, input[type="submit"]:hover {
     border: 2px dashed red;
     display: inline-block;
     padding: 0.5em;
+    margin-bottom: 2em;
+    
 }
 
 .profileImage {

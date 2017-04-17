@@ -46,7 +46,7 @@
     <div class="container">
 
       <div class="pseudoCode">
-	<p>This is the python code we'll need in order to deal with vectors.  Create a file called <b><span class="str">vectors.py</span></b> and place the code on the right into that file.  All we need to do to make a vector is pass in an x and a y value.  Those values default to 0, so if you don't pass anything in you'll get a vector with a 0 length.  The <b>toTuple</b> method is useful for when we need to convert our vector into a tuple.  There are two types of magnitude methods here.  The first one gets the actual magnitude which requires a square root function.  This is why we imported the math package.  It's good to have this, but we won't really use it in our game.  Instead we'll make use of the magnitudeSquared method.  This is the same as the magnitude method, except we don't need to take a square root.  We really want to avoid taking the square root since it's a really expensive method.  In our case it's also just uneccessary since all we're going to need the magnitude for is comparing distances.  If all you need to do is compare distances, then you don't need to take the square root sine <span class="equations">if m &gt n, then m<sup>2</sup> &gt n<sup>2</sup></span>.  The rest of the methods allow us to add, subtract, multiply, and divide Vector2D objects.  There's a lot more methods we could add that relate to vectors like taking the dot product, normalizing, and so on.  However, this is all we'll need for Pacman so I'm not including those other ones, but go ahead and write as many as you like if you're feeling inspired.</p>
+	<p>This is the python code we'll need in order to deal with vectors.  Create a file called <b><span class="str">vectors.py</span></b> and place the code on the right into that file.  All we need to do to make a vector is pass in an x and a y value.  Those values default to 0, so if you don't pass anything in you'll get a vector with a 0 length.  The <b>toTuple</b> method is useful for when we need to convert our vector into a tuple.  There are two types of magnitude methods here.  The first one gets the actual magnitude which requires a square root function.  This is why we imported the math package.  It's good to have this, but we won't really use it in our game.  Instead we'll make use of the magnitudeSquared method.  This is the same as the magnitude method, except we don't need to take a square root.  We really want to avoid taking the square root since it's a really expensive method.  In our case it's also just uneccessary since all we're going to need the magnitude for is comparing distances.  If all you need to do is compare distances, then you don't need to take the square root sine <span class="equations">if m &gt n, then m<sup>2</sup> &gt n<sup>2</sup></span>.  The rest of the methods allow us to add, subtract, multiply, and divide Vector2D objects.  The very last method, however, allows us to return a fresh new copy of itself.  This is useful when you don't want some other object to share the same instance of this vector object with another object.  There's a lot more methods we could add that relate to vectors like taking the dot product, normalizing, and so on.  However, this is all we'll need for Pacman so I'm not including those other ones, but go ahead and write as many as you like if you're feeling inspired.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -88,7 +88,11 @@
 	    </div>
 	    <span class="kw">def</span> <span class="mn">__div__</span>(<span class="kw">self</span>, scalar):<br>
 	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="cn">Vector2D</span>(<span class="kw">self</span>.x / scalar, <span class="kw">self</span>.y / scalar)<br>
+	      <span class="kw">return</span> <span class="cn">Vector2D</span>(<span class="kw">self</span>.x / scalar, <span class="kw">self</span>.y / scalar)<br><br>
+	    </div>
+	    <span class="kw">def</span> <span class="mn">copy</span>(<span class="kw">self</span>):<br>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> <span class="cn">Vector2D</span>(<span class="kw">self</span>.x, <span class="kw">self</span>.y)<br>
 	    </div>
 	  </div>
 	</code>
