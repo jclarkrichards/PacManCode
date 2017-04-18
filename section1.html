@@ -96,30 +96,44 @@
 	  <span class="kw">def</span> <span class="mn">update</span>(<span class="kw">self</span>, dt):<br>
 	  <div class="tabLeft">
 	    <span class="kw">self</span>.position += <span class="kw">self</span>.direction*<span class="kw">self</span>.speed*dt<br>
-	    <span class="var">key_pressed</span> = pygame.key.get_pressed()<br>
-	    <span class="kw">if</span> key_pressed[K_UP]:<br>
+	    <span class="var">direction</span> = <span class="kw">self</span>.getValidKey()<br>
+	    <span class="kw">if</span> direction:<br>
 	    <div class="tabLeft">
-	      <span class="kw">self</span>.move(UP)<br>
-	    </div>
-	    <span class="kw">if</span> key_pressed[K_DOWN]:<br>
-	    <div class="tabLeft">
-	      <span class="kw">self</span>.move(DOWN)<br>
-	    </div>
-	    <span class="kw">if</span> key_pressed[K_LEFT]:<br>
-	    <div class="tabLeft">
-	      <span class="kw">self</span>.move(LEFT)<br>
-	    </div>
-	    <span class="kw">if</span> key_pressed[K_RIGHT]:<br>
-	    <div class="tabLeft">
-	      <span class="kw">self</span>.move(RIGHT)<br>
+	      <span class="kw">self</span>.moveByKey(direction)<br>
 	    </div>
 	    <span class="kw">else</span>:<br>
 	    <div class="tabLeft">
-	      <span class="kw">self</span>.move(STOP)<br><br>
+	      <span class="kw">self</span>.direction = STOP<br><br>
+	    </div>
+	  </div>
+
+	  <span class="kw">def</span> <span class="mn">getValidKey</span>(<span class="kw">self</span>):<br>
+	  <div class="tabLeft">
+	  
+	    <span class="var">key_pressed</span> = pygame.key.get_pressed()<br>
+	    <span class="kw">if</span> key_pressed[K_UP]:<br>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> UP<br>
+	    </div>
+	    <span class="kw">if</span> key_pressed[K_DOWN]:<br>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> DOWN<br>
+	    </div>
+	    <span class="kw">if</span> key_pressed[K_LEFT]:<br>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> LEFT<br>
+	    </div>
+	    <span class="kw">if</span> key_pressed[K_RIGHT]:<br>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> RIGHT<br>
+	    </div>
+	    <span class="kw">else</span>:<br>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> <span class="py">None</span><br><br>
 	    </div>
 	  </div>
 	
-	  <span class="kw">def</span> <span class="mn">move</span>(<span class="kw">self</span>, direction):<br>
+	  <span class="kw">def</span> <span class="mn">moveByKey</span>(<span class="kw">self</span>, direction):<br>
 	  <div class="tabLeft">
 	    <span class="kw">self</span>.direction = direction<br><br>
 	  </div>
