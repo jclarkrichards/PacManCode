@@ -47,7 +47,7 @@
       <hr/>
 
       <div class="pseudoCode">
-	<p>The first thing we're going to modify is the pacman.py file.  We need to pass in the list of nodes that make up the maze.  Instead of specifying a random pixel position vector for Pacman to start out on we need to tell him which node we want him to start out on.  Right now it doesn't matter so we'll just have him start out on the first node, so we set his position to be the same as that nodes position.  So nodes is a list of the complete maze and node is the node that Pacman is currently on.  Then we call a method called <span class="mn">setPosition</span>.  We also introduce a temporary variable called "keyDown".  The only reason we have this is so Pacman will only move one node at a time with each key press.</p>
+	<p>The first thing we're going to modify is the <span class="filenames">pacman.py</span> file.  We need to pass in the list of nodes that make up the maze.  Instead of specifying a random pixel position vector for Pacman to start out on we need to tell him which node we want him to start out on.  Right now it doesn't matter so we'll just have him start out on the first node, so we set his position to be the same as that nodes position.  So nodes is a list of the complete maze and node is the node that Pacman is currently on.  Then we call a method called <span class="mn">setPosition</span>.  We also introduce a temporary variable called "keyDown".  The only reason we have this is so Pacman will only move one node at a time with each key press.</p>
       </div>
       <div class="codeText">
 	<span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, nodes):<br>
@@ -109,7 +109,7 @@
       <hr/>
 
       <div class="pseudoCode">
-	<p>In the gamecontrol.py method we're going to modify the <span class="mn">startGame</span> method so that we pass in the nodeList into the Pacman object.  We also change it so we create the nodes first, so create the Pacman object after we create the nodes.</p>
+	<p>In the <span class="filenames">gamecontrol.py</span> method we're going to modify the <span class="mn">startGame</span> method so that we pass in the nodeList into the Pacman object.  We also change it so we create the nodes first, so create the Pacman object after we create the nodes.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -161,7 +161,7 @@
       <hr/>
 
       <div class="pseudoCode">
-	<p>The first thing we'll do is add the target to the pacman.py file.  The target node is usually the node Pacman needs to move towards, but if Pacman is stationary on a node then the target node and his current node are the same node.  In other words, the target node can never be <span class="py">None</span>.</p>
+	<p>The first thing we'll do is add the target to the <span class="filenames">pacman.py</span> file.  The target node is usually the node Pacman needs to move towards, but if Pacman is stationary on a node then the target node and his current node are the same node.  In other words, the target node can never be <span class="py">None</span>.</p>
       </div>
       <div class="codeText">
 	<span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, nodes):<br>

@@ -386,3 +386,11 @@ figcaption {
     caption-side: bottom;
     color: yellow;
 }
+
+.filenames {
+    color: white;
+    background-color: rgba(150,100,10, 0.5);
+    /*text-size: 1.5%;*/
+    font-weight: bold;
+    border-bottom: 3px solid red;
+}
