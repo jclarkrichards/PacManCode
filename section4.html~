@@ -27,18 +27,30 @@
     </div>
 
     <hr />
-    <h2>Section 3: Moving From Node To Node</h2>
+    <h2>Section 4: Automatic Node Maps</h2>
     <div class="container">
       <h3>Setup</h3>
-      <p>So the whole point of creating the node map was to constrain Pacman's movement so that he can only move from node to node and nowhere else.  This section will show you how to do that.  This section is actually further divided up into three subsections because we're going to cover three types of node movement.  All of which are good to know and used in this game.  You can jump to the different sections by clicking on the links below or just read from the start.</p>
-      <dl>
-	<dt><a href="#movement1">Movement 1</a>:</dt>
-	<dd>The simplest type of Node to Node movement.  We just jump from Node to Node with no movement in between</dd>
-	<dt><a href="#movement2">Movement 2</a>:</dt>
-	<dd>We show movement in between the nodes, but we will always stop on each node</dd>
-	<dt><a href="#movement3">Movement 3</a>:</dt>
-	<dd>The super advanced Node to Node movement that Pacman and the Ghosts will use</dd>
-      </dl>
+      <p>So we want to generate a maze automatically instead of having to manually create and connect all of the nodes together.  This could save a lot of time since in a normal Pacman maze there could be up to 100 nodes to create and connect together.  What I would like to do is have a text file that defines the maze.  I would then like to use that text file as an input to some method and then have that method output the required nodeList.  The file should be something that is easy for us to make, and also something that the computer can easily parse.  So we need a system of symbols that lets the computer know what should be interpreted as a node and what should be interpreted as empty space and so on.  I'll use the following four symbols:
+      <ul>
+	<li><b>"0"</b>: empty space</li>
+	<li><b>"+"</b>: Node</li>
+	<li><b>"-"</b>: horizontal path</li>
+	<li><b>"|"</b>: vertical path</li>
+      </ul>
+      
+With using only these symbols I should be able to generate a text file of any size that defines a maze.  If we were to convert the previous nodes we've been using in the last sections into a text file, then it would look like the following image on the left.</p>
+      <div class="codeText">
+	0 0 0 0 0 0 0 0<br>
+	0 0 0 0 0 0 0 0<br>
+	0 + - - + 0 0 0<br>
+	0 | 0 0 | 0 0 0<br>
+	0 + - - + - + 0<br>
+	0 | 0 0 0 0 | 0<br>
+	0 | 0 0 0 0 | 0<br>
+	0 + - - - - + 0<br>
+	0 0 0 0 0 0 0 0<br>
+      </div>
+      <p>There are a few things we need to understand about this text file.  First off, a path will always lead to another node.  There should never be a path that leads to nothing.  It wouldn't make much sense otherwise.  Also, two nodes are equal if and only if they are located in the same row and the same column.  This is important to remember as we're writing the code because the computer may generate the same node twice.  You'll see why when we get to the code, but if it does generate the same node we need to check for node equality.  The only way to do that is to define what it means to be equal.  <span class="important">Remember, two nodes are equal if and only if they have the same row and column values.</span></p>
     </div>
 
     <div class="container">
@@ -415,9 +427,9 @@
     <footer>
       <div class="bottomNav">
 	<ul>
-	  <li><a href="section2.html">Previous</a></li>
+	  <li><a href="section3.html">Previous</a></li>
 	  <li><a href="#top">Top</a></li>
-	  <li><a href="section4.html">Next</a></li>
+	  <li><a href="section5.html">Next</a></li>
 	</ul>
       </div>
     </footer>

@@ -394,3 +394,9 @@ figcaption {
     font-weight: bold;
     border-bottom: 3px solid red;
 }
+
+.important {
+    color: red;
+    font-weight: 800;
+    
+}
