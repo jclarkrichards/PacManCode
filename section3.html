@@ -266,16 +266,16 @@
       <h3>Changes in the <span class="filenames">pacman.py</span> file</h3>
       <h4>New method called <span class="mn">reverseDirection</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>We're going to create a new method called <span class="mn">reverseDirection</span> which will allow Pacman to reverse direction at any time.  We first change his direction to be opposite to the direction he was moving in.  You would think that since we're dealing with vectors it would be easier to just multiply the direction by -1.  It is true that UP * -1 == DOWN and LEFT * -1 == RIGHT, however, if I'm trying to reference a direction in the neighbor's dictionary then this won't work.  For example, let's say that Node A has a neighbor dictionary with UP as one of the keys.  That UP vector is a specific object and if I create another UP vector, then that's not the same vector.  When dealing with dictionaries the keys are unique objects even if they look the same.  That's why we can't just multiply the direction by -1 to reverse the direction.  After we change the direction we just simply swap the target and node values.  </p>
       </div>
       <div class="codeText">
 	<code>
 	  <span class="kw">def</span> <span class="mn">reverseDirection</span>(<span class="kw">self</span>):<br>
 	  <div class="tabLeft">
 	    <span class="kw">if self</span>.direction <span class="kw">is</span> UP: <span class="kw">self</span>.direction = DOWN<br>
-	    <span class="kw">if self</span>.direction <span class="kw">is</span> DOWN: <span class="kw">self</span>.direction = UP<br>
-	    <span class="kw">if self</span>.direction <span class="kw">is</span> LEFT: <span class="kw">self</span>.direction = RIGHT<br>
-	    <span class="kw">if self</span>.direction <span class="kw">is</span> RIGHT: <span class="kw">self</span>.direction = LEFT<br>
+	    <span class="kw">elif self</span>.direction <span class="kw">is</span> DOWN: <span class="kw">self</span>.direction = UP<br>
+	    <span class="kw">elif self</span>.direction <span class="kw">is</span> LEFT: <span class="kw">self</span>.direction = RIGHT<br>
+	    <span class="kw">elif self</span>.direction <span class="kw">is</span> RIGHT: <span class="kw">self</span>.direction = LEFT<br>
 	    <span class="var">temp</span> = <span class="kw">self</span>.node<br>
 	    <span class="kw">self</span>.node = <span class="kw">self</span>.target<br>
 	    <span class="kw">self</span>.target = temp
@@ -286,6 +286,7 @@
       
       <h4>New method called <span class="mn">moveBySelf</span></h4>
       <div class="pseudoCode">
+	<p></p>
       </div>
       <div class="codeText">
 	<code>
@@ -344,32 +345,32 @@
 		<span class="kw">self</span>.target = <span class="kw">self</span>.node.neighbors[direction]<br>
 		<span class="kw">self</span>.direction = direction<br>
 	      </div>
-	      <span class="kw">else</span>:
+	      </div>
+	    <span class="kw">else</span>:
+	    <div class="tabLeft">
+	      <span class="kw">if</span> direction == <span class="kw">self</span>.direction * -1:
 	      <div class="tabLeft">
-		<span class="kw">if</span> direction == <span class="kw">self</span>.direction * -1:
+		<span class="kw">self</span>.reverseDirection()<br>
+	      </div>
+	      <span class="kw">if self</span>.overshotTarget():
+	      <div class="tabLeft">
+		<span class="kw">self</span>.node = <span class="kw">self</span>.target<br>
+		<span class="kw">if self</span>.node.neighbors[direction] <span class="kw">is not</span> <span class="pw">None</span>:
 		<div class="tabLeft">
-		  <span class="kw">self</span>.reverseDirection()<br>
+		  <span class="kw">self</span>.target = <span class="kw">self</span>.node.neighbors[direction]<br>
+		  <span class="kw">self</span>.direction = direction<br>
+		  <span class="kw">self</span>.setPosition()<br>
 		</div>
-		<span class="kw">if self</span>.overshotTarget():
+		<span class="kw">else</span>:
 		<div class="tabLeft">
-		  <span class="kw">self</span>.node = <span class="kw">self</span>.target<br>
-		  <span class="kw">if self</span>.node.neighbors[direction] <span class="kw">is not</span> <span class="pw">None</span>:
+		  <span class="kw">if self</span>.node.neighbors[<span class="kw">self</span>.direction] <span class="kw">is not</span> <span class="py">None</span>:
 		  <div class="tabLeft">
-		    <span class="kw">self</span>.target = <span class="kw">self</span>.node.neighbors[direction]<br>
-		    <span class="kw">self</span>.direction = direction<br>
-		    <span class="kw">self</span>.setPosition()<br>
+		    <span class="kw">self</span>.target = <span class="kw">self</span>.node.neighbors[<span class="kw">self</span>.direction]<br>
 		  </div>
 		  <span class="kw">else</span>:
 		  <div class="tabLeft">
-		    <span class="kw">if self</span>.node.neighbors[<span class="kw">self</span>.direction] <span class="kw">is not</span> <span class="py">None</span>:
-		    <div class="tabLeft">
-		      <span class="kw">self</span>.target = <span class="kw">self</span>.node.neighbors[<span class="kw">self</span>.direction]<br>
-		    </div>
-		    <span class="kw">else</span>:
-		    <div class="tabLeft">
-		      <span class="kw">self</span>.setPosition()<br>
-		      <span class="kw">self</span>.direction = STOP
-		    </div>
+		    <span class="kw">self</span>.setPosition()<br>
+		    <span class="kw">self</span>.direction = STOP
 		  </div>
 		</div>
 	      </div>
