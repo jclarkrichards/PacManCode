@@ -50,7 +50,7 @@ With using only these symbols I should be able to generate a text file of any si
 	0 + - - - - + 0<br>
 	0 0 0 0 0 0 0 0<br>
       </div>
-      <p>There are a few things we need to understand about this text file.  First off, <span class="important">a path will always lead to another node.</span>  There should never be a path that leads to nothing.  It wouldn't make much sense otherwise.  Also, two nodes are equal if and only if they are located in the same row and the same column.  This is important to remember as we're writing the code because the computer may generate the same node twice.  You'll see why when we get to the code, but if it does generate the same node we need to check for node equality.  The only way to do that is to define what it means to be equal.  <span class="important">Remember, two nodes are equal if and only if they have the same row and column values.</span></p>
+      <p>There are a few things we need to understand about this text file.  First off, <span class="important">a path will always lead to another node.</span>  There should never be a path that leads to nothing.  It wouldn't make much sense otherwise.  Also, two nodes are equal if and only if they are located in the same row and the same column.  This is important to remember as we're writing the code because the computer may generate the same node twice.  You'll see why when we get to the code, but if it does generate the same node we need to check for node equality.  The only way to do that is to define what it means to be equal.  <span class="important">Remember, two nodes are equal if and only if they have the same x and y values.</span></p>
     </div>
 
     <div class="container">
@@ -58,23 +58,151 @@ With using only these symbols I should be able to generate a text file of any si
       <h4>Modify the <span class="cn">NodeGroup</span> class in the <span class="mn">nodes.py</span> file</h4>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-	<p>We're going to spend most of our time in the <span class="cn">NodeGroup</span> class.  We need to define a few new variables that we'll need.  The <span class="var">grid</span> variable will hold the values in the text file as a 2D array.  We'll also use a stack so we need to <span class="kw">import</span> it at the beginning of the file.  The <span class="var">fRows</span> and <span class="var">fCols</span> variables will just hold the dimensions of the <span class="var">grid</span> array.</p>
+	<p>We're going to spend most of our time in the <span class="cn">NodeGroup</span> class.  We need to define a few new variables that we'll need.  In order to create the node map from a text file we need to get the text file first.  So when we create a <span class="cn">NodeGroup</span> object we give it the name and path of the text file we want to use.  This is what the <span class="var">level</span> variable is for.  It just holds the path and name of the file in a string format.  The <span class="var">grid</span> variable will hold the values in the text file as a 2D array.  We'll also use a stack so we need to <span class="kw">import</span> it at the beginning of the file.  We are also going to need numpy's <span class="mn">loadtxt</span> method so we need to import that.</p>
       </div>
       <div class="codeText">
 	<code>
 	  <span class="kw">from</span> stacks <span class="kw">import</span> Stack<br>
-	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>):
+	  <span class="kw">from</span> numpy <span class="kw">import</span> loadtxt<br>
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, level):
 	  <div class="tabLeft">
+	    <span class="kw">self</span>.level = level<br>
 	    <span class="kw">self</span>.nodeList = []<br>
 	    <span class="kw">self</span>.grid = <span class="py">None</span><br>
 	    <span class="kw">self</span>.nodeStack = Stack()<br>
-	    <span class="kw">self</span>.fRows = 0<br>
-	    <span class="kw">self</span>.fCols = 0<br>
 	  </div>
 	</code>
       </div><!--End of codeText-->
       <hr/>
 
+      <h4>Create new method called <span class="mn">createNodeList</span></h4>
+      <div class="pseudoCode">
+	<p>This is the main method that we'll call in order to make the node map from the file.  You'll notice that there are several methods that we haven't defined yet.  Those methods are defined below, but this method will give you an overview of what we are doing, then the methods will go into more detail.  We first load the text file into the <span class="var">grid</span> variable as a two-dimensional numpy array of strings.  We then call a method called <span class="mn">findFirstNode</span> which will find the first node in the <span class="var">grid</span> array and return it.  We need a starting point before we can begin.  Once we find that we add it to the stack.  We then start a while loop that will continue as long as the stack is not empty.  Once the stack is empty, then we are finished.  For each iteration through the loop we first pop off the top node from the stack.  We then add that node to the nodeList if it isn't in the nodeList already.  The method <span class="mn">addNode</span> takes care of that.  We then find all of the node's neighbors in all four directions, and add them to the node's neighbors dictionary.  Finally, we add all of the node's neighbors we just found to the stack.  This continues until we've popped off all of the nodes.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">createNodeList</span>(<span class="kw">self</span>):
+	  <div class="tabLeft">
+	    <span class="kw">self</span>.grid = loadtxt(<span class="kw">self</span>.level, dtype=<span class="kw">str</span>)<br>
+	    <span class="var">startNode</span> = <span class="kw">self</span>.<span class="mn">findFirstNode</span>(*<span class="kw">self</span>.grid.shape)<br>
+	    <span class="kw">self</span>.nodeStack.<span class="mn">push</span>(startNode)<br>
+	    <span class="kw">while not self</span>.nodeStack.<span class="mn">isEmpty</span>():
+	    <div class="tabLeft">
+	      <span class="var">node</span> = <span class="kw">self</span>.nodeStack.<span class="mn">pop</span>()<br>
+	      <span class="kw">self</span>.<span class="mn">addNode</span>(node)<br>
+	      <span class="var">leftNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(LEFT, node.row, node.col-1)<br>
+	      <span class="var">rightNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(RIGHT, node.row, node.col+1)<br>
+	      <span class="var">upNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(UP, node.row-1, node.col)<br>
+	      <span class="var">downNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(DOWN, node.row+1, node.col)<br>
+	      
+	      node.neighbors[LEFT] = leftNode<br>
+	      node.neighbors[RIGHT] = rightNode<br>
+	      node.neighbors[UP] = upNode<br>
+	      node.neighbors[DOWN] = downNode<br>
+
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(leftNode)<br>
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(rightNode)<br>
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(upNode)<br>
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(downNode)<br>
+	      
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+
+      <h4>Create new method called <span class="mn">getNode</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create new method called <span class="mn">getNodeFromNode</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Create new method called <span class="mn">getUniqueNode</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+     
+      <h4>Create new method called <span class="mn">findFirstNode</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create new method called <span class="mn">addNode</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create new method called <span class="mn">addNodeToStack</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      
+      <h4>Create new method called <span class="mn">nodeInList</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create new method called <span class="mn">followPath</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create new method called <span class="mn">pathToFollow</span></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
       
     </div><!--End of the code container-->
 

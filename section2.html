@@ -38,71 +38,72 @@
       <hr/>
       <h3>Code</h3>
       <p>Alright, so in order to get some nodes up on the screen we'll start by creating a Node class.  We'll create a file called nodes.py and add the following class to it.</p>
-      <dir class="pseudoCode">
-	<p>We import pygame, Vector2D, and everything in our constants.py file.  When we create a Node we pass in the x and y pixel position we want to place the Node on the screen.  We also set up the neighbors as a dictionary.  This way it's really easy to know which node is in which direction to this Node.  Then all we need to do is render the Node so it appears on the screen.  We draw all of the paths to the neighbors first as WHITE lines, and we draw the Node itself as a RED circle.  When we're finished with the game we don't actually draw the nodes, but we draw them now while we're developing the game.</p>
-      </dir>
+      <div class="pseudoCode">
+	<p>We import pygame, Vector2D, and everything in our constants.py file.  When we create a Node we pass in the row and column values and then compute the x and y position we want to place the Node on the screen.  We also set up the neighbors as a dictionary.  This way it's really easy to know which node is in which direction to this Node.  Then all we need to do is render the Node so it appears on the screen.  We draw all of the paths to the neighbors first as WHITE lines, and we draw the Node itself as a RED circle.  When we're finished with the game we don't actually draw the nodes, but we draw them now while we're developing the game.</p>
+      </div>
       
-      <dir class="codeText">
+      <div class="codeText">
 	<code>
 	<span class="kw">import</span> pygame<br>
 	<span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br>
 	<span class="kw">from</span> constants <span class="kw">import</span> *<br><br>
 	<span class="kw">class</span> <span class="cn">Node</span>(<span class="mn">object</span>):<br>
-	<dir class="tabLeft">
-	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, x, y):<br>
-	  <dir class="tabLeft">
-	    <span class="kw">self</span>.position = Vector2D(x, y)<br>
-	    <span class="kw">self</span>.neighbors = {UP:<span class="py">None</span>, DOWN:<span class="py">None</span>, LEFT:<span class="py">None</span>, RIGHT:<span class="py">None</span>}<br>
-	  </dir>
+	<div class="tabLeft">
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, row, column):<br>
+	  <div class="tabLeft">
+	    <span class="kw">self</span>.row, <span class="kw">self</span>.column = row, column<br>
+	    <span class="kw">self</span>.position = Vector2D(column*WIDTH, row*HEIGHT)<br>
+	    <span class="kw">self</span>.neighbors = {UP:<span class="py">None</span>, DOWN:<span class="py">None</span>, LEFT:<span class="py">None</span>, RIGHT:<span class="py">None</span>}<br><br>
+	  </div>
 
 	  <span class="kw">def</span> <span class="mn">render</span>(<span class="kw">self</span>, screen):
-	  <dir class="tabLeft">
+	  <div class="tabLeft">
 	    <span class="kw">for</span> n <span class="kw">in self</span>.neighbors.keys():<br>
-	    <dir class="tabLeft">
+	    <div class="tabLeft">
 	      <span class="kw">if self</span>.neighbors[n] <span class="kw">is not</span> <span class="py">None</span>:<br>
-	      <dir class="tabLeft">
+	      <div class="tabLeft">
 		pygame.draw.line(screen, WHITE, <span class="kw">self</span>.position.toTuple(), <span class="kw">self</span>.neighbors[n].position.toTuple(), 4)<br>
 		pygame.draw.circle(screen, RED, <span class="kw">self</span>.position.toTuple(), 12)
-	      </dir>
-	    </dir>
-	  </dir>
-	</dir>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	</code>
-      </dir>
+      </div>
 
       <hr/>
       <p>You may have noticed that we added more colors, so we'll need to add them to the constants.py file.</p>
-      <dir class="pseudoCode">
+      <div class="pseudoCode">
 	<p>We'll just add the colors as we need them.  You can put these anywhere in the file, but try and keep all of the colors in one place so it's easy to find them.</p>
-      </dir>
-      <dir class="codeText">
+      </div>
+      <div class="codeText">
 	<span class="var">WHITE</span> = (255, 255, 255)<br>
 	<span class="var">RED</span> = (255, 0, 0)	
-      </dir>
+      </div>
       <hr/>
       <p>Having a Node class is great when dealing with individual nodes, but we're going to be dealing with a lot of nodes.  It would be better if we grouped all of the nodes together so let's create another class in the nodes.py file where we actually create all of the individual nodes.  This class needs to be placed after the <span class="cn">Nodes</span> class.</p>
-      <dir class="pseudoCode">
-	<p>We're going to keep all of our Node objects in a list called nodeList, which starts out empty.  After we create our NodeGroup object we'll call a method called <span class="mn">setupTestNodes</span> which is just a temporary method we're using to show how we manually create and link up the nodes together.  When creating each Node you need to pass in the location you want to place the Node in pixels.  Then, after the nodes have been created, we need to link them up together by adding nodes to the neighbors dictionary of each node.  Finally, we add all of the nodes to the nodeList.  When we want to draw all of the nodes we call the <span class="mn">render</span> method which just loops through the nodeList and calls that nodes <span class="mn">render</span> method.</p>
-      </dir>
-      <dir class="codeText">
+      <div class="pseudoCode">
+	<p>We're going to keep all of our Node objects in a list called nodeList, which starts out empty.  After we create our NodeGroup object we'll call a method called <span class="mn">setupTestNodes</span> which is just a temporary method we're using to show how we manually create and link up the nodes together.  When creating each Node you need to pass in the location you want to place the Node in (row, column) format.  Then, after the nodes have been created, we need to link them up together by adding nodes to the neighbors dictionary of each node.  Finally, we add all of the nodes to the nodeList.  When we want to draw all of the nodes we call the <span class="mn">render</span> method which just loops through the nodeList and calls that nodes <span class="mn">render</span> method.</p>
+      </div>
+      <div class="codeText">
 	<code>
 	<span class="kw">class</span> <span class="cn">NodeGroup</span>(<span class="mn">object</span>):<br>
 	
-	<dir class="tabLeft">
+	<div class="tabLeft">
 	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>):<br>
-	  <dir class="tabLeft">
-	    <span class="kw">self</span>.nodeList = []<br>
-	  </dir>
+	  <div class="tabLeft">
+	    <span class="kw">self</span>.nodeList = []<br><br>
+	  </div>
 
 	  <span class="kw">def</span> <span class="mn">setupTestNodes</span>(<span class="kw">self</span>):<br>
-	  <dir class="tabLeft">
-	    <span class="var">nodeA</span> = Node(5*WIDTH, 5*HEIGHT)<br>
-	    <span class="var">nodeB</span> = Node(10*WIDTH, 5*HEIGHT)<br>
-	    <span class="var">nodeC</span> = Node(5*WIDTH, 10*HEIGHT)<br>
-	    <span class="var">nodeD</span> = Node(10*WIDTH, 10*HEIGHT)<br>
-	    <span class="var">nodeE</span> = Node(13*WIDTH, 10*HEIGHT)<br>
-	    <span class="var">nodeF</span> = Node(5*WIDTH, 20*HEIGHT)<br>
-	    <span class="var">nodeG</span> = Node(13*WIDTH, 20*HEIGHT)<br>
+	  <div class="tabLeft">
+	    <span class="var">nodeA</span> = Node(5, 5)<br>
+	    <span class="var">nodeB</span> = Node(5, 10)<br>
+	    <span class="var">nodeC</span> = Node(10, 5)<br>
+	    <span class="var">nodeD</span> = Node(10, 10)<br>
+	    <span class="var">nodeE</span> = Node(10, 13)<br>
+	    <span class="var">nodeF</span> = Node(20, 5)<br>
+	    <span class="var">nodeG</span> = Node(20, 13)<br>
 	    <span class="var">nodeA.neighbors</span>[RIGHT] = nodeB<br>
 	    <span class="var">nodeA.neighbors</span>[DOWN] = nodeC<br>
 	    <span class="var">nodeB.neighbors</span>[LEFT] = nodeA<br>
@@ -121,44 +122,44 @@
 	    <span class="var">nodeG.neighbors</span>[LEFT] = nodeF<br>
 	    <span class="kw">self</span>.nodeList = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG]:<br><br>
 	    
-	  </dir>
+	  </div>
 	  <span class="kw">def</span> <span class="mn">render</span>(<span class="kw">self</span>, screen):<br>
-	  <dir class="tabLeft">
+	  <div class="tabLeft">
 	    <span class="kw">for</span> node <span class="kw">in self</span>.nodeList:<br>
-	    <dir class="tabLeft">
+	    <div class="tabLeft">
 	      node.render(screen)
-	    </dir>
-	  </dir>
+	    </div>
+	  </div>
 				     
 				     
-	</dir>
+	</div>
 	</code>
-      </dir>
+      </div>
       <hr/>
       <p>Now that we have the <span class="cn">NodeGroup</span> class written we can create an instance of it in the <span class="cn">GameController</span>.  So add the following code to the gamecontrol.py file.</p>
-      <dir class="pseudoCode">
+      <div class="pseudoCode">
 	<p>In order to use the <span class="cn">NodeGroup</span> class we'll need to import it first.</p>
-      </dir>
-      <dir class="codeText">
+      </div>
+      <div class="codeText">
 	<span class="kw">from</span> nodes <span class="kw">import</span> NodeGroup
-      </dir>
+      </div>
       <hr/>
 
-      <dir class="pseudoCode">
+      <div class="pseudoCode">
 	<p>Add these two lines to the <span class="mn">startGame</span> method.</p>
-      </dir>
-      <dir class="codeText">
+      </div>
+      <div class="codeText">
 	<span class="kw">self</span>.nodes = NodeGroup()<br>
 	<span class="kw">self</span>.nodes.setupTestNodes()
-      </dir>
+      </div>
       <hr/>
 
-      <dir class="pseudoCode">
+      <div class="pseudoCode">
 	<p>Finally, we want to draw the nodes to the screen.  Add this to the <span class="mn">render</span> method.  The order in which you place things here matter.  It depends if you want objects to appear on top or behind other objects.  Place this code before drawing the Pacman object so that Pacman will appear in front of the nodes.  </p>
-      </dir>
-      <dir class="codeText">
+      </div>
+      <div class="codeText">
 	<span class="kw">self</span>.nodes.render(<span class="kw">self</span>.screen)
-      </dir>
+      </div>
       <hr/>
 
       <hr/>

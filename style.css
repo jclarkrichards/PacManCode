@@ -333,7 +333,7 @@ input[type="submit"]:focus, input[type="submit"]:hover {
     padding: 0.5em;
     overflow: auto;
     margin-bottom: 2em;
-
+    white-space: nowrap;
 }
 
 .pseudoCode {
