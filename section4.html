@@ -38,7 +38,7 @@
 	<li><b>"|"</b>: vertical path</li>
       </ul>
       
-With using only these symbols I should be able to generate a text file of any size that defines a maze.  If we were to convert the previous nodes we've been using in the last sections into a text file, then it would look like the following image on the left.</p>
+With using only these symbols I should be able to generate a text file of any size that defines a maze.  If we were to convert the previous nodes we've been using in the last sections into a text file, then it would look like the following image on the right.  In fact, go ahead and create a text file similar to the image on the right and save it in the same directory as all of our other files.  You don't have to copy the image exactly, but you can initially, then when you see things working you can get creative.</p>
       <div class="codeText">
 	0 0 0 0 0 0 0 0<br>
 	0 0 0 0 0 0 0 0<br>
@@ -64,12 +64,13 @@ With using only these symbols I should be able to generate a text file of any si
 	<code>
 	  <span class="kw">from</span> stacks <span class="kw">import</span> Stack<br>
 	  <span class="kw">from</span> numpy <span class="kw">import</span> loadtxt<br>
-	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, level):
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, mazeFile):
 	  <div class="tabLeft">
-	    <span class="kw">self</span>.level = level<br>
+	    <span class="kw">self</span>.mazeFile = mazeFile<br>
 	    <span class="kw">self</span>.nodeList = []<br>
 	    <span class="kw">self</span>.grid = <span class="py">None</span><br>
 	    <span class="kw">self</span>.nodeStack = Stack()<br>
+	    <span class="kw">self</span>.<span class="mn">createNodeList</span>()
 	  </div>
 	</code>
       </div><!--End of codeText-->
@@ -83,17 +84,17 @@ With using only these symbols I should be able to generate a text file of any si
 	<code>
 	  <span class="kw">def</span> <span class="mn">createNodeList</span>(<span class="kw">self</span>):
 	  <div class="tabLeft">
-	    <span class="kw">self</span>.grid = loadtxt(<span class="kw">self</span>.level, dtype=<span class="kw">str</span>)<br>
+	    <span class="kw">self</span>.grid = loadtxt(<span class="kw">self</span>.mazeFile, dtype=<span class="kw">str</span>)<br>
 	    <span class="var">startNode</span> = <span class="kw">self</span>.<span class="mn">findFirstNode</span>(*<span class="kw">self</span>.grid.shape)<br>
 	    <span class="kw">self</span>.nodeStack.<span class="mn">push</span>(startNode)<br>
 	    <span class="kw">while not self</span>.nodeStack.<span class="mn">isEmpty</span>():
 	    <div class="tabLeft">
 	      <span class="var">node</span> = <span class="kw">self</span>.nodeStack.<span class="mn">pop</span>()<br>
 	      <span class="kw">self</span>.<span class="mn">addNode</span>(node)<br>
-	      <span class="var">leftNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(LEFT, node.row, node.col-1)<br>
-	      <span class="var">rightNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(RIGHT, node.row, node.col+1)<br>
-	      <span class="var">upNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(UP, node.row-1, node.col)<br>
-	      <span class="var">downNode</span> = <span class="kw">self</span>.<span class="mn">getUniqueNode</span>(DOWN, node.row+1, node.col)<br>
+	      <span class="var">leftNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(LEFT, node.row, node.column-1)<br>
+	      <span class="var">rightNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(RIGHT, node.row, node.column+1)<br>
+	      <span class="var">upNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(UP, node.row-1, node.column)<br>
+	      <span class="var">downNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(DOWN, node.row+1, node.column)<br>
 	      
 	      node.neighbors[LEFT] = leftNode<br>
 	      node.neighbors[RIGHT] = rightNode<br>
@@ -114,60 +115,122 @@ With using only these symbols I should be able to generate a text file of any si
 
       <h4>Create new method called <span class="mn">getNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This method simply looks for a node in the nodeList at the specified x and y position.  If a node at this position exists, then it returns that <span class="cn">Node</span> object.  If it doesn't exist, then it will return <span class="py">None</span>.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">getNode</span>(<span class="kw">self</span>, x, y):
+	  <div class="tabLeft">
+	    <span class="kw">for</span> node <span class="kw">in self</span>.nodeList:
+	    <div class="tabLeft">
+	      <span class="kw">if</span> node.position.x == x <span class="kw">and</span> node.position.y == y:
+	      <div class="tabLeft">
+		<span class="kw">return</span> node
+	      </div>
+	    </div>
+	    <span class="kw">return</span> <span class="py">None</span>
+	  </div>
 	</code>
       </div>
       <hr/>
       
       <h4>Create new method called <span class="mn">getNodeFromNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This method may seem pointless at first glance, but it is a very important method.  What it does is look for the specified node in the nodeList.  If the node exists in the nodeList, then the method will return the Node object from the nodeList.  If it doesn't exist in the nodeList, then it will just return the node that was initially inputted.  This is needed in order to avoid having duplicate Nodes.  </p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">getNodeFromNode</span>(<span class="kw">self</span>, node):
+	  <div class="tabLeft">
+	    <span class="kw">if</span> node <span class="kw">is not</span> <span class="py">None</span>:
+	    <div class="tabLeft">
+	      <span class="kw">for</span> inode <span class="kw">in self</span>.nodeList:
+	      <div class="tabLeft">
+		<span class="kw">if</span> node.row == inode.row <span class="kw">and</span> node.column == inode.column:
+		<div class="tabLeft">
+		  <span class="kw">return</span> inode
+		</div>
+	      </div>
+	    </div>
+	    <span class="kw">return</span> <span class="py">node</span>
+	  </div>
 	</code>
       </div>
       <hr/>
 
-      <h4>Create new method called <span class="mn">getUniqueNode</span></h4>
+      <h4>Create new method called <span class="mn">getPathNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This method returns either a <span class="cn">Node</span> object or <span class="py">None</span>.  It follows a path in the specified direction and returns the <span class="cn">Node</span> object that is connected to the current node we're dealing with if there is one and if it already doesn't exist in the nodeList.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">getPathNode</span>(<span class="kw">self</span>, direction, row, col):
+	  <div class="tabLeft">
+	    <span class="var">tempNode</span> = <span class="kw">self</span>.<span class="mn">followPath</span>(direction, row, col)<br>
+	    <span class="kw">return self</span>.<span class="mn">getNodeFromNode</span>(tempNode)
+	  </div>
 	</code>
       </div>
       <hr/>
      
       <h4>Create new method called <span class="mn">findFirstNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This method will go into the grid array and find the first instance of a <span class="cn">Node</span>.  This serves as our starting point before we go into the <span class="kw">while</span> loop.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">findFirstNode</span>(<span class="kw">self</span>, rows, cols):
+	  <div class="tabLeft">
+	    <span class="var">nodeFound</span> = <span class="py">False</span><br>
+	    <span class="kw">for</span> row <span class"kw">in</span> <span class="mn">range</span>(rows):
+	    <div class="tabLeft">
+	      <span class="kw">for</span> col <span class="kw">in</span> <span class="mn">range</span>(cols):
+	      <div class="tabLeft">
+		<span class="kw">if self</span>.grid[row][col] == <span class="str">"+"</span>:
+		<div class="tabLeft">
+		  <span class="kw">return</span> <span class="cn">Node</span>(row, col)
+		</div>
+	      </div>
+	    </div>
+	    <span class="kw">return</span> <span class="py">None</span>
+	  </div>
 	</code>
       </div>
       <hr/>
       
       <h4>Create new method called <span class="mn">addNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This method simply adds a <span class="cn">Node</span> object to the nodeList if it already does not exist in the nodeList.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">addNode</span>(<span class="kw">self</span>, node):
+	  <div class="tabLeft">
+	    <span class="var">nodeInList</span> = <span class="kw">self</span>.<span class="mn">nodeInList</span>(node)<br>
+	    <span class="kw">if not</span> nodeInList:
+	    <div class="tabLeft">
+	      <span class="kw">self</span>.nodeList.append(node)
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
       
       <h4>Create new method called <span class="mn">addNodeToStack</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This method adds a node to the stack if it already hasn't been added to the nodeList.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">addNodeToStack</span>(<span class="kw">self</span>, node):
+	  <div class="tabLeft">
+	    <span class="kw">if</span> node <span class="kw">is not</span> <span class="py">None</span> <span class="kw">and not self</span>.<span class="mn">nodeInList</span>(node):
+	    <div class="tabLeft">
+	      <span class="kw">self</span>.nodeStack.<span class="mn">push</span>(node)
+	    </div>
+	  </div>
+	  <div class="tabLeft">
+	  </div>
 	</code>
       </div>
       <hr/>
@@ -175,51 +238,160 @@ With using only these symbols I should be able to generate a text file of any si
       
       <h4>Create new method called <span class="mn">nodeInList</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This method is similar to the <span class="mn">getNode</span> method but instead of returning <span class="cn">Node</span>s or <span class="py">None</span>, it will return either <span class="py">True</span> or <span class="py">False</span> whether the specified node is in the nodeList or not.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">nodeInList</span>(<span class="kw">self</span>, node):
+	  <div class="tabLeft">
+	    <span class="kw">for</span> inode <span class="kw">in self</span>.nodeList:
+	    <div class="tabLeft">
+	      <span class="kw">if</span> node.position.x == inode.position.x <span class="kw">and</span> node.position.y == inode.position.y:
+	      <div class="tabLeft">
+		<span class="kw">return</span> <span class="py">True</span>
+	      </div>
+	    </div>
+	    <span class="kw">return</span> <span class="py">False</span>
+	  </div>
 	</code>
       </div>
       <hr/>
       
       <h4>Create new method called <span class="mn">followPath</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>We need to follow the path in all four directions.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">followPath</span>(<span class="kw">self</span>, direction, row, col):
+	  <div class="tabLeft">
+
+	    <span class="kw">if</span> direction == LEFT <span class="kw">and</span> col >= 0:
+	    <div class="tabLeft">
+	      <span class="kw">return self</span>.<span class="mn">pathToFollow</span>(LEFT, row, col, <span class="str">"-"</span>)
+	    </div>
+
+	    <span class="kw">elif</span> direction == RIGHT <span class="kw">and</span> col < <span class="kw">self</span>.grid.shape[1]:
+	    <div class="tabLeft">
+	      <span class="kw">return self</span>.<span class="mn">pathToFollow</span>(RIGHT, row, col, <span class="str">"-"</span>)
+	    </div>
+
+	    <span class="kw">elif</span> direction == UP <span class="kw">and</span> row >= 0:
+	    <div class="tabLeft">
+	      <span class="kw">return self</span>.<span class="mn">pathToFollow</span>(UP, row, col, <span class="str">"|"</span>)
+	    </div>
+
+	    <span class="kw">elif</span> direction == DOWN <span class="kw">and</span> row < <span class="kw">self</span>.grid.shape[0]:
+	    <div class="tabLeft">
+	      <span class="kw">return self</span>.<span class="mn">pathToFollow</span>(DOWN, row, col, <span class="str">"|"</span>)
+	    </div>
+	    
+	    <span class="kw">else</span>
+	    <div class="tabLeft">
+	      <span class="kw">return</span> <span class="py">None</span>
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
       
       <h4>Create new method called <span class="mn">pathToFollow</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>This will continuously follow a <span class="str">"-"</span> or a <span class="str">"|"</span> value in the grid until it runs into a node which has a value of <span class="str">"+"</span>.</p>
       </div>
       <div class="codeText">
 	<code>
+	  <span class="kw">def</span> <span class="mn">pathToFollow</span>(<span class="kw">self</span>, direction, row, col, path):
+	  <div class="tabLeft">
+	    <span class="kw">if self</span>.grid[row][col] == path <span class="kw">or self</span>.grid[row][col] == <span class="str">"+"</span>:
+	    <div class="tabLeft">
+	      <span class="kw">while self</span>.grid[row][col] != <span class="str">"+"</span>:
+	      <div class="tabLeft">
+		<span class="kw">if</span> direction <span class="kw">is</span> LEFT: <span class="var">col</span> -= 1<br>
+		<span class="kw">elif</span> direction <span class="kw">is</span> RIGHT: <span class="var">col</span> += 1<br>
+		<span class="kw">elif</span> direction <span class="kw">is</span> UP: <span class="var">row</span> -= 1<br>
+		<span class="kw">elif</span> direction <span class="kw">is</span> DOWN: <span class="var">row</span> += 1
+	      </div>
+	      <span class="kw">return</span> <span class="cn">Node</span>(row, col)
+	    </div>
+	    <span class="kw">else</span>:
+	    <div class="tabLeft">
+	      <span class="kw">return</span> <span class="py">None</span>
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
       
-      
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <div class="pseudoCode">
+	<p>There's actually not a lot we need to do here.  We just need to remove the line where we manually generate the nodes by calling the <span class="mn">setupTestNodes</span> method.  We also need to input our text file that we created at the start of this section.  I called my text file <span class="str">mazetest.txt</span> but you can call it whatever you want.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">startGame</span>(<span class="kw">self</span>):
+	  <div class="tabLeft">
+	    <span class="kw">self</span>.nodes = <span class="cn">NodeGroup</span>(<span class="str">"mazetest.txt"</span>)<br>
+	    <span class="kw">self</span>.pacman = <span class="cn">Pacman</span>(<span class="kw">self</span>.nodes.nodeList)
+	  </div>
+	</code>
+      </div>
+      <hr/>
     </div><!--End of the code container-->
 
     <div class="container">
+      <h3>Creating the maze for the original Pacman game</h3>
+      <p>Now that we have all of this code set up, we can use it for any text file of any size.  So instead of this tiny maze we've been using for testing, let's create the actual Pacmna maze we want to use in our game.  This maze is modeled after the actual Pacman maze from the first game, so it should look familiar to you.  Maybe not in text form, but once we run it, it will I hope.  Life doesn't have to be so hard.</p>
+      <div class="pseudoCode">
+	<p>This is the text file we'll be using for the actual maze.  We'll eventually make more for other mazes as well.  How many nodes are in this map?  I counted 66 nodes.  That's quite a bit and the other maps we'll create may have more or less nodes.  Maybe now you're happy that you don't actually have to connect these by hand.  Remember how much work it was to just connect 7 nodes together?  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 + - - - - + - - - - - + 0 0 + - - - - - + - - - - + 0<br>
+	  0 | 0 0 0 0 | 0 0 0 0 0 | 0 0 | 0 0 0 0 0 | 0 0 0 0 | 0<br>
+	  0 | 0 0 0 0 | 0 0 0 0 0 | 0 0 | 0 0 0 0 0 | 0 0 0 0 | 0<br>
+	  0 | 0 0 0 0 | 0 0 0 0 0 | 0 0 | 0 0 0 0 0 | 0 0 0 0 | 0<br>
+	  0 + - - - - + - - + - - + - - + - - + - - + - - - - + 0<br>
+	  0 | 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 | 0<br>
+	  0 | 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 | 0<br>
+	  0 + - - - - + 0 0 + - - + 0 0 + - - + 0 0 + - - - - + 0<br>
+	  0 0 0 0 0 0 | 0 0 0 0 0 | 0 0 | 0 0 0 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 0 0 0 | 0 0 | 0 0 0 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 + - - + - - + - - + 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0<br>
+	  + - - - - - + - - + 0 0 0 0 0 0 0 0 + - - + - - - - - +<br>
+	  0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 + - - - - - - - - + 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0<br>
+	  0 + - - - - + - - + - - + 0 0 + - - + - - + - - - - + 0<br>
+	  0 | 0 0 0 0 | 0 0 0 0 0 | 0 0 | 0 0 0 0 0 | 0 0 0 0 | 0<br>
+	  0 | 0 0 0 0 | 0 0 0 0 0 | 0 0 | 0 0 0 0 0 | 0 0 0 0 | 0<br>
+	  0 + - + 0 0 + - - + - - + - - + - - + - - + 0 0 + - + 0<br>
+	  0 0 0 | 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 | 0 0 0<br>
+	  0 0 0 | 0 0 | 0 0 | 0 0 0 0 0 0 0 0 | 0 0 | 0 0 | 0 0 0<br>
+	  0 + - + - - + 0 0 + - - + 0 0 + - - + 0 0 + - - + - + 0<br>
+	  0 | 0 0 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 0 0 | 0<br>
+	  0 | 0 0 0 0 0 0 0 0 0 0 | 0 0 | 0 0 0 0 0 0 0 0 0 0 | 0<br>
+	  0 + - - - - - - - - - - + - - + - - - - - - - - - - + 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+	</code>
+      </div>
     </div><!--End of movement 2 container-->
-
-
-
-    <div class="container">
-      
-    </div><!--End of movement 3 container-->
 
 
 
     <div class="container">  
       <h3>Conclusion</h3>
-      <p></p>
+      <p>That sure was a lot of code to do something that took us much less code to do.  It almost seems counter-productive.  Although it is true that if we only have a few nodes, then it is easier to just create and link them by hand, however, we don't just have a few nodes.  We're going to have many mazes and each maze can have up to 100 nodes in them.  If you want to take the time to link all of those nodes by hand, then be my guest.  The code in this section is going to save us a ton of time and we won't have to worry about accidently linking up nodes that aren't supposed to be linked or not linking nodes that are supposed to be linked.  This sort of task is the perfect job for a computer to handle.  Now we don't have to think about it again.  All we need to do is create the text files, and that's so much easier for us to handle.  This was a big section with a lot of code, so let's take it easy on the next section before we tackle another big one.  In the next section we're going to learn how to portal between two nodes.</p>
     </div> <!--End of the conclusion container-->
     <hr />
 
@@ -230,6 +402,7 @@ With using only these symbols I should be able to generate a text file of any si
 	<ul>
 	  <li>constants.py</li>
 	  <li>gamecontrol.py</li>
+	  <li>maze1.txt</li>
 	  <li>pacman.py</li>
 	  <li>stacks.py</li>
 	  <li>vectors.py</li>

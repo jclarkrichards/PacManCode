@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+    <div class="navigation">
+      <header>
+	<h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	<hr />
+	<nav>
+	  <ul>
+	    <li><a href="index.html">Home</a></li>
+	    <li><a href="code.html">Code</a></li>
+	    <li><a href="clones.html">Clones</a></li>
+	    <li><a href="discuss.html">Discuss</a></li>
+	    <li><a href="about.html">About</a></li>
+	    <li><a href="contact.html">Contact</a></li>
+	  </ul>
+	</nav>
+      </header>
+    </div>
+
+    <hr />
+
+
+    <h2>Section 5: Portalling Between Two Nodes</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>An important part of any Pacman game is the ability to portal from one side of the screen to the other side.  In the original Pacman game, when you reach the edge of the screen on the middle path you're sent to the other side of the screen.  In some of the mazes in Ms Pacman there were several locations on each side of the screen where one could portal to the other side of the screen.  There were mainly done to portal horizontally, but there's no reason why we can't portal vertically as well.  It's actually pretty easy to do this with the node setup we currently have.  </p>
+    </div><!--End of Setup container-->
+
+
+    <div class="container">
+      <h3>Modify the <span class="filenames">constants.py</span> file</h3>
+      <p>The first thing we want to do is plan for the future.  I know that I'll be adding more mazes soon.  I don't know how many mazes I'll add, but it'll be at least 5.  Each maze will have different portal nodes.  So what I want to do is define all of the portal nodes for each maze.  I'm going to put this information in the <span class="filenames">constants.py</span> file because this information doesn't change and it's a good place to put information about each maze.</p>
+      <h4>Create a new method called <span class="mn">setupPortalNodes</span></h4>
+      <div class="pseudoCode">
+	<p>We're going to hold constant information about each maze in a dictionary called <span class="var">MAZEDATA</span>.  Right now we only have one maze, so there's only one entry.  Each maze map entry also contains a dictionary as it's value.  The keys in this dictionary can be whatever we want to use in order to differentiate the maze from other mazes.  Right now we want to place the locations of the portal nodes for each maze here.  So right now this dictionary only has one entry called <span class="str">portal</span>, which contains another dictionary.  This final dictionary contains the portal node (x, y) locations as a key:value pair.  You can have as many of these as you need for your maze, just place all portal node pairs as key:value pairs.  It doesn't matter which node you make the key and which node you make the value.  We'll be adding a lot more data to these dictionary sets throughout the rest of this website.  The disadvantage of this is that we have to know the (x, y) locations of each portal node ahead of time.  That's not a big problem though since we have to create the maze files ourselves.  It's easy enough to determine what nodes we want to make our portal nodes.  For the first maze, the nodes we need to make portal nodes are at the (column, row) locations (0, 17) and (27, 17).  We multiply these by WIDTH and HEIGHT so we store the actual pixel locations instead.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  <span class="var">MAZEDATA</span> = {<span class="str">"maze1.txt"</span>:{<span class="str">"portal"</span>:{(0, 17*<span class="var">HEIGHT</span>):(27*<span class="var">WIDTH</span>, 17*<span class="var">HEIGHT</span>)}}}
+	</code>
+      </div>
+      
+    </div><!--End of container-->
+
+
+
+    <div class="container">
+      <h3>Modify the <span class="filenames">nodes.py</span> file</h3>
+      <h4>Modify the <span class="cn">Node</span> class</h4>
+      <div class="pseudoCode">
+	<p>The first thing we need to do is add a new variable to the <span class="cn">Node</span> class.  If this node portals to another node, then the variable <span class="var">portalNode</span> will contain a reference to that node.  For most of the nodes it has a value of <span class="py">None</span> since in this maze there are only two nodes that are portal nodes to each other.  Other mazes may have more, but generally, the majority of nodes will not be portal nodes.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, row, column):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    <span class="kw">self</span>.portalNode = <span class="py">None</span>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create a new method called <span class="mn">setupPortalNodes</span></h4>
+      <div class="pseudoCode">
+	<p>So portal nodes always come in pairs.  It wouldn't make much sense otherwise.  We need to loop through all of the pairs and set them as each others portal nodes.  Remember we store the locations of these nodes since we don't know the actual <span class="cn">Node</span> objects associated with those locations.  So to get those <span class="cn">Nodes</span> we pass in those locations to the <span class="mn">getNode</span> method which searches through the nodeList and returns the corresponding <span class="cn">Nodes</span>.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">setupPortalNodes</span>(<span class="kw">self</span>):
+	  <div class="tabLeft">
+	    <span class="kw">for</span> pos1 <span class="kw">in</span> MAZEDATA[<span class="kw">self</span>.mazeFile][<span class="str">"portal"</span>].keys():
+	    <div class="tabLeft">
+	      <span class="var">node1</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*pos1)<br>
+	      <span class="var">node2</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*DATA[<span class="kw">self</span>.mazeFile][<span class="str">"portal"</span>][pos1])<br>
+	      node1.portalNode = node2<br>
+	      node2.portalNode = node1
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      
+      <h4>Modify the <span class="mn">createNodeList</span> method</h4>
+      <div class="pseudoCode">
+	<p>After we've finished making all of the nodes and their links we will call this method which will set up the portal pairs.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">createNodeList</span>(<span class="kw">self</span>):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    <span class="kw">self</span>.<span class="mn">setupPortalNodes</span>()
+	  </div>
+	</code>
+      </div>
+    </div>
+
+    <div class="container">
+      <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
+      <h4>Create a new method called <span class="mn">portal</span></h4>
+      <p>We need to tell Pacman what to do when he lands on one of these portal nodes.  </p>
+      <div class="pseudoCode">
+	<p>We are going to create a new method which we'll call whenever we need Pacman to jump from one node to another node.  If the node he is on happens to be a portalNode, then set his new node as that nodes portalNode and update his position.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">portal</span>(<span class="kw">self</span>):
+	  <div class="tabLeft">
+	    <span class="kw">if self</span>.node.portalNode:
+	    <div class="tabLeft">
+	      <span class="kw">self</span>.node = <span class="kw">self</span>.node.portalNode<br>
+	      <span class="kw">self</span>.<span class="mn">setPosition</span>()
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Update the <span class="mn">moveByKey</span> and <span class="mn">moveBySelf</span> methods.</h4>
+      <div class="pseudoCode">
+	<p>In both of these methods there's a point where we check to see if Pacman has overshot a node.  It's at this point in both methods where we want to portal to the other node if the node we just overshot happens to be a portal node.  So we need to make these changes to both of those methods.  I'm not including the whole code, just where you need to make the changes.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  <span class="kw">if self</span>.<span class="mn">overshotTarget</span>():
+	  <div class="tabLeft">
+	    <span class="kw">self</span>.node = <span class="kw">self</span>.target<br>
+	    <span class="kw">self</span>.<span class="mn">portal</span>()
+	  </div>
+	  <p>...</p>
+	</code>
+      </div>
+      
+    </div><!--End of the code container-->
+    
+    
+    <div class="container">  
+      <h3>Conclusion</h3>
+      <p>I told you that would be a short section with comparitivley little code.  Now we can make Pacman jump between any two nodes we want so that's good.  I think it's about time we start to look into the Ghosts so that's what we'll deal with in the next section</p>
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>maze1.txt</li>
+	  <li>pacman.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section4.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section6.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
