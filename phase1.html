@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Pacman Code</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
   </head>
 
@@ -18,7 +18,6 @@
 	    <li><a href="index.html">Home</a></li>
 	    <li><a href="code.html">Code</a></li>
 	    <li><a href="clones.html">Clones</a></li>
-	    <li><a href="discuss.html">Discuss</a></li>
 	    <li><a href="about.html">About</a></li>
 	    <li><a href="contact.html">Contact</a></li>
 	  </ul>
@@ -47,61 +46,6 @@
 	<li><a href="section6.html">Section 6: Introducing the Ghosts</a></li>
       </ul>
     </div>
-    <h2>Stack Class</h2>
-    <div class="container">
-      <div class="pseudoCode">
-	<p>The stack class is pretty simple.  We store all of the elements in the stack in a list.  When we want to add an element we call the <span class="mn">push</span> method which will append the item to the end of the list.  When we want to remove an item from the stack we call the <span class="mn">pop</span> method which will return the item at the end of the list if there is one.  If we want to know what's on top of the stack without removing it we can call the <span class="mn">peek</span> method.  The <span class="mn">isEmpty</span> method is useful if we want to know if our stack is empty or not.  We also want to be able to <span class="mn">clear</span> out the stack.  </p>
-      </div>
-      <div class="codeText">
-	<code>
-	  <span class="kw">class</span> <span class="cn">Stack</span>(<span class="kw">object</span>):<br>
-	  <div class="tabLeft">
-	    <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>):<br>
-	    <div class="tabLeft">
-	      <span class="kw">self</span>.items = []<br><br>
-	    </div>
-	    <span class="kw">def</span> <span class="mn">isEmpty</span>(<span class="kw">self</span>):<br>
-	    <div class="tabLeft">
-	      <span class="kw">if</span> <span class="mn">len</span>(<span class="kw">self</span>.items) > 0:<br>
-	      <div class="tabLeft"><span class="kw">return</span> <span class="py">False</span><br></div>
-	      <span class="kw">return</span> <span class="py">True</span><br><br>
-	    </div>
-	    <span class="kw">def</span> <span class="mn">length</span>(self):<br>
-	    <div class="tabLeft">
-	      <span class="kw">return</span> <span class="mn">len</span>(<span class="kw">self</span>.items)<br><br>
-	    </div>
-	    <span class="kw">def</span> <span class="mn">clear</span>(<span class="kw">self</span>):<br>
-	    <div class="tabLeft">
-	      <span class="kw">self</span>.items = []<br><br>
-	    </div>
-	    <span class="kw">def</span> <span class="mn">push</span>(<span class="kw">self</span>, item):<br>
-	    <div class="tabLeft">
-	      <span class="kw">self</span>.items.<span class="mn">append</span>(item)<br><br>
-	    </div>
-	    <span class="kw">def</span> <span class="mn">pop</span>(self):<br>
-	    <div class="tabLeft">
-	      <span class="kw">if</span> <span class="mn">len</span>(<span class="kw">self</span>.items) > 0:<br>
-	      <div class="tabLeft">
-		<span class="var">removedItem</span> = <span class="kw">self</span>.items.<span class="mn">pop</span>(<span class="mn">len</span>(<span class="kw">self</span>.items)-1)<br>
-		<span class="kw">return</span> <span class="var">removedItem</span><br>
-	      </div>
-	      <span class="kw">return</span> <span class="py">None</span><br><br>
-	    </div>
-	    <span class="kw">def</span> <span class="mn">peek</span>(self):<br>
-	    <div class="tabLeft">
-	      <span class="kw">if</span> <span class="mn">len</span>(<span class="kw">self</span>.items) > 0:<br>
-	      <div class="tabLeft">
-		<span class="kw">return</span> <span class="kw">self</span>.items[<span class="mn">len</span>(<span class="kw">self</span>.items)-1]<br>
-	      </div>
-	      <span class="kw">return</span> <span class="py">None</span><br><br>
-	    </div>
-
-	  </div>
-	</code>
-      </div>
-      
-    </div>
-
     </div>
     <div class="buffer"></div>
     <footer>
