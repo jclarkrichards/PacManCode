@@ -31,11 +31,134 @@
     <h2>Section 6: Introduction to the Ghosts</h2>
     <div class="container">
       <h3>Setup</h3>
-      <p></p>
+      <p>Moving the yellow circle around the maze almost feels like we're playing a game right?  But something is missing.  Well, for starters there aren't any enemies.  Without obstacles like enemies there's no challenge.  There's also no way of getting points, but we'll get to that later.  Everyone knows that in Pacman there are four Ghosts or Monsters depending on your generation.  I guess technically they're Monsters, but they look like Ghosts and I always thought they were supposed to be Ghosts, so I'm calling them Ghosts instead of Monsters.  The deal with them is that they're constantly trying to kill Pacman for whatever reason.  You may have also noticed that they all seem to have their own personalities.  They do have their own names:  Blinky, Pinky, Inky, and Clyde.  In Ms Pacman they have different names I think, but we won't worry about that.  This section is just about the Ghosts in general.  We'll first get one of the Ghosts up and running around the maze with Pacman.  Then in a later section we'll get all four of them up there.  The Ghosts are actually the most complicated part of this game, so getting them working is going to take multiple sections.</p>
+      <p>Before we get into writing any code for the Ghosts, lets try and understand how they move around the maze.  Like Pacman, the ghosts move around the maze from node to node.  So a lot of the code that we wrote for Pacman will also apply to the ghosts with some minor differences.  
+	<h4>Basic Movement</h4>
+      <ul>
+	<li>When the ghosts are between nodes, i.e. traveling from one node to another, they cannot reverse direction (except in a couple of special cases)</li>
+	<li>When the ghosts get to a node, they can go in any valid direction except in the direction from which they just came.  So for example, if a ghost is moving LEFT while he enters a node, and the node has neighbors in all directions, then the ghost can move in any of those directions except for RIGHT. So no backtracking.</li>
+	<li>The player doesn't choose the directions for the ghosts like they do for Pacman, so the ghosts move entirely on their own.</li>
+	<li>The ghosts choose a direction when entering a node based on which direction will get them closer to their goal they are trying to reach.</li>
+      </ul>
+      </p>
+
     </div><!--End of Setup container-->
 
 
     <div class="container">
+      <h3>Create a new file called <span class="filenames">entities.py</span></h3>
+      <p>So it makes sense (at least to me) that since Pacman and the Ghosts move around the maze in similar ways we should create a generic class from which they both can inherit.  The class should describe any object that can move around the maze in a basic sense.  Then we can use the Pacman and Ghost classes to be more specific in how they move around the maze.  This way we're not writing the same code in multiple classes.  We may also want to have other objects that move around the maze.  so in the new file let's create a class called <span class="cn">MazeMouse</span> because the most generic object I can think of moving around a maze is a mouse.  Any object that inherits from this class will have the basic ability to move around the maze on its own.  If you can think of a better name, then go ahead.  I was never very good at naming things.  The most important thing is that it's memorable and descriptive.  Naming it something like <span class="cn">GenericEntity</span> isn't very descriptive or memorable.</p>
+      <h4>Create new class called <span class="cn">MazeMouse</span></h4>
+      
+      <div class="pseudoCode">
+	<p>If we were to just create an object out of <span class="cn">MazeMouse</span> then you would just see a white circle sitting on top of the first node doing nothing.  If we were to give it a direction then it would move in that direction until it couldn't move in that direction anymore and come to a stop.  Pretty boring, but in the classes that will inherit from this class we define their movements more specifically.  This does everything we need all of our objects that move around the maze to do.  I'm writing out the entire class even though we've written most of this code in the <span class="cn">Pacman</span> class.  Since we're going to have <span class="cn">Pacman</span> inherit from this class we can remove all of these methods from the Pacman class.  We'll get to that later.  Right now I shouldn't have to explain what all of these methods do since there isn't anything new here.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  import pygame<br>
+	  from vectors import Vector2D<br>
+	  from constants import *<br>
+	  class MazeMouse(object):<br><br>
+
+	  <div class="tabLeft">
+	    def __init__(self, nodes):<br>
+	    <div class="tabLeft">
+	      self.name = ""<br>
+	      self.nodes = nodes<br>
+	      self.node = nodes[0]<br>
+	      self.target = self.node<br>
+	      self.setPosition()<br>
+	      self.direction = STOP<br>
+	      self.speed = 100<br>
+	      self.radius = 10<br>
+	      self.color = WHITE<br>
+	      <br>
+
+	      def setPosition(self):
+	      <div class="tabLeft">
+		self.position = self.node.position.copy()<br>
+	      </div>
+	      <br>
+
+	      def update(self, dt):
+	      <div class="tabLeft">
+		self.position += self.direction*self.speed*dt<br>
+		self.moveBySelf()<br>
+	      </div>
+	      <br>
+
+	      def moveBySelf(self):
+	      <div class="tabLeft">
+		if self.direction is not STOP:
+		<div class="tabLeft">
+		  if self.overshotTarget():
+		  <div class="tabLeft">
+		    self.node = self.target<br>
+		    self.portal()<br>
+		    if self.node.neighbors[self.direction] is not None:
+		    <div class="tabLeft">
+		      self.target = self.node.neighbors[self.direction]<br>
+		    </div>
+		    else:
+		    <div class="tabLeft">
+		      self.setPosition()<br>
+		      self.direction = STOP<br>
+		    </div>
+		  </div>
+		</div>
+	      </div>
+	      <br>
+
+	      def overshotTarget(self):
+	      <div class="tabLeft">
+		vec1 = self.target.position - self.node.position<br>
+		vec2 = self.position - self.node.position<br>
+		node2Target = vec1.magnitudeSquared()<br>
+		node2Self = vec2.magnitudeSquared()<br>
+		return node2Self >= node2Target<br>
+	      </div>
+	      <br>
+
+	      def reverseDirection(self):
+	      <div class="tabLeft">
+		if self.direction is UP: self.direction = DOWN<br>
+		elif self.direction is DOWN: self.direction = UP<br>
+		elif self.direction is LEFT: self.direction = RIGHT<br>
+		elif self.direction is RIGHT: self.direction = LEFT<br>
+		temp = self.node<br>
+		self.node = self.target<br>
+		self.target = temp<br>
+	      </div>
+	      <br>
+
+	      def setNextTarget(self, direction):
+	      <div class="tabLeft">
+		self.target = self.node.neighbors[direction]<br>
+		self.direction = direction<br>
+	      </div>
+	      <br>
+
+	      def portal(self):
+	      <div class="tabLeft">
+		if self.node.portalNode:
+		<div class="tabLeft">
+		  self.node = self.node.portalNode<br>
+		  self.setPosition()<br>
+		</div>
+	      </div>
+	      <br>
+
+	      def render(self, screen):
+	      <div class="tabLeft">
+		px = int(self.position.x)<br>
+		py = int(self.position.y)<br>
+		pygame.draw.circle(screen, self.color, (px, py), self.radius)<br>
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
       
     </div><!--End of container-->
 
