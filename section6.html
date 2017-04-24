@@ -9,29 +9,27 @@
   <body>
     <div id="top"></div>
     <div class="page">
-    <div class="navigation">
-      <header>
-	<h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
-	<hr />
-	<nav>
-	  <ul>
-	    <li><a href="index.html">Home</a></li>
-	    <li><a href="code.html">Code</a></li>
-	    <li><a href="clones.html">Clones</a></li>
-	    <li><a href="about.html">About</a></li>
-	    <li><a href="contact.html">Contact</a></li>
-	  </ul>
-	</nav>
-      </header>
-    </div>
-
-    <hr />
-
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
 
     <h2>Section 6: Introduction to the Ghosts</h2>
     <div class="container">
       <h3>Setup</h3>
-      <p>Moving the yellow circle around the maze almost feels like we're playing a game right?  But something is missing.  Well, for starters there aren't any enemies.  Without obstacles like enemies there's no challenge.  There's also no way of getting points, but we'll get to that later.  Everyone knows that in Pacman there are four Ghosts or Monsters depending on your generation.  I guess technically they're Monsters, but they look like Ghosts and I always thought they were supposed to be Ghosts, so I'm calling them Ghosts instead of Monsters.  The deal with them is that they're constantly trying to kill Pacman for whatever reason.  You may have also noticed that they all seem to have their own personalities.  They do have their own names:  Blinky, Pinky, Inky, and Clyde.  In Ms Pacman they have different names I think, but we won't worry about that.  This section is just about the Ghosts in general.  We'll first get one of the Ghosts up and running around the maze with Pacman.  Then in a later section we'll get all four of them up there.  The Ghosts are actually the most complicated part of this game, so getting them working is going to take multiple sections.</p>
+      <p>Moving the yellow circle around the maze almost feels like we're playing a game right?  But something is missing.  Well, for starters there aren't any enemies.  Without obstacles like enemies there's no challenge.  There's also no way of getting points, but we'll get to that later.  Everyone knows that in Pacman there are four Ghosts or Monsters depending on your generation.  I guess technically they're Monsters, but they look like Ghosts and I always thought they were supposed to be Ghosts, so I'm calling them Ghosts instead of Monsters.  The deal with them is that they're constantly trying to kill Pacman for whatever reason.  You may have also noticed that they all seem to have their own personalities.  They do have their own names:  Blinky, Pinky, Inky, and Clyde.  In Ms Pacman they have different names I think, but we won't worry about that.  This section is just about the Ghosts in general.  We'll first get one of the Ghosts up and running around the maze with Pacman.  Then in a later section we'll get all four of them up there.  The Ghosts are actually the most complicated part of this game, so it's easier to just focus on one Ghost at this time.  Once we have that Ghost complete we can easily create as many Ghosts as we want with some minor changes for each Ghost to give them a unique personality.</p>
       <p>Before we get into writing any code for the Ghosts, lets try and understand how they move around the maze.  Like Pacman, the ghosts move around the maze from node to node.  So a lot of the code that we wrote for Pacman will also apply to the ghosts with some minor differences.  
 	<h4>Basic Movement</h4>
       <ul>
@@ -52,7 +50,7 @@
       
       <div class="pseudoCode">
 	<p>If we were to just create an object out of <span class="cn">MazeMouse</span> then you would just see a white circle sitting on top of the first node doing nothing.  If we were to give it a direction then it would move in that direction until it couldn't move in that direction anymore and come to a stop.  Pretty boring, but in the classes that will inherit from this class we define their movements more specifically.  This does everything we need all of our objects that move around the maze to do.  I'm writing out the entire class even though we've written most of this code in the <span class="cn">Pacman</span> class.  Since we're going to have <span class="cn">Pacman</span> inherit from this class we can remove all of these methods from the Pacman class.  We'll get to that later.  Right now I shouldn't have to explain what all of these methods do since there isn't anything new here.</p>
-      </div>
+      </div><!--End of pseudoCode-->
       <div class="codeText">
 	<code>
 	  import pygame<br>
@@ -157,20 +155,211 @@
 	    </div>
 	  </div>
 	</code>
-      </div>
+      </div><!--End of codeText-->
+    </div><!--End of container-->
+    
+    <div class="container">
+      <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
+      <p>Since we created this <span class="cn">MazeMouse</span> class we are going to have Pacman inherit from it.  By inheriting we're saying that <span class="cn">Pacman</span> is a <span class="cn">MazeMouse</span>.  Anything that <span class="cn">MazeMouse</span> can do, <span class="cn">Pacman</span> can do to.  </p>
+
+      <div class="pseudoCode">
+	<p>In order to inherit from <span class="cn">MazeMouse</span> we need to import it first.  Then when creating the class instead of saying <span class="mn">object</span> which is the generic class all classes inherit from, we'll say <span class="cn">MazeMouse</span>.  Then in the <span class="mn">__init__</span> method we need to call <span class="cn">MazeMouses</span> <span class="mn">__init__</span> as well.  This way, any variables or methods that are defined inside of <span class="cn">MazeMouse</span> are useable by <span class="cn">Pacman</span>.  What's nice about this is that since we can put all of the generic stuff inside of <span class="cn">MazeMouse</span> we can focus on what's unique about <span class="cn">Pacman</span>.  So we can actually go ahead and delete anything in <span class="cn">Pacman</span> that we moved over to <span class="cn">MazeMouse</span>.  That goes for all of the variables except for <span class="var">name</span> and <span class="var">color</span>.  The methods we can delete are <span class="mn">setPosition</span>, <span class="mn">moveBySelf</span>, <span class="mn">overshotTarget</span>, <span class="mn">reverseDirection</span>, <span class="mn">setNextTarget</span>, <span class="mn">portal</span>, and <span class="mn">render</span>.  When you're finished, the only methods in <span class="cn">Pacman</span> right now are <span class="mn">__init__</span>, <span class="mn">getValidKey</span>, <span class="mn">update</span>, and <span class="mn">moveByKey</span>.  You're probably wondering why we didn't delete the <span class="mn">update</span> method from <span class="cn">Pacman</span>.  After all, <span class="cn">MazeMouse</span> has an <span class="mn">update</span> method as well.  That's fine, if we have a method in the <span class="cn">Pacman</span> class that has the same name in the <span class="cn">MazeMouse</span> class, then the method in the <span class="cn">Pacman</span> class will override the one in the <span class="cn">MazeMouse</span> class.  If you go ahead and run the game you shouldn't notice any difference.  That's good, there shouldn't be any difference, if there is then we messed up somewhere.  </p>
+      </div><!--End of pseudoCode-->
+
+      <div class="codeText">
+	<code>
+	  from entities import MazeMouse<br><br>
+	  class Pacman(MazeMouse):
+	  <div class="tabLeft">
+	    def __init__(self, nodes):
+	    <div class="tabLeft">
+	      MazeMouse.__init__(self, nodes)<br>
+	      self.name = "pacman"<br>
+	      self.color = YELLOW
+	    </div>
+	  </div>
+	</code>
+      </div><!--End of codeText-->
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Create a new file called <span class="filenames">ghosts.py</span></h3>
+      <h4>Create a new class called <span class="cn">Ghost</span></h4>
+      <p>Alright, now we can get into what this section is all about finally.  We're going to create a new file and within that file create a new class for the ghosts to use.  Like I said before, after we do this we're only going to create one instance of the <span class="cn">Ghost</span> class.  I know it will be tempting to create all four, but let's just keep things simple and focus on one ghost for now.</p>
       <hr/>
-      
+
+      <div class="pseudoCode">
+	<p>So this class isn't that exciting yet.  It basically doesn't do anything the <span class="cn">MazeMouse</span> can't do yet.  But we'll add to it in a bit.</p>
+      </div><!--End of pseudoCode-->
+
+      <div class="codeText">
+	<code>
+	  import pygame<br>
+	  from entities import MazeMouse<br>
+	  from constants import *<br>
+	  from vectors import Vector2D<br><br>
+	  class Ghost(MazeMouse):
+	  <div class="tabLeft">
+	    def __init__(self, nodes):
+	    <div class="tabLeft">
+	      MazeMouse.__init__(self, nodes)<br>
+	      self.name = "ghost"
+	    </div>
+	  </div>
+	</code>
+      </div><!--End of codeText-->
     </div><!--End of container-->
 
 
-
     <div class="container">
+      <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
+      <div class="pseudoCode">
+	<p>Firs off, get rid of all of the <span class="cn">MazeMouse</span> references if there are any here.  So in order to use the <span class="cn">Ghost</span> class that we just made, we need to import it, then create an instance of it.  We'll call the instance a generic ghost name like "ghost".  Then we call it's <span class="mn">update</span> and <span class="mn">render</span> methods.  Again, if you were to run this then you wouldn't notice any changes.  That is you wouldn't notice anything different if you created a <span class"cn">MazeMouse</span> instance before.  All you should see is a white circle in the upper left corner just sitting there.  Pacman should be behind it since we're drawing the <span class"cn">Ghost</span> in front of <span class="cn">Pacman</span>.  We want to have the ghost move around the maze on its own, so lets do that.</p>
+      </div><!--End of pseudoCode-->
+
+      <div class="codeText">
+	<code>
+	  from ghosts import Ghost
+	  <p>...</p>
+	  def startGame(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.ghost = Ghost(self.nodes.nodeList)<br><br>
+	  </div>
+
+	  def update(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.ghost.update(dt)<br>
+	    self.checkEvents()<br>
+	    self.render()<br><br>
+	  </div>
+
+	  def render(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.ghost.render(self.screen)<br>
+	    pygame.display.update()
+	  </div>
+	</code>
+      </div><!--End of codeText-->
     </div><!--End of the code container-->
     
+    <div class="container">
+      
+      <h3>Modify the <span class="cn">Ghost</span> class</h3>
+      <div class="pseudoCode">
+      <p>We're going to make the ghost move around the maze randomly at first.  This is the easiest way to make the ghost move around by itself.  We'll actually use it in part of the game, so let's learn how to do it now.  We need to first import a random generator.  Python has one built in, so we'll use that.  We need to make two brand new methods called callsed <span class="cn">getValidDirections</span> and <span class="mn">randomDirection</span>.  The <span class="mn">getValidDirections</span> method will build a list of directions that the ghost can travel in and return that list to whoever is calling it.  We'll expand on this when we add more restrictions to the directions the ghosts can travel in.  The <span class="mn">randomDirection</span> just gets a random direction to move in by first getting a list of valid directions then randomly choosing one.  We'll also override the default <span class="mn">moveBySelf</span> method.  We don't ever have to worry about the ghost stopping, as it can never stop once the game starts.  It will always move in a new direction when reaching a node, or in the same direction.</p>
+      </div><!--End of pseudocode-->
+      
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  from random import randint<br><br>
+	  def __init__(self, nodes):
+	  <div class="tabLeft">
+	    self.name = "ghost"<br><br>
+	  </div>
+	  
+	  def getValidDirections(self):
+	  <div class="tabLeft">
+	    validDirections = []<br>
+	    for key in self.node.neighbors.keys():
+	    <div class="tabLeft">
+	      if self.node.neighbors[key] is not None:
+	      <div class="tabLeft">
+		validDirections.append(key)
+	      </div>
+	    </div>
+	    return validDirections<br><br>
+	  </div>
+
+	  def randomDirection(self, validDirections):
+	  <div class="tabLeft">
+	    index = randint(0, len(validDirections) - 1)<br>
+	    return validDirections[index]<br><br>
+	  </div>
+
+	  def moveBySelf(self):
+	  <div class="tabLeft">
+	    if self.overshotTarget():
+	    <div class="tabLeft">
+	      self.node = self.target<br>
+	      self.portal()<br>
+	      validDirections = self.getValidDirections()<br>
+	      self.direction = self.randomDirection(validDirections)<br>
+	      self.target = self.node.neighbors[self.direction]<br>
+	      self.setPosition()
+	    </div>
+	  </div>
+	</code>
+      </div><!--End of codeText-->
+    </div><!--End of the container-->
+
+    <div class="container">
+      <h3>Modify the <span class="cn">Ghost</span> class</h3>
+      <h4>Modify the <span class="mn">getValidDirections</span></h4>
+      <p>Remember at the start of this section we made a list of how the ghosts can and can't move around the maze?  Well, one of the restrictions we listed was that the ghosts can't backtrack when they reach a node.  Right now they can, so we need to modify the <span class="mn">getValidDirections</span> method to filter those directions out.</p>
+      <div class="pseudoCode">
+	<p>When we're getting the list of valid directions we need to add an extra check to make sure that we remove the direction we just came from so we don't backtrack.  What happens if we're left with no directions then?  There is only one instance where this can possibly happen.  I'll explain it when we get there, but just in case we're left with no directions then we can force the ghost to backtrack since that's the only direction he can move in when this situation occurs.  We know that's the only direction he can move in since that's how he got to where he is in the first place.</p>
+      </div><!--End of pseudoCode-->
+      <div class="codeText">
+	<code>
+	  def getValidDirections(self):
+	  <div class="tabLeft">
+	    validDirections = []<br>
+	    for key in self.node.neighbors.keys():
+	    <div class="tabLeft">
+	      if self.node.neighbors[key] is not None:
+	      <div class="tabLeft">
+		if not key == self.direction * -1:
+		<div class="tabLeft">
+		  validDirections.append(key)
+		</div>
+	      </div>
+	    </div>
+	    if len(validDirections) == 0:
+	    <div class="tabLeft">
+	      validDirections.append(self.forceBacktrack())
+	    </div>
+	    return validDirections
+	  </div>
+	</code>
+      </div><!--End of codeText-->
+      <hr/>
+
+      <h4>Create a new method called <span class="mn">forceBacktrack</span></h4>
+      <div class="pseudoCode">
+	<p>I know that I said that the ghosts can never backtrack, but there will be occasions when we need to force them to backtrack.  We're not going to run into those situations yet, but we're going to be prepared for them.  There's actually only one situation where we need to force them to backtrack, and I'll mention it when we get there.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def forceBacktrack(self):
+	  <div class="tabLeft">
+	    if self.direction * -1 == UP:
+	    <div class="tabLeft">
+	      return UP
+	    </div>
+	    if self.direction * -1 == DOWN:
+	    <div class="tabLeft">
+	      return DOWN
+	    </div>
+	    if self.direction * -1 == LEFT:
+	    <div class="tabLeft">
+	      return LEFT
+	    </div>
+	    if self.direction * -1 == RIGHT:
+	    <div class="tabLeft">
+	      return RIGHT
+	    </div>
+	  </div>
+	</code>
+      </div>
+    </div><!--End of container-->
     
     <div class="container">  
       <h3>Conclusion</h3>
-      <p></p>
+      <p>Try running the program now.  You'll notice that the ghost moves around the maze by itself, and it will never backtrack or double-back on itself.  This is a good first step in understanding how the ghosts move around the maze.  Again, we're only dealing with one ghost for now.  One issue is that the ghost currently moves around in random directions.  There are a lot of clones out there that will just stop here and figure that this is good enough.  However, in the original Pacman game you know that the ghosts didnt' move around randomly.  They were actually trying to get you!  We need to instill some kind of AI into our ghosts.  In the next section we'll deal with that and we'll also deal with the different modes the ghosts can be in and what that means.</p>
     </div> <!--End of the conclusion container-->
     <hr />
 
@@ -180,8 +369,11 @@
 	<li>Pacman</li>
 	<ul>
 	  <li>constants.py</li>
+	  <li>entities.py</li>
 	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
 	  <li>maze1.txt</li>
+	  <li>nodes.py</li>
 	  <li>pacman.py</li>
 	  <li>stacks.py</li>
 	  <li>vectors.py</li>

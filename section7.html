@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 7: Giving the Ghosts AI</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>Right now we have one ghost that moves around the maze in a random fashion.  This is fine, but we actually want to give the ghosts some sort of intelligence.  The main secret behind this is that we just need to give the ghosts a goal to reach.  The goal that we want the ghosts to reach is just a (x, y) position.  It doesn't even have to be reachable, and usually it won't be reachable.  Let's give our ghost a goal to reach to see how this works.</p>
+    </div><!--End of Setup container-->
+
+
+    <div class="container">
+      <h3>Modify the <span class="cn">Ghost</span> class</h3>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to add a goal vector to the <span class="cn">Ghost</span> class.  Right now we'll set the goal to be the origin of the screen.  This is unreachable, but that shouldn't matter.</p>
+      </div><!--End of pseudoCode-->
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.goal = Vector2D()
+	  </div>
+	</code>
+      </div><!--End of codeText-->
+      <hr/>
+      
+      <h4>Create a new method called <span class="mn">getClosestDirection</span></h4>
+      <div class="pseudoCode">
+	<p>It is easiest to understand what this method does by referring to the images on the right.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def getClosestDirection(self, validDirections):
+	  <div class="tabLeft">
+	    distances = []<br>
+	    for key in validDirections:
+	    <div class="tabLeft">
+	      diffVec = self.node.position + key*WIDTH - self.goal<br>
+	      distances.append(diffVec.magnitudeSquared())
+	    </div>
+	    return distances.index(min(distances))
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <h4>Modify the <span class="mn">moveBySelf</span> method</h4>
+      <div class="pseudoCode">
+	<p>Here we just need to get rid of the call to the <span class="mn">randomDirection</span> method and replace it with the call to the <span class="mn">getClosestDirection</span> method.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def moveBySelf(self):
+	  <div class="tabLeft">
+	    if self.overshotTarget():
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.direction = self.getClosestDirection(validDirections)<br>
+	      self.target = self.node.neighbors[self.direction]<br>
+	      self.setPosition()
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <p>What you should see after you do this is the ghost moving around in a circle in the upper left corner.  This is because the ghost is basically trying to reach the screen origin which is the upper left corner of the screen, but can't because of the restrictions we've placed on it.  Remember that it can't ever STOP during the game, so it has to choose a target every time it reaches a node, even if that target takes it further from the goal.  But if it is able to choose a target that takes it closer to the goal, it will.  What's nice about this is that we can give it any position on or off the screen and it will traverse the maze on its own trying to get to that position.  This is the heart behind the ghosts AI.  Next we need to understand something called Modes.  This will give our ghosts AI more sophistication.</p>
+    </div><!--End of container-->
+    
+    <div class="container">
+      <h3>Setting up the Modes for the Ghosts</h3>
+      <p>During the game, the ghosts are always in one of four different modes or states.  The main difference between the modes is the goal the ghost is trying to reach.  So, during the course of the game, we periodically change the ghost's modes which changes it's goals.  I'll explain more about this in a bit, but for now here are the four different modes and their general description:
+      <dl>
+	<dt>Scatter:</dt>
+	<dd>This mode tells the ghosts to scatter to one of the four corners of the maze.  Each ghost has their own corner and I'll explain what they are when we start talking about the individual ghosts.  For now the corner we'll have our one ghost scatter to is the top left corner.</dd>
+	<dt>Chase:</dt>
+	<dd>This, like the scatter mode, is different for all of the ghosts.  I'll explain this in much more detail when we talk about the individual ghosts.  But, in general, each ghost has a way of tracking Pacman down.  The simplest of these is to just have Pacman's position as the goal.  Doing this will make the ghost follow Pacman wherever he goes like a lost puppy.  This is what we'll use for our test ghost since it's the simplest.</dd>
+	<dt>Freight:</dt>
+	<dd>We don't have to worry about this yet, but when Pacman eats a Power Pellet the ghosts are vulnerable and Pacman is able to eat them.  During this mode the ghosts move around the maze randomly and slower.</dd>
+	<dt>Spawn:</dt>
+	<dd>This is the mode the ghosts are in after Pacman eats them.  In this mode their goal is to get to their spawn location which we haven't defined yet.  They also move much faster in this mode.  </dd>
+      </dl>
+      Right now the two main Modes we need to worry about are Scatter and Chase.  We'll deal with the other modes in a future section.  There are a few other things we need to understand about the Scatter and Chase modes.  When the game first starts, all of the ghosts are in Scatter mode.  Scatter mode only lasts for 7 seconds, then automatically switches to Chase mode.  Chase mode then lasts for 20 seconds before switching back to Scatter mode.  These two modes switch back and forth during the game, however they don't switch indefinetly.  They only switch back and forth four times during a level.  The switches will look like the following:
+      <ol>
+	<li>Scatter 7 seconds</li>
+	<li>Chase 20 seconds</li>
+	<li>Scatter 7 seconds</li>
+	<li>Chase 20 seconds</li>
+	<li>Scatter 7 seconds</li>
+	<li>Chase 20 seconds</li>
+	<li>Scatter 5 seconds</li>
+	<li>Chase for the rest of the level</li>
+      </ol>
+
+      So the ghosts only scatter a maximum of 4 times during any given level.  Let's have our test ghost follow this mode order.  We'll scatter him to the upper left corner of the screen, and during chase mode he'll follow Pacman around the maze.  He can't interact with Pacman yet though, so he may move past Pacman because he can't ever stop, and Pacman can.</p>  
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Make a new class called <span class="cn">Mode</span></h3>
+      <p>We'll make a new class in the <span class="filenames">ghosts.py</span> file called <span class="cn">Mode</span>.  We need to place it before the <span class="cn">Ghost</span> class.</p>
+      
+      <div class="pseudoCode">
+      </div><!--End of pseudoCode-->
+
+      <div class="codeText">
+	<code>
+	  class Mode(object):
+	  <div class="tabLeft">
+	    def __init__(self, name="", time=None, timeLimit=None, speed=100):
+	    <div class="tabLeft">
+	      self.name = name<br>
+	      self.time = time<br>
+	      self.timeLimit = timeLimit<br>
+	      self.speed = speed
+	    </div>
+	  </div>
+	</code>
+      </div><!--End of codeText-->
+    </div><!--End of container-->
+
+    <div class="container">
+      <div class="pseudoCode">
+      </div><!--End of pseudoCode-->
+
+      <div class="codeText">
+	<code>
+	</code>
+      </div><!--End of codeText-->
+    </div><!--End of container-->
+
+    <div class="container">
+      <div class="pseudoCode">
+      </div><!--End of pseudoCode-->
+
+      <div class="codeText">
+	<code>
+	</code>
+      </div><!--End of codeText-->
+    </div><!--End of the code container-->
+    
+    <div class="container">
+      
+      <div class="pseudoCode">
+      </div><!--End of pseudocode-->
+   
+      <div class="codeText">
+	<code>
+	</code>
+      </div><!--End of codeText-->
+    </div><!--End of the container-->
+
+    <div class="container">
+      <div class="pseudoCode">
+      </div><!--End of pseudoCode-->
+      <div class="codeText">
+	<code>
+	</code>
+      </div><!--End of codeText-->
+    </div><!--End of container-->
+    
+    <div class="container">  
+      <h3>Conclusion</h3>
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>maze1.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section6.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section8.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
