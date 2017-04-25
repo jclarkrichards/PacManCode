@@ -59,9 +59,9 @@
 	  def getClosestDirection(self, validDirections):
 	  <div class="tabLeft">
 	    distances = []<br>
-	    for key in validDirections:
+	    for direction in validDirections:
 	    <div class="tabLeft">
-	      diffVec = self.node.position + key*WIDTH - self.goal<br>
+	      diffVec = self.node.position + direction*WIDTH - self.goal<br>
 	      distances.append(diffVec.magnitudeSquared())
 	    </div>
 	    return distances.index(min(distances))
@@ -121,35 +121,135 @@
 
     <div class="container">
       <h3>Make a new class called <span class="cn">Mode</span></h3>
-      <p>We'll make a new class in the <span class="filenames">ghosts.py</span> file called <span class="cn">Mode</span>.  We need to place it before the <span class="cn">Ghost</span> class.</p>
-      
       <div class="pseudoCode">
+	<p>We'll make a new class in the <span class="filenames">ghosts.py</span> file called <span class="cn">Mode</span>.  We need to place it before the <span class="cn">Ghost</span> class.  So when we create an object from the <span class="cn">Mode</span> class we specify the name of the mode, the time in seconds of how long the mode is supposed to last, and the speed that the ghosts need to be in during this mode.  This will actually be a speed multiplier.  So a speedMult of 1 means that the ghosts move at 100% of their max speed.  A speedMult of 0.5 means that they move at 50% of their max speed.  We define the ghosts max speed in the <span class="cn">Ghost</span> class as the speed.</p>
       </div><!--End of pseudoCode-->
 
       <div class="codeText">
 	<code>
 	  class Mode(object):
 	  <div class="tabLeft">
-	    def __init__(self, name="", time=None, timeLimit=None, speed=100):
+	    def __init__(self, name="", time=None, speedMult=1):
 	    <div class="tabLeft">
 	      self.name = name<br>
 	      self.time = time<br>
-	      self.timeLimit = timeLimit<br>
-	      self.speed = speed
+	      self.speedMult = speedMult
 	    </div>
 	  </div>
 	</code>
       </div><!--End of codeText-->
     </div><!--End of container-->
-
+    <hr/>
+    
     <div class="container">
+      <h3>Modify the <span class="cn">Ghost</span> class</h3>
+      <h4>Create a new method called <span class="mn">setupModeStack</span></h4>
       <div class="pseudoCode">
+	<p>It should be apparent by the name of the method that we're going to use a stack to manage the main two modes.  We're only putting these two modes in the stack because these are the only modes that happen at predictable times.  The other two modes are more like interrupt modes.  They'll interrupt the normal flow of the game, and we'll deal with them later.  But for now we'll just assume that these are the only two modes that exist.  These modes happen no matter what we do and we have no control over them.  Notice that the first mode we push to the stack is a CHASE mode and it doesn't have a time associated with it.  Didn't I say before that the first mode should be SCATTER with a time of 7 seconds?  Yes, that is true, but remember that in a stack the first thing you push to it will be the last thing you pop off of it.  So the first mode that we'll pop off when the game starts needs to be the last mode we push to the stack, which is what we have done here.</p>
       </div><!--End of pseudoCode-->
-
+      
       <div class="codeText">
 	<code>
+	  from stack import Stack<br>
+	  <p>...</p>
+	  def setupModeStack(self):
+	  <div class="tabLeft">
+	    modes = Stack()<br>
+	    modes.push(Mode(name="CHASE"))<br>
+	    modes.push(Mode(name="SCATTER", time=5))<br>
+	    modes.push(Mode(name="CHASE", time=20))<br>
+	    modes.push(Mode(name="SCATTER", time=7))<br>
+	    modes.push(Mode(name="CHASE", time=20))<br>
+	    modes.push(Mode(name="SCATTER", time=7))<br>
+	    modes.push(Mode(name="CHASE", time=20))<br>
+	    modes.push(Mode(name="SCATTER", time=7))<br>
+	    return modes
+	  </div>
 	</code>
       </div><!--End of codeText-->
+      <hr/>
+      
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to create a variable to store the mode stack.  We also need a variable that will tell us what mode we are currently in.  This will hold the <span class="cn">Mode</span> object, and we start by popping the first <span class="cn">Mode</span> off of the stack.  Lastly, we'll need a mode timer that just keeps track of the time we've spent in our current mode.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.modeStack = self.setupModeStack()<br>
+	    self.mode = self.modeStack.pop()<br>
+	    self.modeTimer = 0
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Create new methods called <span class="mn">setScatterGoal</span> and <span class="mn">setChaseGoal</span></h4>
+      <div class="pseudoCode">
+	<p>We're going to make two new methods that simply define our scatter and chase vectors.  Notice that our chase vector is pacman's position.  So we'll need to pass in the <span class="cn">Pacman</span> object when our ghost is in the CHASE mode.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def setScatterGoal(self):
+	  <div class="tabLeft">
+	    self.goal = Vector2D()<br><br>
+	  </div>
+	  def setChaseGoal(self, pacman):
+	  <div class="tabLeft">
+	    self.goal = pacman.position
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Create a new method called <span class="mn">modeUpdate</span></h4>
+      <div class="pseudoCode">
+	<p>We need a way to update the mode that the ghosts are in.  We just need to write a method that keeps track of the time that has passed, and then pop off the next mode when it needs to.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def modeUpdate(self, dt):
+	  <div class="tabLeft">
+	    self.modeTimer += dt<br>
+	    if self.mode.time is not None:
+	    <div class="tabLeft">
+	      if self.modeTimer >= self.mode.time:
+	      <div class="tabLeft">
+		self.mode = self.modeStack.pop()<br>
+		self.modeTimer = 0
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">update</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to pass in the <span class="cn">Pacman</span> object so that we can know his position when the ghost is in CHASE mode.  We use the mode's speedMult to modify the ghost's speed.  Then we update the mode the ghost is in if it needs to be updated.  Then based on the mode, right now either CHASE or SCATTER, we set the ghosts goal vector.  When you run this the ghost will start its life by circling around the top left corner of the maze, then it will chase Pacman for a period of time, then go back to the corner, then back chasing Pacman, and so on.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def update(self, dt, pacman):
+	  <div class="tabLeft">
+	    speedMod = self.speed * self.mode.speedMult<br>
+	    self.position += self.direction*speedMod*dt<br>
+	    self.modeUpdate(dt)<br>
+	    if self.mode.name == "CHASE":
+	    <div class="tabLeft">
+	      self.setChaseGoal(pacman)
+	    </div>
+	    elif self.mode.name == "SCATTER":
+	    <div class="tabLeft">
+	      self.setScatterGoal()
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
     </div><!--End of container-->
 
     <div class="container">
