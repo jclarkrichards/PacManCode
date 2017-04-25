@@ -150,7 +150,7 @@
       
       <div class="codeText">
 	<code>
-	  from stack import Stack<br>
+	  from stacks import Stack<br>
 	  <p>...</p>
 	  def setupModeStack(self):
 	  <div class="tabLeft">
@@ -228,7 +228,7 @@
 
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We need to pass in the <span class="cn">Pacman</span> object so that we can know his position when the ghost is in CHASE mode.  We use the mode's speedMult to modify the ghost's speed.  Then we update the mode the ghost is in if it needs to be updated.  Then based on the mode, right now either CHASE or SCATTER, we set the ghosts goal vector.  When you run this the ghost will start its life by circling around the top left corner of the maze, then it will chase Pacman for a period of time, then go back to the corner, then back chasing Pacman, and so on.  </p>
+	<p>We were using the generic <span class="mn">update</span> method before so we'll need to override that method with our own for the <span class="cn">Ghost</span> class.  We need to pass in the <span class="cn">Pacman</span> object so that we can know his position when the ghost is in CHASE mode.  We use the mode's speedMult to modify the ghost's speed.  Then we update the mode the ghost is in if it needs to be updated.  Then based on the mode, right now either CHASE or SCATTER, we set the ghosts goal vector.  When you run this the ghost will start its life by circling around the top left corner of the maze, then it will chase Pacman for a period of time, then go back to the corner, then back chasing Pacman, and so on.  </p>
       </div>
       <div class="codeText">
 	<code>
@@ -245,6 +245,7 @@
 	    <div class="tabLeft">
 	      self.setScatterGoal()
 	    </div>
+	    self.moveBySelf()
 	  </div>
 	</code>
       </div>
@@ -253,38 +254,30 @@
     </div><!--End of container-->
 
     <div class="container">
+      <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
+      <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
+	<p>Finally, we just need to update the <span class"mn">update</span> method in the <span class="cn">GameController</span> class.  The only thing we're changing is the ghost's call to their <span class="mn">update</span> method to include self.pacman.</p>
       </div><!--End of pseudoCode-->
 
       <div class="codeText">
 	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    dt = self.clock.tick(30) / 1000.0<br>
+	    self.pacman.update(dt)<br>
+	    self.ghost.update(dt, self.pacman)<br>
+	    self.checkEvents()<br>
+	    self.render()
+	  </div>
 	</code>
       </div><!--End of codeText-->
     </div><!--End of the code container-->
     
-    <div class="container">
-      
-      <div class="pseudoCode">
-      </div><!--End of pseudocode-->
-   
-      <div class="codeText">
-	<code>
-	</code>
-      </div><!--End of codeText-->
-    </div><!--End of the container-->
-
-    <div class="container">
-      <div class="pseudoCode">
-      </div><!--End of pseudoCode-->
-      <div class="codeText">
-	<code>
-	</code>
-      </div><!--End of codeText-->
-    </div><!--End of container-->
     
     <div class="container">  
       <h3>Conclusion</h3>
-
+      <p>In this section we gave our ghost a bit more of a personality than it previously had.  Instead of just sitting around doing nothing it actually moves around on its own.  Not only that but it will periodically chase Pacman around the maze and then retreat to its corner by flipping back and forth between SCATTER and CHASE modes.  We still need to deal with the othe two modes:  FREIGHT and SPAWN.  But before we can deal with that we need to put some pellets on the screen.  After all, the ghosts can't go into FREIGHT mode if there aren't any power pellets for Pacman to eat.  So in the next section we'll figure out how to put the pellets in the maze.  Should be an easy section, right?</p>
     </div> <!--End of the conclusion container-->
     <hr />
 
