@@ -29,98 +29,97 @@
     <h2>Section 9: Interacting with the Pellets</h2>
     <div class="container">
       <h3>Setup</h3>
-
+      <p>Now that we have all of these pellets in the maze we need a way for Pacman to eat them.  It wouldn't be much of a Pacman game if he wasn't able to eat the pellets.  In order to get Pacman to eat the pellets we need to know when Pacman comes into contact with the pellets.  Looking at the image on the right, if we have two circles, then it's easy to know when they collide.  The two circles in our case is Pacman and any pellet.  If the two circles are touching each other then the distance between them is equal to their radii added together.  If the circles are overlapping, then the distance between them is less than their radii added together.  If the distance between them is greater than their summed radii, as in the bottom part of the image, then they are not colliding.  So, basically, all we need to know is if the distance between Pacman and any pellet is less than the sum of their radii.  This is probably the simplest form of collision detection.  </p>
 
     </div><!--End of Setup container-->
 
 
     <div class="container">
-
+      <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
+      <h4>Make a new method alled <span class="mn">eatPellets</span></h4>
       <div class="pseudoCode">
-
+	<p>Since Pacman is the one who eats the pellets, we'll add a method in the <span class="cn">Pacman</span> class that takes care of the pellet eating.  We pass in the list of pellets so that we can loop through them until we come across with a pellet that Pacman is colliding with.  Once we detect that Pacman is colliding with a pellet we just return the pellet to whoever was requestingthis, otherwise we return <span class="py">None</span> if Pacman is not colliding with any pellets.  Notice that we get the square of the distnaces to avoid taking a square root.  But why are we using the pellet's radius twice when getting the sum of the two radii?  We can use whatever radius we want, depending on when we want to detet the collision.  We want to make it look like Pacman is eating the pellet so we don't want to detect a collision until Pacman is already overlapping the pellet rather than have him detect a pellet as soon as he touches one.  Why do we just return the pellet instead of deleting it?  We will delete it, but we first need to extract some information from it that Pacman doesn't need to concern himself with.  We'll deal with that in the next part below.</p>
+	
       </div><!--End of pseudoCode-->
       <div class="codeText">
 	<code>
+	  def eatPellets(self, pelletList):
+	  <div class="tabLeft">
+	    for pellet in pelletList:
+	    <div class="tabLeft">
+	      d = self.position - pellet.position<br>
+	      dSquared = d.magnitudeSquared()<br>
+	      rSquared = (pellet.radius + pellet.radius)**2<br>
+	      if dSquared <= rSquared:
+			     <div class="tabLeft">
+			       return pellet
+			     </div>
+			     return None
+			     
+			     
+	    </div>
+	  </div>
 	</code>
       </div><!--End of codeText-->
     </div><!--End of container-->
     <hr/>
-
-    <div class="container">
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-
-    </div><!--End of container-->
     
     <div class="container">
-
+      <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-
-      </div><!--End of pseudoCode-->
+	<p>The only thing that we're adding here is the <span class="var">score</span> variable.  We'll use this from now on to keep track of our score during the game.</p>
+      </div>
       <div class="codeText">
 	<code>
-
+	  def __init__(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.score = 0
+	  </div>
 	</code>
-      </div><!--End of codeText-->
+      </div>
+      <hr/>
+      <h4>Make a new method named <span class="mn">checkPelletDrivenEvents</span></h4>
+      <div class="pseudoCode">
+	<p>It's important to keep track of the pellet events.  What do I mean by pellet events?  Well, eating the pellets has a lot of consequences.  For starters, eating pellets increases our score, eating all of the pellets ends the level, and eating power pellets causes the ghosts to go into FREIGHT mode (which we haven't programmed yet).  We'll use the pellets and the number of pellets we've eaten for other things as well.  So I figured that it deserved it's own method since keeping track of the pellets is really important in Pacman.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletDrivenEvents(self):
+	  <div class="tabLeft">
+	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
+	    if pellet:
+	    <div class="tabLeft">
+	      self.score += pellet.value<br>
+	      self.pellets.pelletList.remove(pellet)
+	    </div>
+	  </div>
+	</code>
+      </div>
       <hr/>
 
-
+      <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-
-      </div><!--End of pseudoCode-->
+	<p>We just call the method we just created at some point in this method.  </p>
+      </div>
       <div class="codeText">
 	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    dt = self.clock.tick(30) / 1000.0<br>
+	    self.checkPelletDrivenEvents()
+	    <p>...</p>
+	  </div>
 	</code>
-      </div><!--End of codeText-->
-
-
-
+      </div>
     </div><!--End of container-->
-    <hr/>
     
-    <div class="container">
-      <div class="pseudoCode">
-	<p></p>
-      </div><!--End of pseudoCode-->
-      
-      <div class="codeText">
-	<code>
-	</code>
-      </div><!--End of codeText-->
-      <hr/>
-       
-    </div><!--End of container-->
-
     
     
     <div class="container">  
       <h3>Conclusion</h3>
-      <p></p>
+      <p>Well this was a short section.  It's nice to have short easy sections every now and then.  Especially since the next session is going to be a bit longer and harder.  Now that Pacman can eat the pellets we need to get the ghost to react when he eats a power pellet.  So we'll need to add in the FREIGHT mode, make Pacman collide with the ghost, and add in the SPAWN mode and a spawn point for the ghost.  We'll discuss it in the next section in more detail.</p>
     </div> <!--End of the conclusion container-->
     <hr />
 

@@ -161,6 +161,11 @@
 	      self.pelletList = []<br>
 	      self.createPelletList(levelFile)<br><br>
 	    </div>
+	    def isEmpty(self):
+	    <div class="tabLeft">
+	      if len(self.pelletList) == 0: return True<br>
+	      else: return False
+	    </div>
 	    def createPelletList(self, levelFile):
 	    <div class="tabLeft">
 	      grid = loadtxt(levelFile, dtype=str)<br>
