@@ -34,41 +34,104 @@
 
 
     <div class="container">
-      <div class="pseudoCode">
-	<h3>FREIGHT Mode Overview</h3>
-	<p>The ghosts currently have two modes that they can be in:  CHASE or SCATTER.  These modes have timers and switch back and forth when their timers expire.  We controlled this by putting them in a stack since the number of times the ghosts switch between the modes is set and doesn't change from level to level.  FREIGHT mode, however, is a mode that can happen at any time.  Well, it can only happen four times during a level since there are only four power pellets.  This is what I like to call an interrupt mode.  When Pacman eats a power pellet the ghosts can be in either SCATTER or CHASE mode.  When this happens we force all of the ghosts into FREIGHT mode whether they are in SCATTER or CHASE mode.  FREIGHT mode also has a timer and initially only lasts for 7 seconds.  This timer decreases as the levels increase to the point where it's practically non-existant.  In our game though, it will never drop below 1 second.  When the timer for FREIGHT mode expires the ghosts return back to the mode they were in prior to being forced into FREIGHT mode and continue that mode with the remaining time they had.  For example, if a ghost is in CHASE mode and has been in CHASE mode for 5 seconds prior to being forced into FREIGHT mode, then when the FREIGHT mode timer expires the ghost will return to CHASE mode with 15 seconds remaining since CHASE mode is 20 seconds long.  Being forced into FREIGHT mode basically just pauses the mode they are in and resumes where it left off when it is finished.  Also, in FREIGHT mode, the ghosts move a lot slower.  They move about 50% of their maximum speed and they choose directions randomly so they don't have a particular goal that they're trying to reach.  It's almost as if they are dazed and confused.  Right now this is all we want to program into our game, so lets get to it.</p>
-      </div><!--End of pseudoCode-->
-      <div class="codeText">
-	<code>
-	</code>
-      </div><!--End of codeText-->
+      <h3>FREIGHT Mode Overview</h3>
+      <p>The ghosts currently have two modes that they can be in:  CHASE or SCATTER.  These modes have timers and switch back and forth when their timers expire.  We controlled this by putting them in a stack since the number of times the ghosts switch between the modes is set and doesn't change from level to level.  FREIGHT mode, however, is a mode that can happen at any time.  Well, it can only happen four times during a level since there are only four power pellets.  This is what I like to call an interrupt mode.  When Pacman eats a power pellet the ghosts can be in either SCATTER or CHASE mode.  When this happens we force all of the ghosts into FREIGHT mode whether they are in SCATTER or CHASE mode.  FREIGHT mode also has a timer and initially only lasts for 7 seconds.  This timer decreases as the levels increase to the point where it's practically non-existant.  In our game though, it will never drop below 1 second.  When the timer for FREIGHT mode expires the ghosts return back to the mode they were in prior to being forced into FREIGHT mode and continue that mode with the remaining time they had.  For example, if a ghost is in CHASE mode and has been in CHASE mode for 5 seconds prior to being forced into FREIGHT mode, then when the FREIGHT mode timer expires the ghost will return to CHASE mode with 15 seconds remaining since CHASE mode is 20 seconds long.  Being forced into FREIGHT mode basically just pauses the mode they are in and resumes where it left off when it is finished.  Also, in FREIGHT mode, the ghosts move a lot slower.  They move about 50% of their maximum speed and they choose directions randomly so they don't have a particular goal that they're trying to reach.  It's almost as if they are dazed and confused.  Right now this is all we want to program into our game, so lets get to it.</p>
+      <p>The idea is that we first need to determine when Pacman eats a power pellet.  That's easy because he can now eat pellets and we can know what pellet he just ate by the <span class="var">name</span> variable of the pellet he just ate.  So when that happens we need to tell the ghosts to drop what they are doing and go into FREIGHT mode.  We do that by simply pushing the mode they are currently in back to the stack with the remaining time left in that mode.  Then we create a new mode called FREIGHT with a 7 second time limit and a 50% speed reduction, and make that their current mode.  We also need to tell the ghosts to move around randomly while in this mode.</p>
     </div><!--End of container-->
     <hr/>
     
     <div class="container">
+      <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
+      <h4>Modify the <span class="mn">checkPelletDrivenEvents</span> method</h4>
       <div class="pseudoCode">
-
+	<p>Here we just check to see if the pellet we just ate happened to be a power pellet.  If it is then we tell the ghost to go into FREIGHT mode.  If it isn't then we do nothing different.  The last two lines here are the new lines.</p>
       </div>
       <div class="codeText">
 	<code>
+	  def checkPelletDrivenEvents(self):
+	  <div class="tabLeft">
+	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
+	    if pellet:
+	    <div class="tabLeft">
+	      self.score += pellet.value<br>
+	      self.pellets.pelletList.remove(pellet)<br>
+	      if pellet.name == "powerpellet":
+	      <div class="tabLeft">
+		self.ghost.setFreightMode()
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+    </div><!--End of container-->
+      
+    <div class="container">
+      <h3>Modify the <span class="filenames">ghosts.py</span> file</h3>
+      <h4>Create a new method called <span class="mn">setFreightMode</span></h4>
+      <div class="pseudoCode">
+	<p>We first check to see if the ghost is already in FREIGHT mode.  If he is not already in FREIGHT mode, then we check to see if the mode he is in has a time limit.  Remember that not all modes will have a time limit.  For example, the last CHASE mode doesn't have a timer associated with it, so we need to make sure we have that in mind.  If there is a timer associated with the mode the ghost is currently in, then we find the remaining time and then push that same mode back to the stack with the remaining time.  If there isn't a timer associated with the mode the ghost is currently in, then we can just push the same mode back to the stack.  We then create a new mode called <span class="str">"FREIGHT"</span> and set the timer and speed multiplier, and force that as the ghosts current mode.  Don't forget to reset the <span class="var">modeTimer</span> back to 0.  If the ghost is already in FREIGHT mode (which we need to assume can happen), then we just need to start that mode over again and reset the <span class="var">modeTimer</span> back to 0.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def setFreightMode(self):
+	  <div class="tabLeft">
+	    if self.mode.name != "FREIGHT":
+	    <div class="tabLeft">
+	      if self.mode.time is not None:
+	      <div class="tabLeft">
+		dt = self.mode.time - self.modeTimer<br>
+		self.modeStack.push(Mode(name=self.mode.name, time=dt))
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		self.modeStack.push(Mode(name=self.mode.name))
+	      </div>
+	      self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
+	      self.modeTimer = 0
+	    </div>
+	    elif self.mode.name == "FREIGHT":
+	    <div class="tabLeft">
+	      self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
+	      self.modeTimer = 0
+	    </div>
+	  </div>
+	  
 	</code>
       </div>
       <hr/>
 
+      <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-
+	<p>We want to add this else statement so the ghost knows which goal to go for.  In FREIGHT mode he just goes for some random goal which is just a point picked randomly on the screen.  It should be pretty clear where to put there lines.  In case it isn't you want to place it at the end of the current if...elif block where we're also checking for CHASE and SCATTER.  </p>
       </div>
       <div class="codeText">
 	<code>
+	  def update(self, dt, pacman):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    
+	    elif self.mode.name == "FREIGHT":
+	    <div class="tabLeft">
+	      self.setRandomGoal()
+	    </div>
+	    self.moveBySelf()
+	  </div>
 	</code>
       </div>
+
       <hr/>
-
+      <h4>Create a new method called <span class="mn">setRandomGoal</span></h4>
       <div class="pseudoCode">
-
+	<p>This is pretty straightforward.  We're just picking a random point on the screen and setting that as the ghost's goal.  </p>
       </div>
       <div class="codeText">
 	<code>
+	  def setRandomGoal(self):
+	  <div class="tabLeft">
+	    x = randint(0, NCOLS*WIDTH)<br>
+	    y = randint(0, NROWS*HEIGHT)<br>
+	    self.goal = Vector2D(x, y)
+	  </div>
 	</code>
       </div>
     </div><!--End of container-->
@@ -77,7 +140,7 @@
     
     <div class="container">  
       <h3>Conclusion</h3>
-
+      <p>Really all we did in this section was to get the ghost in a different mode when Pacman eats a power pellet.  It's good because it's a big part of the game, and I was going to continue on with Pacman eating the ghost and the ghost respawning, but then I realized that we don't have a place for the ghost to respawn yet.  We need to give the ghosts a home where they can respawn before we give Pacman the power to eat them.  </p>
     </div> <!--End of the conclusion container-->
     <hr />
 
