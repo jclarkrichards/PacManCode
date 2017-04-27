@@ -29,82 +29,182 @@
     <h2>Section 12: Eat, Spawn, Repeat</h2>
     <div class="container">
       <h3>Setup</h3>
-
+      <p>I think that we are making some good progress.  Now that we have a place for the ghost to respawn we can make Pacman eat the ghost and have the ghost retreat to the ghost home and respawn back into the game.  I just had an idea for a Pacman-like game.  How about 4-player simulataneous play where each player is playing as one of the ghosts, and their goal is to stop the monster that is Pacman from eating their food supply?  That could be a fun spin, I'm not sure if it has been done yet.  Anyways, back to this game.  What we need to do is to get Pacman to collide with the ghost, which will be easy because we've already figured out how to do that with the pellets, so it'll pretty much be the same.  Then, after we detect a collision with the ghost, we need to check to make sure the ghost was in FREIGHT mode or not.  If he was in FREIGHT mode, then we need to change his mode to SPAWN mode.  In SPAWN mode we give him the home we just created as his goal, and set his speed to be faster than his maximum speed, maybe 1.5 or 2 times.  Then when he reaches his spawn point, he just returns back to the mode he was in previous to being in FREIGHT mode.  After a ghost has respawned, we don't return him to FREIGHT mode because a ghost can only be eaten once per power pellet.  Also, a ghost can only enter SPAWN mode if he was first in FREIGHT mode.  I'll provide a drawing of the flow of all of the modes within the game.  </p>
     </div><!--End of Setup container-->
 
 
     <div class="container">
-
+      <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
+      <h4>Create a new method called <span class="mn">eatGhost</span></h4>
       <div class="pseudoCode">
 
       </div>
       <div class="codeText">
 	<code>
-
+	  def eatGhost(self, ghost):
+	  <div class="tabLeft">
+	    d = self.position - ghost.position<br>
+	    dSquared = d.magnitudeSquared()<br>
+	    rSquared = (self.radius + ghost.radius)**2<br>
+	    if dSquared &lt= rSquared:
+	    <div class="tabLeft">
+	      return True
+	    </div>
+	    return False
+	  </div>
 	</code>
       </div>
     </div><!--End of container-->
       
     <div class="container">
-
+      <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
+      <h4>Create a new method called <span class="mn">checkGhostEvents</span></h4>
+      
       <div class="pseudoCode">
 
       </div>
       <div class="codeText">
 	<code>
+	  def checkGhostEvents(self):
+	  <div class="tabLeft">
+	    if self.pacman.eatGhost(self.ghost):
+	    <div class="tabLeft">
+	      if self.ghost.mode.name == "FREIGHT":
+	      <div class="tabLeft">
+		self.ghost.setRespawnMode()
+	      </div>
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
+
       
 
-
+      <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
 
       </div>
       <div class="codeText">
 	<code>
-	</code>
-      </div>
-      <hr/>
-
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    dt = self.clock.tick(30) / 1000.0<br>
+	    self.checkGhostEvents()
+	    <p>...</p>
+	  </div>
 	</code>
       </div>
     </div><!--End of container-->
 
     <div class="container">
-
+      <h3>Modify the <span class="filenames">ghost.py</span> file</h3>
+      <h4>Create a new method called <span class="mn">setRespawnMode</span></h4>
       <div class="pseudoCode">
 
       </div>
       <div class="codeText">
 	<code>
-
+	  def setRespawnMode(self):
+	  <div class="tabLeft">
+	    self.mode = Mode("SPAWN", speedMult=2)<br>
+	    self.modeTimer = 0
+	  </div>
 	</code>
       </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">update</span> method</h4>
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	  def update(self, dt, pacman):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    elif self.mode.name == "SPAWN":
+	    <div class="tabLeft">
+	      self.setSpawnGoal()
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Create a new method called <span class="mn">setSpawnGoal</span></h4>
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	  def setSpawnGoal(self):
+	  <div class="tabLeft">
+	    self.goal = Vector2D(216, 272)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+    
+      <h4>Modify the <span class="mn">setFreightMode</span> method</h4>
+      <div class="pseudoCode">
+	
+      </div>
+      <div class="codeText">
+	<code>
+	  def setFreightMode(self):
+	  <div class="tabLeft">
+	    if self.mode.name != "FREIGHT" and self.mode.name != "SPAWN":
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <h4>Modify the <span class="mn">moveBySelf</span> method</h4>
+      <div class="pseudoCode">
+	
+      </div>
+      <div class="codeText">
+	<code>
+	  def moveBySelf(self):
+	  <div class="tabLeft">
+	    if self.overshotTarget():
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if self.mode.name == "SPAWN":
+	      <div class="tabLeft">
+		if self.position == self.goal:
+		<div class="tabLeft">
+		  self.mode = self.modeStack.pop()
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Defining the Spawn Node</h3>
+      
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+      </div>
+      <hr/>
     </div><!--End of container-->
     
     
