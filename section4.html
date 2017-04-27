@@ -69,7 +69,7 @@ With using only these symbols I should be able to generate a text file of any si
 	    <span class="kw">self</span>.nodeList = []<br>
 	    <span class="kw">self</span>.grid = <span class="py">None</span><br>
 	    <span class="kw">self</span>.nodeStack = Stack()<br>
-	    <span class="kw">self</span>.<span class="mn">createNodeList</span>()
+	    <span class="kw">self</span>.<span class="mn">createNodeList</span>(mazeFile, self.nodeList)
 	  </div>
 	</code>
       </div><!--End of codeText-->
@@ -81,29 +81,29 @@ With using only these symbols I should be able to generate a text file of any si
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">def</span> <span class="mn">createNodeList</span>(<span class="kw">self</span>):
+	  <span class="kw">def</span> <span class="mn">createNodeList</span>(<span class="kw">self</span>, textFile, nodeList):
 	  <div class="tabLeft">
-	    <span class="kw">self</span>.grid = loadtxt(<span class="kw">self</span>.mazeFile, dtype=<span class="kw">str</span>)<br>
+	    <span class="kw">self</span>.grid = loadtxt(textFile, dtype=<span class="kw">str</span>)<br>
 	    <span class="var">startNode</span> = <span class="kw">self</span>.<span class="mn">findFirstNode</span>(*<span class="kw">self</span>.grid.shape)<br>
 	    <span class="kw">self</span>.nodeStack.<span class="mn">push</span>(startNode)<br>
 	    <span class="kw">while not self</span>.nodeStack.<span class="mn">isEmpty</span>():
 	    <div class="tabLeft">
 	      <span class="var">node</span> = <span class="kw">self</span>.nodeStack.<span class="mn">pop</span>()<br>
 	      <span class="kw">self</span>.<span class="mn">addNode</span>(node)<br>
-	      <span class="var">leftNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(LEFT, node.row, node.column-1)<br>
-	      <span class="var">rightNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(RIGHT, node.row, node.column+1)<br>
-	      <span class="var">upNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(UP, node.row-1, node.column)<br>
-	      <span class="var">downNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(DOWN, node.row+1, node.column)<br>
+	      <span class="var">leftNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(LEFT, node.row, node.column-1, nodeList)<br>
+	      <span class="var">rightNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(RIGHT, node.row, node.column+1, nodeList)<br>
+	      <span class="var">upNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(UP, node.row-1, node.column, nodeList)<br>
+	      <span class="var">downNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(DOWN, node.row+1, node.column, nodeList)<br>
 	      
 	      node.neighbors[LEFT] = leftNode<br>
 	      node.neighbors[RIGHT] = rightNode<br>
 	      node.neighbors[UP] = upNode<br>
 	      node.neighbors[DOWN] = downNode<br>
 
-	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(leftNode)<br>
-	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(rightNode)<br>
-	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(upNode)<br>
-	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(downNode)<br>
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(leftNode, nodeList)<br>
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(rightNode, nodeList)<br>
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(upNode, nodeList)<br>
+	      <span class="kw">self</span>.<span class="mn">addNodeToStack</span>(downNode, nodeList)<br>
 	      
 	    </div>
 	  </div>
@@ -118,9 +118,9 @@ With using only these symbols I should be able to generate a text file of any si
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">def</span> <span class="mn">getNode</span>(<span class="kw">self</span>, x, y):
+	  <span class="kw">def</span> <span class="mn">getNode</span>(<span class="kw">self</span>, x, y, nodeList=[]):
 	  <div class="tabLeft">
-	    <span class="kw">for</span> node <span class="kw">in self</span>.nodeList:
+	    <span class="kw">for</span> node <span class="kw">in</span> nodeList:
 	    <div class="tabLeft">
 	      <span class="kw">if</span> node.position.x == x <span class="kw">and</span> node.position.y == y:
 	      <div class="tabLeft">
@@ -139,11 +139,11 @@ With using only these symbols I should be able to generate a text file of any si
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">def</span> <span class="mn">getNodeFromNode</span>(<span class="kw">self</span>, node):
+	  <span class="kw">def</span> <span class="mn">getNodeFromNode</span>(<span class="kw">self</span>, node, nodeList):
 	  <div class="tabLeft">
 	    <span class="kw">if</span> node <span class="kw">is not</span> <span class="py">None</span>:
 	    <div class="tabLeft">
-	      <span class="kw">for</span> inode <span class="kw">in self</span>.nodeList:
+	      <span class="kw">for</span> inode <span class="kw">in</span> nodeList:
 	      <div class="tabLeft">
 		<span class="kw">if</span> node.row == inode.row <span class="kw">and</span> node.column == inode.column:
 		<div class="tabLeft">
@@ -163,10 +163,10 @@ With using only these symbols I should be able to generate a text file of any si
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">def</span> <span class="mn">getPathNode</span>(<span class="kw">self</span>, direction, row, col):
+	  <span class="kw">def</span> <span class="mn">getPathNode</span>(<span class="kw">self</span>, direction, row, col, nodeList):
 	  <div class="tabLeft">
 	    <span class="var">tempNode</span> = <span class="kw">self</span>.<span class="mn">followPath</span>(direction, row, col)<br>
-	    <span class="kw">return self</span>.<span class="mn">getNodeFromNode</span>(tempNode)
+	    <span class="kw">return self</span>.<span class="mn">getNodeFromNode</span>(tempNode, nodeList)
 	  </div>
 	</code>
       </div>
@@ -203,12 +203,12 @@ With using only these symbols I should be able to generate a text file of any si
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">def</span> <span class="mn">addNode</span>(<span class="kw">self</span>, node):
+	  <span class="kw">def</span> <span class="mn">addNode</span>(<span class="kw">self</span>, node, nodeList):
 	  <div class="tabLeft">
-	    <span class="var">nodeInList</span> = <span class="kw">self</span>.<span class="mn">nodeInList</span>(node)<br>
+	    <span class="var">nodeInList</span> = <span class="kw">self</span>.<span class="mn">nodeInList</span>(node, nodeList)<br>
 	    <span class="kw">if not</span> nodeInList:
 	    <div class="tabLeft">
-	      <span class="kw">self</span>.nodeList.append(node)
+	      nodeList.append(node)
 	    </div>
 	  </div>
 	</code>
@@ -221,9 +221,9 @@ With using only these symbols I should be able to generate a text file of any si
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">def</span> <span class="mn">addNodeToStack</span>(<span class="kw">self</span>, node):
+	  <span class="kw">def</span> <span class="mn">addNodeToStack</span>(<span class="kw">self</span>, node, nodeList):
 	  <div class="tabLeft">
-	    <span class="kw">if</span> node <span class="kw">is not</span> <span class="py">None</span> <span class="kw">and not self</span>.<span class="mn">nodeInList</span>(node):
+	    <span class="kw">if</span> node <span class="kw">is not</span> <span class="py">None</span> <span class="kw">and not self</span>.<span class="mn">nodeInList</span>(node, nodeList):
 	    <div class="tabLeft">
 	      <span class="kw">self</span>.nodeStack.<span class="mn">push</span>(node)
 	    </div>
@@ -241,9 +241,9 @@ With using only these symbols I should be able to generate a text file of any si
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">def</span> <span class="mn">nodeInList</span>(<span class="kw">self</span>, node):
+	  <span class="kw">def</span> <span class="mn">nodeInList</span>(<span class="kw">self</span>, node, nodeList):
 	  <div class="tabLeft">
-	    <span class="kw">for</span> inode <span class="kw">in self</span>.nodeList:
+	    <span class="kw">for</span> inode <span class="kw">in</span> nodeList:
 	    <div class="tabLeft">
 	      <span class="kw">if</span> node.position.x == inode.position.x <span class="kw">and</span> node.position.y == inode.position.y:
 	      <div class="tabLeft">
