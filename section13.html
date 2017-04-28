@@ -29,51 +29,230 @@
     <h2>Section 13: Start and End Game States</h2>
     <div class="container">
       <h3>Setup</h3>
-
+      <p>Right now we have Pacman and one ghost moving around the maze.  When the game starts, they are both in the upper left corner of the maze because we defined that node to be their starting node.  That's not where they are actually supposed to start though.  Pacman is supposed to begin the game in the lower middle part of the maze, and the ghost is supposed to start in the ghost home.  Also, it would be nice if the game didn't start automatically, but waited until we were ready.  It would also be nice if we could pause the game at any point.  We should also check when Pacman has eaten all of the pellets and restart the level when he does.  Oh, and if Pacman collides with the ghost while the ghost is not in FREIGHT mode, Pacman should lose a life and have the level restart.  I think that's a good amount of tasks for this section. </p>
     </div><!--End of Setup container-->
 
 
     <div class="container">
-
+      <h3>Define Starting Positions</h3>
+      <p>We want to define the starting positions for Pacman and the ghost.  Pacman starts between two nodes in the lower middle part of the maze.  We have to know which nodes to place him between though.  We're eventually going to modify the <span class="filenames">maze1.txt</span> file to do it for us automatically, but for now we'll just hard-code it in since we currently only have the one maze.  However, we will put the position of Pacman's starting node in the MAZEDATA dictionary since the starting node is level dependent.  All of this applies to the ghost as well.  </p>
+      <hr/>
+      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
       <div class="pseudoCode">
-
+	<p>We're going to rewrite the MAZEDATA dictionary since it was getting kind of long and this breaks it up a bit.  The last line is the new line where we define the starting node for Pacman and the ghost.  For the ghost you'll notice that the starting position is the same as the respawn node.</p>
       </div>
       <div class="codeText">
 	<code>
+	  MAZEDATA = {}<br>
+	  MAZEDATA[0] = {}<br>
+	  MAZEDATA[0]["file"] = "maze1.txt"<br>
+	  MAZEDATA[0]["portal"] ={(0, 17*HEIGHT):(27*WIDTH, 17*HEIGHT)}<br>
+	  MAZEDATA[0]["linkNodes"] = {0:(12*WIDTH, 14*HEIGHT), 1:(15*WIDTH, 14*HEIGHT)}<br>
+	  MAZEDATA[0]["start"] = {"pacman":(15*WIDTH, 26*HEIGHT), "ghost":(216, 272)}
 	</code>
       </div>
+
+      <hr/>
+      <h4>Modify the <span class="filename">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p>Since the starting positions are level dependent, we'll need to pass in the level to pacman and the ghost objects.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def startGame(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.pacman = Pacman(self.nodes, self.level)<br>
+	    self.ghost = Ghost(self.nodes, self.level)
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="filenames">pacman.py</span>, <span class="filenames">ghost.py</span>, and <span class="filenames">entities.py</span> files</h4>
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p>Since we passed in the level to Pacman and the ghost, we'll have to modify their classes and also the <span class="cn">MazeMouse</span> class.  On the right the top part is for the <span class="cn">Pacman</span> and the <span class="cn">Ghost</span> classes and the bottom part is for the <span class="cn">MazeMouse</span> class.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level):
+	  <div class="tabLeft">
+	    MazeMouse.__init__(self, nodes, level)
+	  </div>
+	  <p>...</p>
+	  def __init__(self, nodes, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.level = level
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="filenames">pacman.py</span> file</h4>
+      <h4>Create a new method called <span class="mn">setStartPosition</span></h4>
+      <div class="pseudoCode">
+	<p>When Pacman starts a level or when he restarts a level after losing a life, he starts in the lower middle part of the maze between two nodes as we mentioned before.  His initial direction is also towards the LEFT.  Since his initial direction is to the LEFT, we use that to find his initial target node.  Then we find the halfway point between his node and the target node and place him there.  So when the game starts he will be between these two nodes and moving LEFT.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def setStartPosition(self):
+	  <div class="tabLeft">
+	    self.direction = LEFT<br>
+	    self.node = self.nodes.getNode(*MAZEDATA[self.level]["start"]["pacman"], nodeList=self.nodes.nodeList)<br>
+	    self.target = self.node.neighbors[self.direction]<br>
+	    self.setPosition()<br>
+	    halfway = (self.node.position.x - self.target.position.x) / 2<br>
+	    self.position.x -= halfway
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We'll modify Pacman's <span class="mn">__init__</span> method again by calling the method we just created above.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.setStartPosition()
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="filenames">ghost.py</span> file</h4>
+      <h4>Create a new method called <span class="mn">setStartPosition</span></h4>
+      <div class="pseudoCode">
+	<p>Similar to Pacamn's method we created above, we set the ghost's node, direction, and target.  The initial direction we set for the ghost is UP since he starts in the ghost home.  We want him to immediately move out of the home.  Make sure to use the homeList rather than the nodeList when looking up the node in the first line.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def setStartPosition(self):
+	  <div class="tabLeft">
+	    self.node = self.nodes.getNode(*MAZEDATA[self.level]["start"]["ghost"], nodeList=self.nodes.homeList)<br>
+	    self.direction = UP<br>
+	    self.target = self.node.neighbors[self.direction]<br>
+	    self.setPosition()
+	  
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We'll modify ghost's <span class="mn">__init__</span> method again by calling the method we just created above.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.setStartPosition()
+	  </div>
+	</code>
+      </div>
+
+
     </div><!--End of container-->
       
     <div class="container">
-      
+      <h3>Pausing the Game</h3>
+      <p>Pausing a game isn't that hard of a concept.  We want to draw everything to the screen, we just don't update their positions so the objects appear to remain in a frozen state.  We will control the pausing and unpausing of the game with the spacebar.  It's nice to be able to pause the game, especially when we're developing it.  From the player viewpoint, it's nice to pause in case you need a bathroom break or something distracting is happening.  The original Pacman game didn't have a pause, but players expect to be able to pause their game at any point nowadays.  </p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">startGame</span> file</h4>
       <div class="pseudoCode">
-
+	<p>Add a <span class="var">paused</span> variable and set it to <span class="py">True</span> since we want to start the game with everything paused so that the player can start when he is ready to play.</p>
       </div>
       <div class="codeText">
 	<code>
+	  def startGame(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.paused = True
+	  </div>
 	</code>
       </div>
       <hr/>
 
-      
-
-
+      <h4>Modify the <span class="mn">checkEvents</span> method</h4>
       <div class="pseudoCode">
-
+	<p>Since we're dealing with key presses, we'll check to see if the player has pressed the SPACE key at any point.  If he does then we just flip the paused variable.  So, if the game was paused when he presses the SPACEBAR, the game becomes unpaused.  If the game was unpaused, then the game becomes paused.  Really simple stuff.  </p>
       </div>
       <div class="codeText">
 	<code>
+	  def checkEvents(self):
+	  <div class="tabLeft">
+	    for event in pygame.event.get():
+	    <div class="tabLeft">
+	      if event.type == QUIT:
+	      <div class="tabLeft">
+		exit()
+	      </div>
+	      if event.type == KEYDOWN:
+	      <div class="tabLeft">
+		if event.key == K_SPACE:
+		<div class="tabLeft">
+		  self.paused = not self.paused
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="mn">update</span> method</h4>
+      <div class="pseudoCode">
+	<p>We just check to see if the game is paused or not.  If it is not paused, then it will run as normal.  If it is paused, then we don't update Pacman or the ghost or check for their events.  But we still want to check for key presses and we still want to draw them to the screen.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    dt = self.clock.tick(30)/ 1000.0<br>
+	    if not self.paused:
+	    <div class="tabLeft">
+	      self.checkGhostEvents()<br>
+	      self.checkPelletEvents()<br>
+	      self.pacman.update(dt)
+	      self.ghost.update(dt, self.pacman)
+	    </div>
+	    self.checkEvents()<br>
+	    self.render()
+	  </div>
 	</code>
       </div>
     </div><!--End of container-->
 
     <div class="container">
-
+      <h3>Restarting the Level</h3>
+      <p>There are two cases where we need to restart a level.  The first case is when Pacman eats all of the pellets.  When we have more mazes, then we'll put up different mazes after Pacman completes a level.  But since we only have one maze we just reset the maze and all of the initial starting conditions.  That's how the original Pacman games worked as well.  The second case is when Pacman loses a life by colliding with a ghost that is not in a FREIGHT mode.  When that happens the level is reset with the initial starting conditions, except for the pellets.  In this case we don't reset the pellets, unless you want to make the game really hard and frustrating.</p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
-
+	<p>This is the easy change.  We just need to check if Pacman has eaten all of the pellets.  If the pellet list is empty, then all of the pellets have been eaten and we just call the <span class="mn">startGame</span> method which recreates all of the objects from scratch.</p>
       </div>
       <div class="codeText">
 	<code>
+	  def checkPelletEvents(self):
+	  <div class="tabLeft">
+	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
+	    if pellet:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if self.pellets.isEmpty():
+	      <div class="tabLeft">
+		self.startGame()
+	      </div>
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
@@ -99,7 +278,6 @@
       <hr/>
 
     
-      <h4>Modify the <span class="mn">setFreightMode</span> method</h4>
       <div class="pseudoCode">
 	
       </div>

@@ -37,7 +37,7 @@
       <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
       <h4>Create a new method called <span class="mn">eatGhost</span></h4>
       <div class="pseudoCode">
-
+	<p>This method is similar to the <span class="mn">eatPellets</span> method.  Except in this one we return <span class="py">True</span> if Pacman is colliding with a ghost and <span class="py">False</span> otherwise.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -61,7 +61,7 @@
       <h4>Create a new method called <span class="mn">checkGhostEvents</span></h4>
       
       <div class="pseudoCode">
-
+	<p>This method is similar to the <span class="mn">checkPelletEvents</span> method.  We check if Pacman has collided with the ghost.  If he has collided, then we check to see if the ghost was in FREIGHT mode.  If he was in FREIGHT mode, then we make the ghost respawn.  Normally, if the ghost is not in FREIGHT mode when this happens, then Pacman loses a life, but we don't have that programmed yet.  But when we do get to that, this is where we're going to put it.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -83,7 +83,7 @@
 
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-
+	<p>Just need to make sure we call the method we just created above in the <span class="mn">update</span> method.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -101,7 +101,7 @@
       <h3>Modify the <span class="filenames">ghost.py</span> file</h3>
       <h4>Create a new method called <span class="mn">setRespawnMode</span></h4>
       <div class="pseudoCode">
-
+	<p>To respawn we just make a SPAWN mode and set the modeTimer to 0.  </p>
       </div>
       <div class="codeText">
 	<code>
@@ -116,7 +116,7 @@
 
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-
+	<p>We want to add this to the end of the if...elif block so that we set the spawn goal.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -134,7 +134,7 @@
 
       <h4>Create a new method called <span class="mn">setSpawnGoal</span></h4>
       <div class="pseudoCode">
-
+	<p>We have the spawn goal hard-coded in.  That's not the best practice, but it works for now.  It would be better to define a new symbol in the <span class="filenames">home.txt</span> file and then automatically calculate the position for us.  We will do that eventually, but we'll wait until we have more symbols to introduce to those text files.  So right now we'll just hard-code these values in.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -149,7 +149,7 @@
     
       <h4>Modify the <span class="mn">setFreightMode</span> method</h4>
       <div class="pseudoCode">
-	
+	<p>Remember that this method is called whenever Pacman eats a power pellet.  We need to make sure that the ghost isn't in SPAWN mode because that wouldn't really make sense.  So if Pacman eats a power pellet any ghosts in SPAWN mode won't be FREIGHTENED.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -163,7 +163,7 @@
       <hr/>
       <h4>Modify the <span class="mn">moveBySelf</span> method</h4>
       <div class="pseudoCode">
-	
+	<p>When the ghost reaches the spawn goal, we just pop off the next mode from the stack.  Remember that mode will be the mode the ghost was in prior to being FREIGHTENED with whatever remaining time it had left in that mode.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -185,27 +185,6 @@
       </div>
     </div><!--End of container-->
 
-    <div class="container">
-      <h3>Defining the Spawn Node</h3>
-      <p>So we had to hard-code the spawn point.  That's fine and everything, but it's never a good idea to hard-code values unless you're sure that they will never ever change. A simple idea is to just add an "s" symbol to the <span class="filenames">home.txt</span> file for the node we want to make the spawn point.  Then we would have to make a change in the <span class="filenames">nodes.py</span> like we did when we had to add the "n" and "N" values.  We are just going to leave it hard-coded for now.  It's not that big of a deal.  </p>
-      <div class="pseudoCode">
-      </div>
-      <div class="codeText">
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-      </div>
-      <div class="codeText">
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-      </div>
-      <div class="codeText">
-      </div>
-      <hr/>
-    </div><!--End of container-->
     
     
     <div class="container">  

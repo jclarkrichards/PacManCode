@@ -97,7 +97,7 @@
 	    <span class="kw">for</span> pos1 <span class="kw">in</span> MAZEDATA[<span class="kw">self</span>.level][<span class="str">"portal"</span>].keys():
 	    <div class="tabLeft">
 	      <span class="var">node1</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*pos1)<br>
-	      <span class="var">node2</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*DATA[<span class="kw">self</span>.level][<span class="str">"portal"</span>][pos1])<br>
+	      <span class="var">node2</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*MAZEDATA[<span class="kw">self</span>.level][<span class="str">"portal"</span>][pos1])<br>
 	      node1.portalNode = node2<br>
 	      node2.portalNode = node1
 	    </div>
