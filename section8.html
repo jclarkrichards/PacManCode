@@ -156,10 +156,10 @@
 	<code>
 	  class PelletGroup(object):
 	  <div class="tabLeft">
-	    def __init__(self, levelFile):
+	    def __init__(self, level):
 	    <div class="tabLeft">
 	      self.pelletList = []<br>
-	      self.createPelletList(levelFile)<br><br>
+	      self.createPelletList(level)<br><br>
 	    </div>
 	    def isEmpty(self):
 	    <div class="tabLeft">
@@ -169,9 +169,9 @@
 	      </div>
 	      return False<br><br>
 	    </div>
-	    def createPelletList(self, levelFile):
+	    def createPelletList(self, level):
 	    <div class="tabLeft">
-	      grid = loadtxt(levelFile, dtype=str)<br>
+	      grid = loadtxt(MAZEDATA[level]["file"], dtype=str)<br>
 	      rows, cols = grid.shape<br>
 	      for row in range(rows):
 	      <div class="tabLeft">
@@ -266,10 +266,10 @@
 	  <p>...</p>
 	  def startGame(self):
 	  <div class="tabLeft">
-	    self.nodes = NodeGroup("maze1.txt")<br>
-	    self.pellets = PelletGroup("maze1.txt")<br>
-	    self.pacman = Pacman(self.nodes.nodeList)<br>
-	    self.ghost = Ghost(self.nodes.nodeList)
+	    self.nodes = NodeGroup(self.level)<br>
+	    self.pellets = PelletGroup(self.level)<br>
+	    self.pacman = Pacman(self.nodes)<br>
+	    self.ghost = Ghost(self.nodes)
 	  </div>
 	</code>
       </div><!--End of codeText-->

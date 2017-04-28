@@ -69,7 +69,23 @@
 	</code>
       </div>
       <hr/>
-      
+    </div>
+    <div class="container">
+      <h3>Modify the <span class="cn">NodeGroup</span> class</h3>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We are just going to replace the mazeFile with the word level.  The mazeFile contained a string, and the level just contains an integer.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, level):
+	  <div class="tabLeft">
+	    self.level = level
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
       <h4>Create a new method called <span class="mn">setupPortalNodes</span></h4>
       <div class="pseudoCode">
 	<p>So portal nodes always come in pairs.  It wouldn't make much sense otherwise.  We need to loop through all of the pairs and set them as each others portal nodes.  Remember we store the locations of these nodes since we don't know the actual <span class="cn">Node</span> objects associated with those locations.  So to get those <span class="cn">Nodes</span> we pass in those locations to the <span class="mn">getNode</span> method which searches through the nodeList and returns the corresponding <span class="cn">Nodes</span>.  </p>
@@ -78,10 +94,10 @@
 	<code>
 	  <span class="kw">def</span> <span class="mn">setupPortalNodes</span>(<span class="kw">self</span>):
 	  <div class="tabLeft">
-	    <span class="kw">for</span> pos1 <span class="kw">in</span> MAZEDATA[<span class="kw">self</span>.mazeFile][<span class="str">"portal"</span>].keys():
+	    <span class="kw">for</span> pos1 <span class="kw">in</span> MAZEDATA[<span class="kw">self</span>.level][<span class="str">"portal"</span>].keys():
 	    <div class="tabLeft">
 	      <span class="var">node1</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*pos1)<br>
-	      <span class="var">node2</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*DATA[<span class="kw">self</span>.mazeFile][<span class="str">"portal"</span>][pos1])<br>
+	      <span class="var">node2</span> = <span class="kw">self</span>.<span class="mn">getNode</span>(*DATA[<span class="kw">self</span>.level][<span class="str">"portal"</span>][pos1])<br>
 	      node1.portalNode = node2<br>
 	      node2.portalNode = node1
 	    </div>
@@ -144,7 +160,39 @@
       </div>
       
     </div><!--End of the code container-->
-    
+
+
+    <div class="container">
+      <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>Get rid of the mazeFile variable and replace it with the level variable.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.level = 0
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p>We are just going to pass in the value of the level.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def startGame(self):
+	  <div class="tabLeft">
+	    self.nodes = NodeGroup(self.level)<br>
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+    </div>
     
     <div class="container">  
       <h3>Conclusion</h3>

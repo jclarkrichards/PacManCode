@@ -63,7 +63,7 @@
 	    <div class="tabLeft">
 	      self.name = ""<br>
 	      self.nodes = nodes<br>
-	      self.node = nodes[0]<br>
+	      self.node = nodes.nodeList[0]<br>
 	      self.target = self.node<br>
 	      self.setPosition()<br>
 	      self.direction = STOP<br>
@@ -224,7 +224,7 @@
 	  def startGame(self):
 	  <div class="tabLeft">
 	    <p>...</p>
-	    self.ghost = Ghost(self.nodes.nodeList)<br><br>
+	    self.ghost = Ghost(self.nodes)<br><br>
 	  </div>
 
 	  def update(self):

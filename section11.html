@@ -59,7 +59,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, mazeFile):
+	  def __init__(self, level):
 	  <div class="tabLeft">
 	    <p>...</p>
 	    self.homeList = []<br>
@@ -80,7 +80,7 @@
 	<code>
 	  def createMainList(self):
 	  <div class="tabLeft">
-	    self.createNodeList(self.mazeFile, self.nodeList)<br>
+	    self.createNodeList(MAZEDATA[self.level]["file"], self.nodeList)<br>
 	    self.setupPortalNodes()
 	  </div>
 	</code>
@@ -110,8 +110,8 @@
 	<code>
 	  def moveHomeNodes(self):
 	  <div class="tabLeft">
-	    nodeA = self.getNode(*MAZEDATA[self.mazeFile]["linkNodes"][0], nodeList=self.nodeList)<br>
-	    nodeB = self.getNode(*MAZEDATA[self.mazeFile]["linkNodes"][1], nodeList=self.nodeList)<br>
+	    nodeA = self.getNode(*MAZEDATA[self.level]["linkNodes"][0], nodeList=self.nodeList)<br>
+	    nodeB = self.getNode(*MAZEDATA[self.level]["linkNodes"][1], nodeList=self.nodeList)<br>
 	    mid = (nodeA.position + nodeB.position) / 2.0<br>
 	    mid = Vector2D(int(mid.x), int(mid.y))<br>
 	    vec = Vector2D(self.homeList[0].position.x, self.homeList[0].position.y)<br>
@@ -157,7 +157,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  MAZEDATA = {"maze1.txt":{"portal":{(0, 17*HEIGHT):(27*WIDTH, 17*HEIGHT)}, "linkNodes":{0:(12*WIDTH, 14*HEIGHT), 1:(15*WIDTH, 14*HEIGHT)}}}
+	  MAZEDATA = {0:{"file":"maze1.txt", "portal":{(0, 17*HEIGHT):(27*WIDTH, 17*HEIGHT)}, "linkNodes":{0:(12*WIDTH, 14*HEIGHT), 1:(15*WIDTH, 14*HEIGHT)}}}
 
 	</code>
       </div>

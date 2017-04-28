@@ -48,13 +48,13 @@
       <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
       <h4>Modify the <span class="mn">__init__</span> method</h4>      
       <div class="pseudoCode">
-	<p>The first thing we're going to modify is the <span class="filenames">pacman.py</span> file.  We need to pass in the list of nodes that make up the maze.  Instead of specifying a random pixel position vector for Pacman to start out on we need to tell him which node we want him to start out on.  Right now it doesn't matter so we'll just have him start out on the first node, so we set his position to be the same as that nodes position.  So nodes is a list of the complete maze and node is the node that Pacman is currently on.  Then we call a method called <span class="mn">setPosition</span>.  We also introduce a temporary variable called "keyDown".  The only reason we have this is so Pacman will only move one node at a time with each key press.</p>
+	<p>The first thing we're going to modify is the <span class="filenames">pacman.py</span> file.  We need to pass in the list of nodes that make up the maze.  Instead of specifying a random pixel position vector for Pacman to start out on we need to tell him which node we want him to start out on.  Right now it doesn't matter so we'll just have him start out on the first node, so we set his position to be the same as that nodes position.  So nodes is the <span class="cn">NodeGroup</span> class and <span class="var">node</span> is the node that Pacman is currently on.  Then we call a method called <span class="mn">setPosition</span>.  We also introduce a temporary variable called "keyDown".  The only reason we have this is so Pacman will only move one node at a time with each key press.</p>
       </div>
       <div class="codeText">
 	<span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, nodes):<br>
 	<div class="tabLeft">
 	  <span class="kw">self</span>.nodes = nodes<br>
-	  <span class="kw">self</span>.node = nodes[0]<br>
+	  <span class="kw">self</span>.node = nodes.nodeList[0]<br>
 	  <span class="kw">self</span>.setPosition()<br>
 	  <span class="kw">self</span>.keyDown = <span class="py">False</span>
 	</div>
@@ -123,7 +123,7 @@
 	<div class="tabLeft">
 	  <span class="kw">self</span>.nodes = NodeGroup()<br>
 	  <span class="kw">self</span>.nodes.setupTestNodes()<br>
-	  <span class="kw">self</span>.pacman = Pacman(<span class="kw">self</span>.nodes.nodeList)
+	  <span class="kw">self</span>.pacman = Pacman(<span class="kw">self</span>.nodes)
 	</div>
 	</code>
       </div>
