@@ -221,7 +221,7 @@
 	    <div class="tabLeft">
 	      self.checkGhostEvents()<br>
 	      self.checkPelletEvents()<br>
-	      self.pacman.update(dt)
+	      self.pacman.update(dt)<br>
 	      self.ghost.update(dt, self.pacman)
 	    </div>
 	    self.checkEvents()<br>
@@ -257,65 +257,49 @@
       </div>
       <hr/>
 
-
+      <h4>Create a new method called <span class="mn">restartLevel</span></h4>
       <div class="pseudoCode">
-
+	<p>We don't want to call the <span class="mn">startGame</span> method because that will reset all of the pellets and so that's the method we call at the start of every level.  If we need to restart the level at some point during the level, like when Pacmna loses a life, then we call this methods which just resets Pacman and the ghost to their starting positions.</p>
       </div>
       <div class="codeText">
 	<code>
+	  def restartLevel(self):
+	  <div class="tabLeft">
+	    self.pacman = Pacman(self.nodes, self.level)<br>
+	    self.ghost = Ghost(self.nodes, self.level)<br>
+	    self.paused = True
+	  </div>
 	</code>
       </div>
       <hr/>
 
-
+      <h4>Modify the method <span class="mn">checkGhostEvents</span></h4>
       <div class="pseudoCode">
-
+	<p>So when Pacman collides with a ghost we check if the ghost is in FREIGHT mode.  If the ghost is not in FREIGHT mode then we just check to see if he is in SPAWN mode.  If the ghost is in SPAWN mode then we ignore the ghost because we shouldn't interact with the ghost if he is in SPAWN mode.  If the ghost is not in SPAWN mode then the only modes he can be in are CHASE or SCATTER.  In which case Pacman loses a life and we restart the level.  Well, right now we are just restarting the level since we don't have a life system in place yet.  </p>
       </div>
       <div class="codeText">
 	<code>
+	  def checkGhostEvents(self):
+	  <div class="tabLeft">
+	    if self.pacman.eatGhost(self.ghost):
+	    <div class="tabLeft">
+	      if self.ghost.mode.name == "FREIGHT":
+	      <div class="tabLeft">
+		self.ghost.setRespawnMode()
+	      </div>
+	      elif self.ghost.mode.name != "SPAWN":
+	      <div class="tabLeft">
+		self.restartLevel()
+	      </div>
+	    </div>
+	  </div>
 	</code>
       </div>
-      <hr/>
+
 
     
-      <div class="pseudoCode">
-	
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-	
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
     </div><!--End of container-->
 
-    <div class="container">
-
-      <div class="pseudoCode">
-      </div>
-      <div class="codeText">
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-      </div>
-      <div class="codeText">
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-      </div>
-      <div class="codeText">
-      </div>
-      <hr/>
-    </div><!--End of container-->
     
     
     <div class="container">  
