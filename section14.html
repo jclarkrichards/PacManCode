@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 14: Restricting Movement and Other Things</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p><img src="Images/restrictnodes.png" alt=""/>Right now all of the nodes are connected together which means that Pacman and the ghost can visit each and every node whenever they want.  However, we need to restrict the movement of Pacman and the ghost when it comes to certain nodes and at certain times.  For example, Pacman can never enter the ghost's home nodes, so we'll need to tell him that those nodes are off limits somehow.  The ghost also shouldn't be allowed to enter the home nodes unless he is in SPAWN mode.  There are also some nodes that only allow one-way movement for the ghosts.  Those are represented by the blue nodes in the image on the right.  When a ghost enters these nodes, he is not allowed to move in the UP direction.  These nodes have no effect on Pacman.  Some nodes also have speed effects on the ghosts.  Well, actually the only nodes that have speed effects on the ghosts are the portal nodes.  Whenever a ghost is moving towards or away from a portal node, then the ghost should be moving at 50% of this max speed.  It's a great way for Pacman to escape if the ghost is following close behind him.  Speaking of slowing down, whenever Pacman is eating pellets his speed is decreased a bit as well.  If he isn't eating pellets then he can move at his max speed, but when he eats pellets he moves slightly slower.  I think that's enough stuff to tackle for this section.  Once we're finished with this section we should finally be able to add the other three ghosts.  </p>
+    </div><!--End of Setup container-->
+
+
+    <div class="container">
+      <h3>Restrict Home Entrance</h3>
+      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
+ 
+       <div class="pseudoCode">
+	 <p>Since the nodes that we need to use to restrict movement are maze dependent we'll add them to the MAZEDATA dictionary.  I know that we're still hard-coding them in, and we'll fix that later.  But for now, it's fine.  The <span class="str">"home"</span> is the node that defines the ghost home entrance.  We'll also add in the four nodes that prevent the ghosts from moving UP.  These are the four blue nodes in the image from before.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  MAZEDATA[0]["home"] = (216, 272)<br>
+	  MAZEDATA[0]["restrictUp"] = {0:(12*WIDTH, 14*HEIGHT), 1:(15*WIDTH, 14*HEIGHT), 2:(12*WIDTH, 26*HEIGHT), 3:(15*WIDTH, 26*HEIGHT)}
+	</code>
+      </div>
+
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">nodes.py</span> file</h4>
+      <h4>Modify the <span class="cn">Node</span> <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.home = False
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="mn">moveHomeNodes</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def moveHomeNodes(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    for node in self.homeList:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if node.position.toTuple() == MAZEDATA[self.level]["home"]:
+	      <div class="tabLeft">
+		node.home = True
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">pacman.py</span> file</h4>
+      <h4>Modify the <span class="mn">moveByKey</span> method</h4>
+      <div class="pseudoCode">
+	<p>When Pacman overshoots a node we just need to add the check to make sure that the node isn't the ghost's home node.  If it is then any key presses from the player won't register.  So Pacman is now forever prevented from moving into the ghost's home.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def moveByKey(self):
+	  <div class="tabLeft">
+	    if self.direction is STOP:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	    else:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if self.overshotTarget():
+	      <div class="tabLeft">
+		<p>...</p>
+		if self.node.neighbors[direction] is not None and not self.node.home:
+		<div class="tabLeft">
+		  <p>...</p>
+		  <!--if not self.node.home and direction is not DOWN:
+		  <div class="tabLeft">
+		    self.target=  self.node.neighbors[direction]
+		    <p>...</p>
+		  </div>-->
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+      <hr/>
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+
+    </div><!--End of container-->
+      
+    <div class="container">
+      <h3>Restrict the Ghost UP Movement</h3>
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+    </div><!--End of container-->
+
+    <div class="container">
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+    </div><!--End of container-->
+
+    <div class="container">
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+
+    </div><!--End of container-->
+    
+    
+    <div class="container">  
+      <h3>Conclusion</h3>
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>maze1.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section13.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section15.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -219,10 +219,10 @@
 	    dt = self.clock.tick(30)/ 1000.0<br>
 	    if not self.paused:
 	    <div class="tabLeft">
+	      self.pacman.update(dt)<br>
+	      self.ghost.update(dt, self.pacman)<br>
 	      self.checkGhostEvents()<br>
 	      self.checkPelletEvents()<br>
-	      self.pacman.update(dt)<br>
-	      self.ghost.update(dt, self.pacman)
 	    </div>
 	    self.checkEvents()<br>
 	    self.render()
@@ -296,15 +296,75 @@
 	</code>
       </div>
 
-
-    
     </div><!--End of container-->
 
+    <div class="container">
+      <h3>Giving Pacman Lives</h3>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>It's not fun if Pacman has infinite lives, or maybe it is.  I don't think it's as much fun so we'll give Pacman a certain number of lives, say 5, and if he depletes them all then the game is over.  Right now a game over would just mean that the game restarts with the number of lives replenished.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.lives = 5
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>When Pacman collides with a ghost that is not in FREIGHT or SPAWN mode then along with restarting the level, he loses a life.  If Pacman doesn't have any lives left, then the game is over.  Right now the game will just restart with the starting number of lives.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    elif self.ghost.mode.name != "SPAWN":
+	    <div class="tabLeft">
+	      self.lives -= 1
+	      <div class="tabLeft">
+		self.lives = 5<br>
+		self.startGame()
+	      </div>
+	      self.restartLeveL()
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">render</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to let the player know how many lives he has left, so let's draw the number of Pacman's the player has in the bottom left corner of the screen.  We draw the number of lives that are left minus one because the current playable Pacman counts as a life.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def render(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    for i in range(self.lives - 1):
+	    <div class="tabLeft">
+	      y = HEIGHT * (NROWS - 1)<br>
+	      x = 5 + self.pacman.radius + (2*self.pacman.radius + 5)*i<br>
+	      pygame.draw.circle(self.screen, self.pacman.color, (x, y), self.pacman.radius)
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+
+    </div><!--End of container-->
     
     
     <div class="container">  
       <h3>Conclusion</h3>
-
+      <p>Alright, we're starting to get something that resembles a game.  We have a starting state and an end state.  If we complete a level the game restarts and can potentially be played forever.  We have a way of killing Pacman which depletes his lives, pausing the game, and that's all we did in this section.  I know that you may be thinking that it's time to add the other three ghosts into the game, but I don't want to do that yet.  There are a few other odds and ends that we need to take care of first.  In the next section we'll try to tie up these loose ends.  Not that these are the only loose ends, just the main ones I can think of right now.  What are they?  Go on to the next section to find out! </p>
     </div> <!--End of the conclusion container-->
     <hr />
 
