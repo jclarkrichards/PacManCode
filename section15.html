@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 15: Adding Bonus Fruit</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>So all Pacman really does is eat doesn't he?  He eats the pellets, the ghosts when he can, and he also eats fruit.  Well, he ate things other than fruit in the original game like the Galaxian ship.  But in this game we'll just stick to fruit.  Fruit is healthy and I'm not sure what those pellets are made out of.</p>
+      <p>There are several different kinds of fruit and each kind of fruit has a different point value associated with it.  In the lower levels the lower valued fruit appear, for example.  Only one kind of fruit appears in any given level, and it appears twice during that level.  In the original Pacman game, the fruit was stationary and appeared right under the ghost's home.  When the fruit did appear it only stayed on screen for about 10 seconds before disappearing.  Pacman has to eat the fruit before it disappears if he wants to get the points from the fruit.  In the Ms. Pacman games, the fruit hopped around the maze along a certain path and would enter the maze via one portal and leave via the other portal.  For now we'll just have the fruit stationary.</p>
+      <p>So our fruit, when it appears, will appear just below the ghost's home in the middle between the two nodes.  So we'll need to place the fruit similar to how we place Pacman between two nodes at the start of a level.  There are also two types of fruit:  the type you collect and the type that is displayed.  When Pacman eats a fruit (the collected kind), it appears in the lower right corner of the screen (the displayed kind).  They look the same, sure, but they do different things.  The collected kind gives Pacman points, it disappears after a certain period of time, and may bounce around the map sometime in the future.  The displayed fruit just sits there doing nothing, other than checking to make sure it's the only unique one being displayed.  Maybe it will be able to do other things like twinkle periodically or something, I don't know.</p>
+      
+    </div><!--End of Setup container-->
+
+
+    <div class="container">
+      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
+      <div class="pseudoCode">
+	<p>Since the position of where the fruit appears on the screen is maze dependent, we'll add it to the MAZEDATA dictionary.  The fruit will actually appear between this node and the node to its LEFT.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  MAZEDATA[0]["fruit"] = (288, 320)
+	</code>
+      </div>
+
+      <hr/>
+
+      <h3>Create a new file called <span class="filenames">fruit.py</span></h3>
+      <h4>Create a new class called <span class="cn">Fruit</span></h4>
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	  import pygame<br>
+	  from entities import MazeMouse<br>
+	  from constants import *<br><br>
+	  class LooseFruit(MazeMouse):
+	  <div class="tabLeft">
+	    def __init__(self, nodes, level):
+	    <div class="tabLeft">
+	      MazeMouse.__init__(self, nodes, level)<br>
+	      self.color = (0, 200, 0)<br>
+	      self.setStartPosition()<br><br>
+	    </div>
+	    def setStartPosition(self):
+	    <div class="tabLeft">
+	      self.node = self.nodes.getNode(*MAZEDATA[self.level]["fruit"], nodeList=self.nodes.nodeList)<br>
+	      self.target = self.node.neighbors[LEFT]<br>
+	      self.setPosition()<br>
+	      halfway = (self.node.position.x - self.target.position.x) / 2<br>
+	      self.position.x -= halfway
+	    </div>
+	  </div><br><br>
+	  class CollectedFruit(object):
+	  <div class="tabLeft">
+	    def __init__(self, nodes, level):
+	    <div class="tabLeft">
+	      self.color = (0, 200, 0)<br><br>
+	    </div>
+	    def setPosition(self):
+	    <div class="tabLeft">
+	      pass
+	    </div>
+	    def render(self, screen):
+	    <div class="tabLeft">
+	      pass
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def startGame(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.fruit = None
+	    self.fruitTimer = 0
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Once we've eaten a pellet we increment the number of pellets we've eaten.  Then we check how many we've eaten.  It we have eaten either 70 or 140 pellets, then we create a <span class="cn">LooseFruit</span> object</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletEvents(self, dt):
+	  <div class="tabLeft">
+	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
+	    if pellet:
+	    <div class="tabLeft">
+	      self.pellets.numEaten += 1
+	      <p>...</p>
+	      if self.pellets.numEaten == 70 or self.pellets.numEaten == 140:
+	      <div class="tabLeft">
+		self.fruit = LooseFruit(self.nodes, self.level)
+	      </div>
+	      <p>...</p>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">render</span> method</h4>
+      <div class="pseudoCode">
+	<p>We only want to draw the fruit to the screen if it exists.  Otherwise we would just get an error because you can't draw what doesn't exist.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def render(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.fruit is not None:
+	    <div class="tabLeft">
+	      self.fruit.render(self.screen)
+	    </div>
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="filenames">pellets.py</span> file</h4>
+      <h4>Modify the <span class="cn">PelletGroup</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We just need to add this into this method so we can easily keep track of how many pellets Pacman has eaten.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.numEaten = 0
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create a new method called <span class="mn">checkFruitEvents</span></h4>
+      <div class="pseudoCode">
+	<p>You should have known that we were going to create a fruit event method.  This one just increments the time that the fruit has been alive.  If the timer goes past 10 seconds and the fruit is still alive, then remove it.  Pacman was too slow in getting the fruit and therefore doesn't get it.  Better luck next time.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkFruitEvents(self, dt):
+	  <div class="tabLeft">
+	    if self.fruit is not None:
+	    <div class="tabLeft">
+	      if self.pacman.eatFruit(self.fruit):
+	      <div class="tabLeft">
+		self.score += self.fruit.value<br>
+		self.fruitTimer = 0<br>
+		self.fruit = None
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		self.fruitTimer += dt<br>
+		if self.fruitTimer >= 10:
+		<div class="tabLeft">
+		  self.fruitTimer = 0<br>
+		  self.fruit = None
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <h4>Modify the <span class="mn">update</span> method</h4>
+      <div class="pseudoCode">
+	<p>We just add the method we just created with the other event checks</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    dt = self.clock.tick(30) / 1000.0<br>
+	    if not self.paused:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.checkFruitEvents(dt)
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+
+    </div><!--End of container-->
+    <div class="container">
+      <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
+
+      <div class="pseudoCode">
+	<p>Similar to how we've checked for collisions with the pellets and the ghost, we check for collision with the fruit.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  
+	</code>
+      </div>
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+
+    </div><!--End of container-->
+
+
+
+    <div class="container">
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+
+
+    </div><!--End of container-->
+
+
+
+    <div class="container">
+
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+
+
+      <hr/>
+
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+
+
+
+
+
+
+
+
+
+    </div><!--End of container-->
+    
+    
+    <div class="container">  
+      <h3>Conclusion</h3>
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>maze1.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section14.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section16.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
