@@ -327,12 +327,13 @@
 	    <p>...</p>
 	    elif self.ghost.mode.name != "SPAWN":
 	    <div class="tabLeft">
-	      self.lives -= 1
+	      self.lives -= 1<br>
+	      if self.lives == 0:
 	      <div class="tabLeft">
 		self.lives = 5<br>
 		self.startGame()
 	      </div>
-	      self.restartLeveL()
+	      self.restartLevel()
 	    </div>
 	  </div>
 	</code>
