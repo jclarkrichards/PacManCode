@@ -37,7 +37,7 @@
 
 
     <div class="container">
-      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
+      <h3>Modify the <span class="filenames">constants.py</span> file</h3>
       <div class="pseudoCode">
 	<p>Since the position of where the fruit appears on the screen is maze dependent, we'll add it to the MAZEDATA dictionary.  The fruit will actually appear between this node and the node to its LEFT.</p>
       </div>
@@ -46,9 +46,24 @@
 	  MAZEDATA[0]["fruit"] = (288, 320)
 	</code>
       </div>
+    </div><!--End of container-->
+    
+    <div class="container">
+      <h4>Modify the <span class="filenames">pellets.py</span> file</h4>
+      <h4>Modify the <span class="cn">PelletGroup</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We just need to add this into this method so we can easily keep track of how many pellets Pacman has eaten.  We'll use this value to determine when to create the fruit object as we'll see in a bit.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.numEaten = 0
+	</code>
+      </div>
 
-      <hr/>
+    </div><!--End of container-->
 
+    <div class="container">
       <h3>Create a new file called <span class="filenames">fruit.py</span></h3>
       <h4>Create a new class called <span class="cn">Fruit</span></h4>
       <div class="pseudoCode">
@@ -64,8 +79,10 @@
 	    def __init__(self, nodes, level):
 	    <div class="tabLeft">
 	      MazeMouse.__init__(self, nodes, level)<br>
+	      self.name = "fruit"<br>
 	      self.color = (0, 200, 0)<br>
-	      self.setStartPosition()<br><br>
+	      self.setStartPosition()<br>
+	      self.value = 100<br><br>
 	    </div>
 	    def setStartPosition(self):
 	    <div class="tabLeft">
@@ -78,35 +95,72 @@
 	  </div><br><br>
 	  class CollectedFruit(object):
 	  <div class="tabLeft">
-	    def __init__(self, nodes, level):
+	    def __init__(self, fruit):
 	    <div class="tabLeft">
-	      self.color = (0, 200, 0)<br><br>
+	      self.name = fruit.name<br>
+	      self.color = fruit.color<br>
+	      self.radius = fruit.radius<br><br>
 	    </div>
-	    def setPosition(self):
+	    def setPosition(self, index):
 	    <div class="tabLeft">
-	      pass
+	      x = WIDTH*NCOLS - (5 + self.radius + (2*self.radius + 5) * index)<br>
+	      y = HEIGHT*(NROWS - 1)<br>
+	      self.position = Vector2D(x, y)<br><br>
 	    </div>
 	    def render(self, screen):
 	    <div class="tabLeft">
-	      pass
+	      x, y = self.position.toTuple()<br>
+	      pygame.draw.circle(screen, self.color, (x, y), self.radius)
 	    </div>
+	  </div>
+	</code>
+      </div>
+    </div><!--End of container-->
+
+    <div class="container">
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>Whenever we start a game we want the fruit to be None and the fruit timer reset.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.collectedFruits = []
 	  </div>
 	</code>
       </div>
 
       <hr/>
-      
-      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">startGame</span> method</h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>Whenever we start a game we want the fruit to be None and the fruit timer reset.</p>
       </div>
       <div class="codeText">
 	<code>
 	  def startGame(self):
 	  <div class="tabLeft">
 	    <p>...</p>
-	    self.fruit = None
+	    self.fruit = None<br>
+	    self.fruitTimer = 0
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      
+      <h4>Modify the <span class="mn">restartLevel</span> method</h4>
+      <div class="pseudoCode">
+	<p>If we have to restart the level in the middle of the level then Pacman loses the chance to get the fruit if it already appeared.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def restartLevel(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.fruit = None<br>
 	    self.fruitTimer = 0
 	  </div>
 	</code>
@@ -138,38 +192,7 @@
       </div>
       <hr/>
 
-      <h4>Modify the <span class="mn">render</span> method</h4>
-      <div class="pseudoCode">
-	<p>We only want to draw the fruit to the screen if it exists.  Otherwise we would just get an error because you can't draw what doesn't exist.</p>
-      </div>
-      <div class="codeText">
-	<code>
-	  def render(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    if self.fruit is not None:
-	    <div class="tabLeft">
-	      self.fruit.render(self.screen)
-	    </div>
-	    <p>...</p>
-	  </div>
-	</code>
-      </div>
-      <hr/>
 
-      <h4>Modify the <span class="filenames">pellets.py</span> file</h4>
-      <h4>Modify the <span class="cn">PelletGroup</span> class</h4>
-      <h4>Modify the <span class="mn">__init__</span> method</h4>
-      <div class="pseudoCode">
-	<p>We just need to add this into this method so we can easily keep track of how many pellets Pacman has eaten.  </p>
-      </div>
-      <div class="codeText">
-	<code>
-	  self.numEaten = 0
-	</code>
-      </div>
-      <hr/>
-      
       <h4>Create a new method called <span class="mn">checkFruitEvents</span></h4>
       <div class="pseudoCode">
 	<p>You should have known that we were going to create a fruit event method.  This one just increments the time that the fruit has been alive.  If the timer goes past 10 seconds and the fruit is still alive, then remove it.  Pacman was too slow in getting the fruit and therefore doesn't get it.  Better luck next time.</p>
@@ -183,6 +206,7 @@
 	      if self.pacman.eatFruit(self.fruit):
 	      <div class="tabLeft">
 		self.score += self.fruit.value<br>
+		self.addCollectedFruit()
 		self.fruitTimer = 0<br>
 		self.fruit = None
 	      </div>
@@ -200,6 +224,7 @@
 	</code>
       </div>
       <hr/>
+
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
 	<p>We just add the method we just created with the other event checks</p>
@@ -220,132 +245,104 @@
 
       <hr/>
 
+      <h4>Create a new method called <span class="mn">addCollectedFruit</span></h4>
+      <div class="pseudoCode">
+	<p>We just add the method we just created with the other event checks</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def addCollectedFruit(self):
+	  <div class="tabLeft">
+	    fruitNames = [n.name for n in self.collectedFruits]<br>
+	    if self.fruit.name not in fruitNames:
+	    <div class="tabLeft">
+	      fruit = CollectedFruit(self.fruit)<br>
+	      fruit.setPosition(len(self.collectedFruits))<br>
+	      self.collectedFruits.append(fruit)
+	      
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+      <hr/>
+      <h4>Modify the <span class="mn">render</span> method</h4>
+      <div class="pseudoCode">
+	<p>We only want to draw the fruit to the screen if it exists.  Otherwise we would just get an error because you can't draw what doesn't exist.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def render(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.fruit is not None:
+	    <div class="tabLeft">
+	      self.fruit.render(self.screen)<br><br>
+	    </div>
+	    for fruit in self.collectedFruits:
+	    <div class="tabLeft">
+	      fruit.render(self.screen)
+	    </div>
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+
+
     </div><!--End of container-->
+
+
     <div class="container">
       <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
 
       <div class="pseudoCode">
-	<p>Similar to how we've checked for collisions with the pellets and the ghost, we check for collision with the fruit.</p>
+	<p>Similar to how we've checked for collisions with the pellets and the ghost, we check for collision with the fruit.  In fact, it is so similar that it is the exact same code.  Whenever I find myself writing the same code for two different things, I'll put that code in its own method and just have those two things call that method.  So here I created a new method called <span class="mn">eatObject</span> and rewrote the <span class="mn">eatPellets</span> and <span class="mn">eatGhost</span> methods.  I also created a new method called <span class="mn">eatFruit</span>.</p>
       </div>
       <div class="codeText">
 	<code>
+	  def eatObject(self, obj):
+	  <div class="tabLeft">
+	    d = self.position - obj.position<br>
+	    dSquared = d.magnitudeSquared()<br>
+	    rSquared = (self.radius + obj.radius)**2<br>
+	    if dSquared &lt= rSquared:
+	    <div class="tabLeft">
+	      return True
+	    </div>
+	    return False<br><br>
+	  </div>
 	  
+	  def eatPellets(self, pelletList):
+	  <div class="tabLeft">
+	    for pellet in pelletList:
+	    <div class="tabLeft">
+	      if self.eatObject(pellet):
+	      <div class="tabLeft">
+		return pellet
+	      </div>
+	    </div>
+	    return None<br><br>
+	  </div>
+
+	  def eatGhost(self, ghost):
+	  <div class="tabLeft">
+	    return self.eatObjects(ghost)<br><br>
+	  </div>
+	  
+	  def eatFruit(self, fruit):
+	  <div class="tabLeft">
+	    return self.eatObjects(fruit)
+	  </div>
 	</code>
       </div>
-
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
 
     </div><!--End of container-->
 
 
 
-    <div class="container">
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
 
 
 
-    </div><!--End of container-->
-
-
-
-    <div class="container">
-
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-
-	</code>
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-      
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-
-	</code>
-      </div>
-
-
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-	</code>
-      </div>
-
-
-
-
-
-
-
-
-
-    </div><!--End of container-->
     
     
     <div class="container">  

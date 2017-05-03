@@ -312,30 +312,9 @@
       <hr/>
 
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
-      <h4>Create a new method called <span class="mn">checkPacmanEvents</span></h4>
-      <div class="pseudoCode">
-	<p>It makes sense to give Pacman his own method for checking events.  We have one for the ghost and the pellets after all.  Right now we're just checking to see if the ghost happens to be in FREIGHT mode.  If he is, then we increase Pacman's speed.  If not, then we set it back to normal.</p>
-      </div>
-      <div class="codeText">
-	<code>
-	  def checkPacmanEvents(self):
-	  <div class="tabLeft">
-	    if self.ghost.mode.name == "FREIGHT":
-	    <div class="tabLeft">
-	      self.pacman.boostSpeed()
-	    </div>
-	    else:
-	    <div class="tabLeft">
-	      self.pacman.normalSpeed()
-	    </div>
-	  </div>
-	</code>
-      </div>
-      
-      <hr/>
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We check the Pacman events along with the other guys.  Notice also that I'm passing in the time into all of the event checks.  So we need to also modify those methods to expect the time value.  We'll need it in the future, might as well just add it now.</p>
+	<p>Notice also that I'm passing in the time into all of the event checks.  So we need to also modify those methods to expect the time value.  We'll need it in the future, might as well just add it now.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -345,7 +324,6 @@
 	    if not self.paused:
 	    <div class="tabLeft">
 	      <p>...</p>
-	      self.checkPacmanEvents(dt)<br>
 	      self.checkGhostEvents(dt)<br>
 	      self.checkPelletEvents(dt)<br>
 	    </div>
@@ -368,7 +346,7 @@
       <hr/>
       <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>If Pacman has eaten a pellet and the ghost is not in FREIGHT mode, then we reduce Pacman's speed.  We have an idleTimer that we use to check to see how long Pacman has not eaten any pellets.  If that timer exceeds a half a second, then we bring his speed back to normal.  This way we reduce the choppiness that would happen if we were constantly telling him to reduce speed, normal speed, reduce speed, normal speed, ... etc everytime he eats a pellet.  There are other things we'll need the idleTimer for in the future.</p>
+	<p>In the end Pacman's speed depends on whether he is eating pellets or not and if the ghost is in FREIGHT or SPAWN mode or not.  If the ghost is in FREIGHT or SPAWN mode, then we increase Pacman's speed whether he's eating pellets or not.  If the ghost is not either of these modes then we reduce Pacman's speed if he is eating pellets, and set his speed to normal if it has been at least half a second since he last ate a pellet.  We have an idleTimer that we use to check to see how long Pacman has not eaten any pellets.  This way we reduce the choppiness that would happen if we were constantly telling him to reduce speed, normal speed, reduce speed, normal speed, ... etc everytime he eats a pellet.  There are other things we'll need the idleTimer for in the future.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -379,7 +357,11 @@
 	    <div class="tabLeft">
 	      self.idleTimer = 0<br>
 	      <p>...</p>
-	      if self.ghost.mode.name != "FREIGHT":
+	      if self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN":
+	      <div class="tabLeft">
+		self.pacman.boostSpeed()
+	      </div>
+	      else:
 	      <div class="tabLeft">
 		self.pacman.reduceSpeed()
 	      </div>
@@ -387,9 +369,17 @@
 	    else:
 	    <div class="tabLeft">
 	      self.idleTimer += dt<br>
-	      if self.idleTimer >= 0.5
+	      if self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN":
 	      <div class="tabLeft">
-		self.pacman.normalSpeed()
+		self.pacman.boostSpeed()
+	      </div>
+	      else:
+	      <div class="tabLeft">
+	    if self.idleTimer &gt= 0.5<br>
+
+		<div class="tabLeft">
+		  self.pacman.normalSpeed()
+		</div>
 	      </div>
 	    </div>
 	  </div>
