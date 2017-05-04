@@ -339,15 +339,146 @@
     </div><!--End of container-->
 
 
+    <div class="container">
+      <h3>Increasing the Level</h3>
+      <p>Right now we're stuck on level 0.  Even if we complete a level by eating all of the pellets we'll still be on level 0.  That's because we only have one maze and we extract data for that maze from the MAZEDATA dictionary.  Even though we only have one maze we still want to increase the level though.  I mean, in the end this game should have an infinite number of levels, but it won't have an infinite number of mazes.  We'll probably only make a maximum of 10 different mazes in this game.  You can go ahead and make as many, or as few, as you want.  We need a way of increasing the level, but also extracting the right data from MAZEDATA.  What I mean if we only have 1 maze and I'm on level 23 then I should be extracting the data from MAZEDATA[0].  If I have 2 mazes and I'm on level 23, then I should be extracting data from MAZEDATA[1].  We're also going to make our mazes cyclical, which means if we only have 3 mazes, for example, then on the 4th level we go back to the 1st maze.  </p>
+
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We are just going to add two new variables that deal with the levels.  The displayedLevel variable will hold the actual level we are on no matter how many mazes we have.  So if we are on level 34, then we use this variable to show the player that he is on level 34.  The maxLevels variable will hold how many mazes we have.  Right now we only have 1, but when we make more mazes we'll change this value to reflect the number of mazes we have.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.level = 0<br>
+	  self.displayedLevel = 0<br>
+	  self.maxLevels = 1
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create a new method called <span class="mn">increaseLevel</span></h4>
+      <div class="pseudoCode">
+	<p>This method just increases the level we are on.  The displayedLevel will increase towards infinity, while <span class="var">level</span> will loop through our available mazes.  So, if we have 4 mazes, for example, then displayedLevel will increment as the following:  0, 1, 2, 3, 4, 5, 6, 7, 8, ... etc.  However, <span class="var">level</span> will increment as the following:  0, 1, 2, 3, 0, 1, 2, 3, 0, ... etc.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def increaseLevel(self):
+	  <div class="tabLeft">
+	    self.level += 1<br>
+	    self.displayedLevel += 1<br>
+	    self.level %= self.maxLevels
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>When the pellets are empty, then Pacman has eaten them all and we need to increase the level and start the game again.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.pellets.isEmpty():
+	    <div class="tabLeft">
+	      self.increaseLevel()<br>
+	      self.startGame()
+	    </div>
+	  </div>
+	</code>
+      </div>
 
 
+    </div><!--End of container-->
+    
+    <div class="container">
+      <h3>Make More Fruit</h3>
+      <p>The reason we're dealing with the level situation in this section is because we want to add more fruit.  We only have one fruit so far, and it's just an abstract generic fruit at that.  But, we only have one type of fruit appearing on each level.  Since we weren't increasing the levels, then we would only see that one type of fruit.  We want to add more fruit, so we had to increase the levels first.  The fruit is not dependent on the maze, so this isn't data that we'll add to MAZEDATA.  If that were the case then we'd be stuck with one fruit since we only have one maze right now.  We can have one or two mazes, but potentially have at least a dozen different fruit.  So, let's make at least 5 different types of fruit, then figure out how to include them in the levels.  Right now the only difference between two different fruit are the name, color, and value.</p>
+      <h4>Modify the <span class="filenames">fruit.py</span> file</h4>
+      <h4>Modify the <span class="cn">LooseFruit</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>When we create a LooseFruit object we are going to also pass in the displayed level, and then call a method that will choose the values for the fruit based on that level value.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, displayedLevel):
+	  <div class="tabLeft">
+	    MazeMouse.__init__(self, nodes, level)<br>
+	    self.chooser(displayedLevel)<br>
+	    self.setStartPosition()
+	  </div>
+	</code>
+      </div>
+      <hr/>
 
+      <h4>Create a new method called <span class="mn">chooser</span></h4>
+      <div class="pseudoCode">
+	<p>If we want to add more fruit, then this is where we'll add it.  Right now the only difference between two fruit are the name, color, and value so that's all we'll use to differentiate between the fruit.  In the future when we start adding graphics we'll use actual images to tell different fruit apart as well.  We added a couple new colors:  MAROON and LIGHTYELLOW.  So we'll have to define those in the <span class="filenames">constants.py</span file.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def chooser(self, level):
+	  <div class="tabLeft">
+	    level %= 5<br>
+	    if level == 0:
+	    <div class="tabLeft">
+	      self.name = "cherry"<br>
+	      self.color = RED<br>
+	      self.value = 100<br><br>
+	    </div>
+	    <div class="tabLeft">
+	      self.name = "banana"<br>
+	      self.color = YELLOW<br>
+	      self.value = 200<br><br>
+	    </div>
+	    <div class="tabLeft">
+	      self.name = "apple"<br>
+	      self.color = MAROON<br>
+	      self.value = 500<br><br>
+	    </div>
+	    <div class="tabLeft">
+	      self.name = "watermelon"<br>
+	      self.color = GREEN<br>
+	      self.value = 1000<br><br>
+	    </div>
+	    <div class="tabLeft">
+	      self.name = "lemon"<br>
+	      self.color = LIGHTYELLOW<br>
+	      self.value = 1500<br><br>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>The only thing we need to modify here is when we actually create the fruit to display.  We just need to add in the displayedLevel variable as an input.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.pellets.numEaten == 70 or self.pellets.numEaten == 140:
+	    <div class="tabLeft">
+	      self.fruit = LooseFruit(self.nodes, self.level, self.displayedLevel)
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+    </div><!--End of container-->
 
     
     
     <div class="container">  
       <h3>Conclusion</h3>
-
+      <p>So now we have fruit appearing that will give Pacman two additional opportunities to score more points if he eats them in time.  If he does eat the fruit, then it will appear in the lower right corner of the screen.  We also added a way to increase the levels to infinity, and added an easy way to include more mazes and fruit.  We currently have 5 different types of fruit that Pacman can eat, but it's easy to add more.  This actually ended up being a pretty long section.  But we have the fruit out of the way.  The only time we'll have to revisit the fruit if we decide to make the fruit bounce around the maze like in Ms. Pacman, but we'll leave that alone for now.  Dare I say it's about time we add in the other ghosts?  Well alright.  It's just not Pacman with only one ghost, so in the next section we'll add in the other three ghosts and give Pacman a real challenge.</p>
     </div> <!--End of the conclusion container-->
     <hr />
 
