@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 17: Defining the Ghost's Start</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>We're almost finished with Phase I!  That's exciting.  Just a couple more sections to go.  In this section we are going to give the ghost's their own starting positions.  Right now, if you play our game, the ghosts all start on the same node.  They basically just start on top of each other.  There's nothing wrong with this and we could just leave it as it is.  But, then what would have been the point of creating all of those extra home nodes?  </p>
+      <p><img src="Images/homenodes.png" alt=""/>The image on the right shows the home nodes with the four ghosts in their starting positions.</p>
+      <ul>
+	<li>Blinky starts on node 1</li>
+	<li>Inky starts on node 2</li>
+	<li>Pinky starts on node 3</li>
+	<li>Clyde starts on node 4</li>
+      </ul>
+</p>When they all leave the ghost home, they should move towards the LEFT.  Why the LEFT?  I don't know, seems arbitrary to me, we can just as easily have them move to the RIGHT.  Or we could just have them decide which direction to move.  But in our game we are going to have them move towards the LEFT whenever they leave the ghost home.  Notice that Blinky does not start in the ghost home.  At the start of the game, therefore, he should move towards the LEFT as if he just left the home.  Also, all of the ghosts don't leave the home immediately.  At the start of the game, Pinky leaves the home immediately, but Inky and Clyde move UP and DOWN until they are allowed to leave the home.  When they are allowed to leave the home, they follow a direct path out of the home instead of deciding which node to go to next.  Below are some images of how Inky behave inside of the ghost home and the path he must take when he leaves the home.</p>
+<p><img src="Images/inkystart3.png" alt="" width=300 height=300/><img src="Images/inkystart2.png" alt="" width=300 height=300/><img src="Images/inkystart1.png" alt="" width=300 height=300/></p>
+<hr/>
+<p>In the first two images we see Inky moving UP and DOWN.  He continues to move UP and DOWN until he is allowed to leave.  When he is allowed to leave we give him direct instructions on which directions he must follow in order to leave the home.  When he reaches his home node he must go RIGHT, then UP, then LEFT.  Clyde has the same behavior, except just on the other side.  When Clyde has to leave home he follows the instructions of LEFT, UP, LEFT.  We'll refer to these images when we get to the code below.</p>
+    </div><!--End of Setup container-->
+
+
+    <div class="container">
+      <h3>Defining the Starting Nodes</h3>
+      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
+      <div class="pseudoCode">
+	<p>Before we were getting the start position from the <span class="str">"ghost"</span> key.  We remove that and then put in the <span class="str">"blinky", "pinky", "inky", "clyde"</span> keys.  Notice that we're still hard-coding them in sort of.  We'll fix that eventually, but for now let's just get things working first.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  MAZEDATA[0]["start"] = {"pacman":(15*WIDTH, 26*HEIGHT)}<br>
+          MAZEDATA[0]["start"]["blinky"] = (216,272-HEIGHT*3)<br>
+          MAZEDATA[0]["start"]["pinky"] = (216,272)<br>
+          MAZEDATA[0]["start"]["inky"] = (216-WIDTH*2,272)<br>
+          MAZEDATA[0]["start"]["clyde"] = (216+WIDTH*2,272)<br>
+	</code>
+      </div>
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Modify the <span class="filenames">ghosts.py</span> file</h3>
+      <h4>Modify the <span class="cn">Ghost</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We are going to add a <span class="var">homeNode</span> variable and a <span class="var">startDirection</span> variable.  We also remove the call to the <span class="mn">setStartPosition</span> method since we'll have each ghost call it in their classes instead.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.homeNode = None<br>
+	  self.startDirection = UP
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">setStartPosition</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def setStartPosition(self):
+	  <div class="tabLeft">
+	    node = MAZEDATA[0]["start"][self.name]<br>
+	    self.homeNode=  self.nodes.getNode(*node, nodeList=self.nodes.homeList)<br>
+	    self.node=  self.nodes.getNode(*node, nodeList=self.nodes.homeList)
+	    <p>...</p>
+	    
+	    self.direction = self.startDirection
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      <h4>Modify the <span class="cn">Pinky</span> class</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init(self, nodes, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.setStartPosition()
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="cn">Blinky</span> class</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init(self, nodes, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.startDirection = LEFT<br>
+	    self.setStartPosition()
+	  </div>
+	  
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="cn">Inky, Clyde</span> classes</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init(self, nodes, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.startDirection = DOWN<br>
+	    self.setStartPosition()
+	  </div>
+	</code>
+      </div>
+
+    </div><!--End of container-->
+
+
+
+    
+    <div class="container">
+      <p>So now we have the ghosts all starting on their own nodes.  We now have to keep Inky and Clyde inside of the home until we are ready for them to leave.  Not only do we have to keep them in there, but while in the home thy can only move UP and DOWN.  They can't move LEFT and RIGHT.  This should be easy enough right?  We just remove the LEFT and RIGHT directions from their <span class="var">validDirections</span> list while they are in the home.  </p>
+      <h3>Modify the <span class="filenames">ghosts.py</span> file</h3>
+      <h4>Modify the <span class="cn">Ghost</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We will make a new variable and set it to <span class="py">True</span> as the default.  This will initially be <span class="py">False</span> in the <span class="cn">Inky</span> and <span class="cn">Clyde</span> classes.  In fact, go ahead and add it to their classes <span clas</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  self.exitHome = True
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="mn">getValidDirections</span> method</h4>
+      <div class="pseudoCode">
+	<p>If the ghost is not allowed to leave the home yet, then we remove the LEFT and RIGHT directions.  This will only work for Inky and Clyde, but they are the only two who need to stay inside the home until we tell them to leave.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  if not self.exitHome:
+	  <div class="tabLeft">
+	    if LEFT in validDirections:
+	    <div class="tabLeft">
+	      validDirections.remove(LEFT)
+	    </div>
+	    if RIGHT in validDirections:
+	    <div class="tabLeft">
+	      validDirections.remove(RIGHT)
+	    </div>
+	  </div>
+	</code>
+      </div>
+
+
+    </div><!--End of container-->
+    
+
+    <div class="container">
+      <p>Now we have Inky and Clyde bouncing UP and DOWN inside of the home area.  They will continue to do this until we tell them that it is time to leave.  How do we know whether it is time for them to leave?  There are a couple of ways we are going to determine that.  The main way we'll determine when they can leave is by how many pellets Pacman has eaten.  Inky can leave when Pacman eats 30 pellets, and Clyde can leave when Pacman has eaten 60 pellets.  We don't want this to be the only control though since the player could just not eat any pellets for awhile and keep Inky and Clyde in the home for a really long time.  I mean, they wouldn't be able to finish the level, but we want to check the idleTimer variable and force Inky and Clyde out of the home after 10 seconds of inactivity.  That'll be easy since we've already implemented an idleTimer.</p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>We check to see how many pellets Pacman has eaten.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.pellets.numEaten &gt= 30 or self.idleTimer &gt= 10:
+	    <div class="tabLeft">
+	      self.ghosts.release("inky")
+	    </div>
+	    if self.pellets.numEaten &gt= 60 or self.idleTimer &gt= 10:
+	    <div class="tabLeft">
+	      self.ghosts.release("clyde")
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
+      <h4>Modify the <span class="cn">GhostGroup</span> class</h4>
+      <h4>Create a new method called <span class="mn">release</span></h4>
+      <div class="pseudoCode">
+	<p>We release the ghost by setting it's <span class="var">exitHome</span> variable to <span class="py">True</span>.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def release(self, name):
+	  <div class="tabLeft">
+	    ghost = self.getGhost(name)<br>
+	    if ghost is not None:
+	    <div class="tabLeft">
+	      ghost.exitHome = True
+	    </div>
+	  </div>
+	</code>
+      </div>
+      
+    </div><!--End of container-->
+    
+
+    
+    
+    
+    <div class="container">  
+      <h3>Conclusion</h3>
+      <p>Now we have all of the ghosts moving like we want them to move.  They all have their own unique AI that will differentiate them from each other.  Playing the game should really feel like Pacman now without the graphics.  There are some things that you'll notice if you're really familiar with Pacman that are different.  We'll discuss those issues in a bit.  In the next section we'll take care of the last major bit which is giving the ghosts their own starting points.</p>
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>maze1.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section16.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section18.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
