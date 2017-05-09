@@ -233,7 +233,62 @@
       
     </div><!--End of container-->
     
+    <div class="container">
+      <h3>Guiding the Ghosts our of their Home</h3>
+      <p>I hope that you've been playing the game with every change that we make, and not just typing stuff in blindly.  If you did happen to run the code up to this point, then you'll notice that Inky and Clyde bounce UP and DOWN inside the ghost home until the conditions that we specified are met.  If those conditions are met then they leave the home.  But depending on where Pacman is at the time you'll notice that it takes them some time to find the exit.  We need to actually guide them out of the home before we release them into the wild.  Like I mentioned at the very beginning of this section with the images, we need to give them specific directions on how to leave the home before they're allowed to make their own decisions on where to go.  We only need to do this for Inky and Clyde as well.  That's because Blinky doesn't start inside of the home, and Pinky immediately exits the home.  </p>
+      <p>What we have so far is that we start the game with the <span class="var">exitHome</span> variable, that every <span class="cn">Ghost</span> has, set to <span class="py">False</span> for Inky and Clyde and <span class="py">True</span> for Blinky and Pinky.  What this does is it removes the LEFT and RIGHT directions from their <span class="var">validDirections</span>.  This restricts them to only moving UP and DOWN.  When certain conditions are met, whatever they may be, we set the <span class="var">exitHome</span> variable to <span class="py">True</span>.  Now they are allowed to move LEFT and RIGHT.  </p>
+      <p>In order to guide them out we can use another variable called <span class="var">guideDog</span> or something that is usually <span class="py">False</span>.  However, when we release Inky and Clyde we set it to <span class="py">True</span>.  While this variable is <span class="py">True</span> we clear out their <span class="var">validDirections</span> list and instead put in the only direction we want them to go.  We can do that with a Stack or a Queue, but we'll use a Stack since we have one written up, and it's been awhile since we've used it.  So Inky, for example, will have three directions in this Stack:  [RIGHT, UP, LEFT].  We pop off each direction and set it in his <span class="var">validDirections</span> list until the stack is empty, at which point we set the <span class="var">guideDog</span> variable to <span class="py">False</span>.  Thereafter, Inky will continue on his merry way of trying to kill Pacman.  So now that we have an understanding of what we want to do, let's get it coded up.</p>
+      <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
+      <h4>Modify the <span class="cn">Ghost</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We just add the <span class="var">guideDog</span> variable that we introduced above.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  self.guideDog = False
+	</code>
+      </div>
+      <hr/>
 
+      <h4>Modify the <span class="cn">GhostGroup</span> class</h4>
+      <h4>Modify the <span class="mn">release</span> method</h4>   
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+
+    </div><!--End of container-->
     
     
     
