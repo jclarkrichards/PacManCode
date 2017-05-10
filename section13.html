@@ -129,13 +129,14 @@
       <h4>Modify the <span class="filenames">ghost.py</span> file</h4>
       <h4>Create a new method called <span class="mn">setStartPosition</span></h4>
       <div class="pseudoCode">
-	<p>Similar to Pacamn's method we created above, we set the ghost's node, direction, and target.  The initial direction we set for the ghost is UP since he starts in the ghost home.  We want him to immediately move out of the home.  Make sure to use the homeList rather than the nodeList when looking up the node in the first line.</p>
+	<p>Similar to Pacman's method we created above, we set the ghost's node, direction, and target.  The initial direction we set for the ghost is UP since he starts in the ghost home.  We want him to immediately move out of the home.  Make sure to use the homeList rather than the nodeList when looking up the node in the first line.</p>
       </div>
       <div class="codeText">
 	<code>
 	  def setStartPosition(self):
 	  <div class="tabLeft">
-	    self.node = self.nodes.getNode(*MAZEDATA[self.level]["start"]["ghost"], nodeList=self.nodes.homeList)<br>
+	    node = MAZEDATA[self.level]["start"]["ghost"]<br>
+	    self.node = self.nodes.getNode(*node, nodeList=self.nodes.homeList)<br>
 	    self.direction = UP<br>
 	    self.target = self.node.neighbors[self.direction]<br>
 	    self.setPosition()

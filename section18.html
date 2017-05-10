@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 18: Tying Up Loose Ends</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>We pretty much have a finished Pacman games at this point.  I know that it doesn't look sexy or anything.  There's no graphics, sound, or splash screens.  All we have are circles and lines.  That's really all you need to make this game though.  You can think of this version as the Atari version.  In the next phase we'll add the flash and pizaz.  But, we're still not quite finished with the Atari version.  There are a few loose ends that we need to tie up.  There aren't very many, and they won't change the way the game is played or anything.  But, they will help in making the game feel more like Pacman even without the graphics.</p>
+      <p>Below is a list of things we need to address and solve before this section is through.
+      <ol>
+	<li>When the ghosts change modes, they actually need to reverse direction.  I may have mentioned before that the ghosts never backtrack when they reach a node.  This is normally true.  However, whenever they change modes they do reverse their direction as a visual cue to the player.  It's not a necessary addition, but we'll include it in our game.</li>
+	<li>On that same note, the ghosts also reverse direction whenver Pacman eats a power pellet.  This is really the same thing as the previous point because when Pacman eats a power pellet, the ghost's mode changes, so they should reverse direction.</li>
+	<li>I should also point out that the reversing direction rule when the mode changes isn't always true.  For example, the ghost should not reverse direction when the mode changes from FREIGHT to SPAWN.  The ghost should also not reverse direction when the mode changes from SPAWN to any other mode.  So, really what I'm saying is that the ghosts only reverse direction when their modes change from any mode to FREIGHT and when they change from SCATTER to CHASE and from CHASE to SCATTER.  </li>
+	<li>When Pacman eats a ghost that is in FREIGHT mode, the game pauses for half a second.  The game does not pause when Pacman eats a fruit, however.  </li>
+	<li>We need to make the collision radiuses for Pacman and the Ghosts a bit smaller.  They really shouldn't collide unless they're right on top of each other.  We should allow a bit of overlap of the objects before we register a collision.  It just looks better that way. </li>
+	<li>When Pacman loses a life, we need to pause the game for one second.  This time will be used to show the death animation later on in the next phase.</li>
+      </ol></p>
+    </div><!--End of Setup container-->
+
+
+    <div class="container">
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+
+    </div><!--End of container-->
+
+
+
+    
+    
+    <div class="container">  
+      <h3>Conclusion</h3>
+      <p>So that was a big section, probably the biggest.  Maybe I should break it down into smaller sections, but we'll see.  In the next section we'll deal with any loose ends that we need to tie up before we finish with this phase.  They are minor things, but they can make a difference in how the game is played.</p>
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>maze1.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section17.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section19.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
