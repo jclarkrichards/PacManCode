@@ -38,13 +38,193 @@
 	<li>When Pacman eats a ghost that is in FREIGHT mode, the game pauses for half a second.  The game does not pause when Pacman eats a fruit, however.  </li>
 	<li>We need to make the collision radiuses for Pacman and the Ghosts a bit smaller.  They really shouldn't collide unless they're right on top of each other.  We should allow a bit of overlap of the objects before we register a collision.  It just looks better that way. </li>
 	<li>When Pacman loses a life, we need to pause the game for one second.  This time will be used to show the death animation later on in the next phase.</li>
+	<li>It would also be nice to get rid of some of the hard-coded values.  I know at the time I mentioned that I was going to eventually do that.  Well, now is the time.</li>  
       </ol></p>
     </div><!--End of Setup container-->
 
 
     <div class="container">
+      <h3>Reversing Direction For the Ghosts</h3>
       <div class="pseudoCode">
+	
+      </div>
+      <div class="codeText">
+	<code>
 
+	</code>
+      </div>
+      <hr/>
+
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Pausing While Eating a Ghost</h3>
+      <p>When Pacman eats a ghost that is in FREIGHT mode, the game needs to pause for half a second.  Play any Pacman game and you'll know that this is true.  We don't need to do this, but I kind of like it.  I don't know why, maybe it offers a small break in the action or something, or maybe it's just there to let the player know that they've just eaten a ghost.  Anyways, the only way the game pauses right now is if the player presses the space bar.  We now need a way for the game to pause for a specific amount of time, then unpause itself.  We also need a way to differentiate between these two types of pauses: a pause initiated by the game, and a pause initiated by the player.</p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">startGame</span> and <span class="mn">restartLevel</span> methods</h4>
+      <div class="pseudoCode">
+	<p>We are going to add a <span class="var">pauseTimer</span> which will keep track of how much time has passed while the game is paused.  The <span class="var">pauseTime</span> variable will hold the amount of time the game should remain paused in seconds.  The variable <span class="var">playerPaused</span> will tell the game that the player initiated the pause if it is <span class="py">True</span>.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  self.pauseTimer = 0<br>
+	  self.pauseTime = 0<br>
+	  self.playerPaused = False
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">checkEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>When the game starts we want to wait until the player presses the space bar.  Whenever the player presses the space bar to pause the game we set the <span class="var">paused</span> and <span class="var">playerPaused</span> variables to <span class="py">True</span> to let the game know that the player paused the game.  When the player presses the space bar to unpause the game, we set those variables to <span class="py">False</span> to let the game know that any pauses it encounters now will be caused by the game and not by the player.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkEvents(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if event.key == K_SPACE:
+	    <div class="tabLeft">
+	      if self.paused:
+	      <div class="tabLeft">
+		self.paused = False<br>
+		self.playerPaused = False
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		self.paused = True<br>
+		self.playerPaused = True
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>When Pacman eats a ghost we need to pause the game and pause it for half a second.  If that is too long or too short, then we can always modify it here.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if ghost.mode.name == "FREIGHT":
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.paused = True<br>
+	      self.pauseTime = 0.5
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">update</span> method</h4>
+      <div class="pseudoCode">
+	<p>If the game is paused, then we first check to see if the player paused the game.  If the player did pause the game, then we ignore the rest because we want to keep the game paused until the player unpauses the game.  If the player didn't pause the game, then the game paused itself.  In that case we keep the game paused for the specified amount of time, after which we unpause the game.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    dt = self.clock.tick(30) / 1000.0<br>
+	    if not self.paused:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	    else:
+	    <div class="tabLeft">
+	      if not self.playerPaused:
+	      <div class="tabLeft">
+		self.pauseTimer += dt<br>
+		if self.pauseTimer >= self.pauseTime:
+		<div class="tabLeft">
+		  self.paused = False
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Pausing When Pacman Dies</h3>
+      <p>This will be easy because we already took care of setting up the neccessary variables above.  </p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if ghost.mode.name == "FREIGHT":
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	    elif ghost.mode.name != "SPAWN":
+	    <div class="tabLeft">
+	      self.paused = True<br>
+	      self.pauseTime = 1<br>
+	      <p>...</p>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Pausing When the Player Passes a Level</h3>
+      <p>All of this pausing and unpausing should be trivial now.  When the player passes a level we want to pause the game because we're going to add something later in the next phase.  Right now we'll pause the game for 3 seconds, but that can change.</p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+      <div class="pseudoCode">
+	
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.pellets.isEmpty():
+	    <div class="tabLeft">
+	      self.paused = True<br>
+	      self.pauseTime = 3
+	      <p>...</p>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Fiddle Around with Collision Radiuses</h3>
+      <div class="pseudoCode">
+	
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Getting Rid of Hard-Coded Values</h3>
+      <div class="pseudoCode">
+	
       </div>
       <div class="codeText">
 	<code>
@@ -61,7 +241,7 @@
     
     <div class="container">  
       <h3>Conclusion</h3>
-      <p>So that was a big section, probably the biggest.  Maybe I should break it down into smaller sections, but we'll see.  In the next section we'll deal with any loose ends that we need to tie up before we finish with this phase.  They are minor things, but they can make a difference in how the game is played.</p>
+      <p>Well, there you have it.  I think we can actually call this a game.  It has a start and an ending.  There are goals to achieve, and it's something you can get better at with repeated play.  Even so, nobody would bat an eyelash at this as it stands.  People have come to expect some form of graphics in their games.  Animation, sound, and music is also a given.  None of that really affects the way the game is played, so that's why I didn't cover any of that in this phase.  This phase was all about getting the gameplay down.  Now that we have that we can focus on adding the visual aspects of the game.  It's important to note that anything we add from here on out should not change the way the game is played or break the game.  Anything we add should only change the way the game looks.  </p>
 
     </div> <!--End of the conclusion container-->
     <hr />

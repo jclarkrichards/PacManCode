@@ -185,7 +185,71 @@
       </div>
     </div><!--End of container-->
 
-    
+    <div class="container">
+      <h3>Adding Points When Eating Ghosts</h3>
+      <p>We need to add to the player's score when eating the ghosts.  When Pacman eats a power pellet, the first ghost he eats is always worth 200 points.  Every other ghost he eats after that doubles the score.  So if Pacman were to eat all four ghosts during a single power pellet, then the ghosts would give the player 200, 400, 800, and 1600 points.  Every time the player eats a power pellet, the score resets back to 200.  So if you add it all up, the player can only get a maximum of 12,000 points per level just from eating the ghosts.  </p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We are going to add a variable that keeps track of how many points we should award the player when he eats a ghost.  The default is 200 points.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  self.ghostScore = 200
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>When Pacman eats a ghost and the ghost is in FREIGHT mode, then we add whatever value is in <span class="var">ghostScore</span> to the player's <span class="var">score</span>.  Then we double the <span class="var">ghostScore</span>.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    ghost = self.pacman.eatGhost(self.ghosts)<br>
+	    if ghost is not None:
+	    <div class="tabLeft">
+	      if ghost.mode.name == "FREIGHT":
+	      <div class="tabLeft">
+		self.score += self.ghostScore<br>
+		self.ghostScore *= 2<br>
+		ghost.setRespawnMode()
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Whenever Pacman eats a power pellet, the <span class="var">ghostScore</span> resets back to 200 points.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletEvents(self, dt):
+	  <div class="tabLeft">
+	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
+	    if pellet:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if pellet.name == "powerpellet":
+	      <div class="tabLeft">
+		self.ghostScore = 200<br>
+		self.ghosts.setFreightMode()
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+
+
+    </div><!--End of container-->
     
     <div class="container">  
       <h3>Conclusion</h3>
