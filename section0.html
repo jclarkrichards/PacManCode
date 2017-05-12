@@ -44,19 +44,24 @@
     <hr />
     <h2>A Blank Screen</h2>
     <div class="container">
+      <h4>Create a new file called <span class="filenames">constants.py</span></h4>
       <div class="pseudoCode">
 	<p>Alright, we're going to get down and dirty and write our first code for the game.  Actually it isn't the first code in the game, since we should have our Vector2D and Stack classes already written.  You don't have those yet?  Well, go back to the <a href="vectors.html">vectors</a> and <a href="stacks.html">stacks</a> sections and complete them before doing this.  Ok, I'm assuming you have those written and saved in their respective files.  You also have your folder structure all set up and you're ready to add more files to it.  This first file is called <b><span class="str">constants.py</span></b>.  In this file we'll place all of our constant global variables.  <img src="Images/grid.png" alt=""/>These values never change throughout the game, so it's nice to place them into one location so that any other file can access them.  We're going to divide our screen into a grid as shown here.  We can consider the grid units the smallest unit of measurement for the time being.  Each grid unit is going to be 16x16 pixels.  So <span class="var">WIDTH</span> and <span class="var">HEIGHT</span> refer to the width and height of the grid units.  So using these units, the actual game screen is 28 grid units wide and 36 grid units tall.  We need to set the actual pixel size for the screen, so we just multiply these values together like so and store it in the <span class="var">SCREENSIZE</span> constant variable.  This way if we wanted to make the screen larger or smaller it's really easy to just change the width and height values here.  But we're not going to change these values for the rest of the game.  This is also a good place to store some color values so we just have to remember the name of the colors instead of their actual RGB values.  Right now we just have <span class="var">BLACK</span>, but go ahead and add more if you want.  We'll eventually add colors like yellow, pink, green, blue, aqua, and so on.  </p>
       </div>
       <div class="codeText">
-	<span class="var">WIDTH</span> = 16<br>
-	<span class="var">HEIGHT</span> = 16<br>
-	<span class="var">NROWS</span> = 36<br>
-	<span class="var">NCOLS</span> = 28<br>
-	<span class="var">SCREENSIZE</span> = (NCOLS*WIDTH, NROWS*HEIGHT)<br>
-	<span class="var">BLACK</span> = (0, 0, 0)
+	<code>
+	  <span class="var">WIDTH</span> = 16<br>
+	  <span class="var">HEIGHT</span> = 16<br>
+	  <span class="var">NROWS</span> = 36<br>
+	  <span class="var">NCOLS</span> = 28<br>
+	  <span class="var">SCREENSIZE</span> = (NCOLS*WIDTH, NROWS*HEIGHT)<br>
+	  <span class="var">BLACK</span> = (0, 0, 0)
+	</code>
       </div>
       
       <hr/>
+
+      <h4>Create a new file called <span class="filenames">gamecontrol.py</span></h4>
       <div class="pseudoCode">
 	<p>This code is in a file called <b><span class="str">gamecontrol.py</span></b>.  To start we need to import pygame, that shouldn't raise any questions.  The next line may not be as clear.  We will import everything under pygame.locals as well.  It's a bit sloppy because we don't need everything from pygame.locals, but we'll just do this for now.  We also want to use the constant variables that we just created above so we need to import eveything in that file.  We're going to create a class called <span class="cn">GameController</span> that basically controls everything in the game at a high level.  There will only be one instance of this class, and once it is created we need to initialize pygame and setup the background.  When setting up the background we also set up the screen.  The screen is what we're going to draw all of our objects to.  Then once everything is set up we'll start the game loop which is just an infinite loop.  How do we break out of the infinite loop?  That's what the <span class="mn">checkEvents</span> method does.  Every iteration through the loop we check to see if the user has pressed the "x" button at the top of the window.  <img src="Images/showxbutton.png" alt=""/>If you don't have this bit of code here, then the "x" button at the top of the window will do nothing and the user will have to force quit the window.  Not a good design practice.  We don't want to frustrate the player.  </p>
       </div>
@@ -65,7 +70,7 @@
 	<code>
 	  <span class="kw">import</span> pygame<br>
 	  <span class="kw">from</span> pygame.locals <span class="kw">import</span> *<br>
-	  <span class="kw">from</span> constants <span class="kw"> import</span><br>
+	  <span class="kw">from</span> constants <span class="kw"> import</span> *<br><br>
 	  <span class="kw">class</span> <span class="cn">GameController</span>(<span class="kw">object</span>):<br>
 	  <div class="tabLeft">
 	    <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>):<br>
@@ -73,7 +78,7 @@
 	      pygame.init()<br>
 	      <span class="kw">self</span>.screen = <span class="py">None</span><br>
 	      <span class="kw">self</span>.background = <span class="py">None</span><br>
-	      <span class="kw">self</span>.setBackground()<br><br>
+	      <span class="kw">self</span>.setBackGround()<br><br>
 	    </div>
 	    
 	    <span class="kw">def</span> <span class="mn">setBackGround</span>(<span class="kw">self</span>):<br>

@@ -34,19 +34,26 @@
       <p>So in the equation above we're saying that s<sub>0</sub> is our current position.  This equation will calculate what our next position will be given our velocity (v), acceleration (a), and the time it takes to get us there (&Delta;t).  We can simplify this because in Pacman we're not concerned with acceleration.  He's not slowing down or speeding up when he moves.  His speed is either 0 or max speed in most situations.  So his acceleration is 0 which means the equation simplifies to:</p>
       <p><b><span class="equations">s(t) = s<sub>0</sub> + v&Delta;t</span></b></p>
       <p>So to calculate his new position all we need is his current velocity and the time it takes to get to the new position.  Figuring out the time is really easy since Python includes some timing methods for us to use in order to keep track of time.  In fact, there's a method that will calculate how long each iteration through our game loop takes, which is exactly what we need for our equation.</p>
-
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
 	<p>What we need to do is initialize a clock.  We add this line of code in our <span class="mn">__init__</span> method in the gamecontrol.py file.  </p>
       </div>
       <div class="codeText">
-	<span class="kw">self</span>.clock = pygame.time.Clock()
+	<code>
+	  <span class="kw">self</span>.clock = pygame.time.Clock()
+	</code>
       </div>
       <hr/>
+
+      <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
 	<p>Now in our <span class="mn">update</span> method in the gamecontrol.py file we'll add the following.  We divide it by 1000.0 because clock.tick returns the time in milliseconds and we want our &Delta;t to be in seconds.</p>
       </div>
       <div class="codeText">
-	dt = <span class="kw">self</span>.clock.tick(30) / 1000.0
+	<code>
+	  dt = <span class="kw">self</span>.clock.tick(30) / 1000.0
+	</code>
       </div>
       <hr/>
       <p>How do we deal with the velocity in our equation?  Well, velocity is a vector and we've already covered vectors and have a Vector2D class waiting for us to use.  The magnitude of velocity is speed, and the direction of velocity is just whatever direction we're moving in.  We can rewrite velocity as speed * direction where direction is a unit vector.  So our equation now becomes:</p>
@@ -54,23 +61,27 @@
       <p>Speed is just some scalar value that we'll have to play around with in order to find the right value.  The direction is a unit vector that has a length of 1 and points in the direction we need to move the object.  Luckily for us Pacman can only move in one of four possible directions:  UP, DOWN, LEFT, or RIGHT.  These directions never change so lets add them to our constants.py file.  </p>
       
       <hr/>
+      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
       <div class="pseudoCode">
 	<p>First off, in order to use vectors we'll have to import the Vector2D class.  So that line goes on the top of the file.  The rest can go anywhere in the file, they don't have to come directly after the <span class="kw">import</span>.  Notice that I also included a <span class="var">STOP</span> vector which is a zero vector.  We'll need that because sometimes Pacman isn't moving, and giving him this vector will stop him in his tracks.  I also went ahead and declared another color:  <span class="var">YELLOW</span>.  Because that's the color we're going to make our Pacman object.</p>
       </div>
       <div class="codeText">
-	<span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br>
-	<span class="var">UP</span> Vector2D(0, -1)<br>
-	<span class="var">DOWN</span> Vector2D(0, 1)<br>
-	<span class="var">LEFT</span> Vector2D(-1, 0)<br>
-	<span class="var">RIGHT</span> Vector2D(1, 0)<br>
-	<span class="var">STOP</span> Vector2D()<br><br>
-	<span class="var">YELLOW</span> = (255, 255, 0)
+	<code>
+	  <span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br>
+	  <span class="var">UP</span> Vector2D(0, -1)<br>
+	  <span class="var">DOWN</span> Vector2D(0, 1)<br>
+	  <span class="var">LEFT</span> Vector2D(-1, 0)<br>
+	  <span class="var">RIGHT</span> Vector2D(1, 0)<br>
+	  <span class="var">STOP</span> Vector2D()<br><br>
+	  <span class="var">YELLOW</span> = (255, 255, 0)
+	</code>
       </div>
       <hr/>
       <p></p>
       <p>Right now this doesn't do anything useful because we don't have an object to apply it to.  Let's create an object called Pacman, that is the whole point of this website after all.  We're going to create a new file called pacman.py and add the following to it.</p>
       <hr/>
       
+      <h4>Create a new file called <span class="filenames">pacman.py</span></h4>
       <div class="pseudoCode">
 	<p>We first import everything we need to import.  This should start to look familiar to you.  When we create a Pacman object we'll give it a name of <span class="str">"pacman"</span>.  We don't have to do this, but it'll come in handy later on.  We also give it an initial position of (200, 400).  This will change later on, but for now you can input any initial position here.  The initial direction of Pacman is <span class="var">STOP</span> because we don't want him moving unless we say so.  We also specify his speed, color, and radius.  The radius is just how big we want him to be since at this time we're just going to represent Pacman as a yellow circle with a radius of 10 pixels.  In the <span class="mn">update</span> method we calculate his new position based on the equation above.  Notice that if his direction is <span class="var">STOP</span> then his position doesn't change.  We also check for key presses since we want to detect if the user is pressing the correct keys.  If we detect that the user has pressed either the UP, DOWN, LEFT, or RIGHT keys then we call the <span class="mn">move</span> method and pass in the corresponding direction.  Right now the <span class="mn">move</span> method just sets the direction, but it will do a lot more soon.  We also need to be able to draw Pacman to the screen so we include his own <span class="mn">render</span> method here.  Like I said before we're representing him as a circle, so that's what we'll draw to the screen.  </p>
       </div>
@@ -146,8 +157,9 @@
 	</div>
 	</code>
       </div>
-      <hr/>
-      
+    </div>
+
+    <div class="container">
       <p>Now that we have our Pacman class written we need to use it by creating a Pacman object.  So let's add the following code into our gamecontrol.py file.  I'm not going to write out the entire class like before, just where we need to make the changes.  Everything else stays the same.  </p>
       <div class="pseudoCode">
 	<p>Somewhere at the top of the file we need to import our Pacman class.</p>
