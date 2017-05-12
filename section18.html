@@ -45,21 +45,69 @@
 
     <div class="container">
       <h3>Reversing Direction For the Ghosts</h3>
+      <h4>Create a new method called <span class="mn">reverseGhostDirection</span></h4>
       <div class="pseudoCode">
-	
+	<p>There is already a method called <span class="mn">reverseDirection</span> that the ghosts inherited, so we don't want to overwrite that.  So that's why we call it <span class="mn">reverseGhostDirection</span> even though it is redundant.  We only want to reverse the direction of the ghosts that have left the home.  Ignore any ghosts still trapped in the ghost home.  Looking at you Inky and Clyde!</p>
       </div>
       <div class="codeText">
 	<code>
-
+	  def reverseGhostDirection(self):
+	  <div class="tabLeft">
+	    if self.leftHome:
+	    <div class="tabLeft">
+	      self.reverseDirection()
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
+
+      <h4>Modify the <span class="mn">modeUpdate</span> method</h4>
+      <div class="pseudoCode">
+	<p>This method gets called when a mode timer has run out and we need to pop off the next mode.  This usually only gets called when switching between CHASE and SCATTER modes.  But it will also get called when the FREIGHT mode timer runs out.  Those are the only modes with timers, so those are the only times this will get called.  Which is perfect because we want the ghosts to reverse direction in all of those cases.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def modeUpdate(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.modeTimer >= self.mode.time:
+	    <div class="tabLeft">
+	      self.reverseGhostDirection()<br>
+	      <p>...</p>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">setFreightMode</span> method</h4>
+      <div class="pseudoCode">
+	<p>This is called when Pacman eats a power pellet and we change the ghost's mode to FREIGHT.  We only reverse their direction if their previous mode was SCATTER or CHASE.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def setFreightMode(self):
+	  <div class="tabLeft">
+	    if self.mode.name != "FREIGHT" and self.mode.name != "SPAWN":
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.reverseGhostDirection()<br>
+	      self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
+	      self.modeTimer = 0
+	    </div>
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      
 
     </div><!--End of container-->
 
     <div class="container">
       <h3>Pausing While Eating a Ghost</h3>
       <p>When Pacman eats a ghost that is in FREIGHT mode, the game needs to pause for half a second.  Play any Pacman game and you'll know that this is true.  We don't need to do this, but I kind of like it.  I don't know why, maybe it offers a small break in the action or something, or maybe it's just there to let the player know that they've just eaten a ghost.  Anyways, the only way the game pauses right now is if the player presses the space bar.  We now need a way for the game to pause for a specific amount of time, then unpause itself.  We also need a way to differentiate between these two types of pauses: a pause initiated by the game, and a pause initiated by the player.</p>
+   
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">startGame</span> and <span class="mn">restartLevel</span> methods</h4>
       <div class="pseudoCode">
@@ -115,7 +163,8 @@
 	    <div class="tabLeft">
 	      <p>...</p>
 	      self.paused = True<br>
-	      self.pauseTime = 0.5
+	      self.pauseTime = 0.5<br>
+	      self.pauseTimer = 0
 	    </div>
 	  </div>
 	</code>
@@ -157,9 +206,47 @@
       <h3>Pausing When Pacman Dies</h3>
       <p>This will be easy because we already took care of setting up the neccessary variables above.  </p>
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>If we want to delay the start and restart of the game, then these variables will be set to <span class="py">True</span> instead of calling the required methods first.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  self.startDelay = False<br>
+	  self.restartDelay = False
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p>If we want to delay the start and restart of the game, then these variables will be set to <span class="py">True</span>.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  self.startDelay = False
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">restartLevel</span> method</h4>
+      <div class="pseudoCode">
+	<p>If we want to delay the start and restart of the game, then these variables will be set to <span class="py">True</span>.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  self.restartDelay = False
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
       <div class="pseudoCode">
-	
+	<p>So instead of calling <span class="mn">restartLevel</span> method directly as we've been doing we just set the <span class="var">restartDelay</span> variable to <span class="py">True</span>.  If we called the <span class="mn">restartLevel</span> method here, then the game wouldn't pause like we want it to.  We'll need to call that method after the pause period has finished.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -174,12 +261,53 @@
 	    <div class="tabLeft">
 	      self.paused = True<br>
 	      self.pauseTime = 1<br>
+	      self.pauseTimer = 0<br>
+	      self.restartDelay = True
 	      <p>...</p>
+	      
 	    </div>
 	  </div>
 	</code>
       </div>
       <hr/>
+      
+      <h4>Modify the <span class="mn">update</span> method</h4>
+      <div class="pseudoCode">
+	<p>This is where we want to call the <span class="mn">startGame</span> and <span class="mn">restartLevel</span> classes.  That way we wait for the pause to finish before the game restarts or the level restarts.  There's always going to be a pause before we want to call these methods anyways, so this is a good place to put them.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if not self.paused:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	    else:
+	    <div class="tabLeft">
+	      if not self.playerPaused:
+	      <div class="tabLeft">
+		self.pauseTimer += dt<br>
+		if self.pauseTimer >= self.pauseTime:
+		<div class="tabLeft">
+		  self.paused = False<br>
+		  if self.startDelay == True:
+		  <div class="tabLeft">
+		    self.startGame()
+		  </div>
+		  if self.restartDelay == True:
+		  <div class="tabLeft">
+		    self.restartLevel()
+		  </div>
+		  
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      
     </div><!--End of container-->
 
     <div class="container">
@@ -188,7 +316,7 @@
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
-	
+	<p>We set the <span class="var">startDelay</span> to <span class="py">True</span> so the game will pause for the specified time before restarting the game.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -198,7 +326,9 @@
 	    if self.pellets.isEmpty():
 	    <div class="tabLeft">
 	      self.paused = True<br>
-	      self.pauseTime = 3
+	      self.pauseTime = 3<br>
+	      self.pauseTimer = 0<br>
+	      self.startDelay = True
 	      <p>...</p>
 	    </div>
 	  </div>
@@ -209,15 +339,35 @@
 
     <div class="container">
       <h3>Fiddle Around with Collision Radiuses</h3>
+      <h4>Modify the <span class="filenames">pacman.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+	<p>We don't want the objects to collide on their edges, we want to make it look like that Pacman is actually eating the pellets, ghosts, and fruit.  So we need to reduce the collision radius so that it's inside the bounds of the objects.  I like using a radius of 4 works really well.</p>
       <div class="pseudoCode">
-	
+	<p>This will be the collision radius.  Different from the actual radius of the object.  </p>
       </div>
       <div class="codeText">
 	<code>
-
+	  <p>...</p>
+	  self.r = 4
 	</code>
       </div>
       <hr/>
+
+      <h4>Modify the <span class="mn">eatObject</span> method</h4>
+      <div class="pseudoCode">
+	<p>We write it like this because (r + r)<sup>2</sup> = 4 * r<sup>2</sup></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def eatObject(self, obj):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    rSquared = 4 * self.r**2<br>
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      
 
     </div><!--End of container-->
 
