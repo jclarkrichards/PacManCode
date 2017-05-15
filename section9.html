@@ -50,14 +50,12 @@
 	      d = self.position - pellet.position<br>
 	      dSquared = d.magnitudeSquared()<br>
 	      rSquared = (pellet.radius + pellet.radius)**2<br>
-	      if dSquared <= rSquared:
-			     <div class="tabLeft">
-			       return pellet
-			     </div>
-			     return None
-			     
-			     
+	      if dSquared &lt= rSquared:
+	      <div class="tabLeft">
+		return pellet
+	      </div>	     
 	    </div>
+	    return None
 	  </div>
 	</code>
       </div><!--End of codeText-->
@@ -80,13 +78,13 @@
 	</code>
       </div>
       <hr/>
-      <h4>Make a new method named <span class="mn">checkPelletDrivenEvents</span></h4>
+      <h4>Make a new method named <span class="mn">checkPelletEvents</span></h4>
       <div class="pseudoCode">
 	<p>It's important to keep track of the pellet events.  What do I mean by pellet events?  Well, eating the pellets has a lot of consequences.  For starters, eating pellets increases our score, eating all of the pellets ends the level, and eating power pellets causes the ghosts to go into FREIGHT mode (which we haven't programmed yet).  We'll use the pellets and the number of pellets we've eaten for other things as well.  So I figured that it deserved it's own method since keeping track of the pellets is really important in Pacman.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletDrivenEvents(self):
+	  def checkPelletEvents(self):
 	  <div class="tabLeft">
 	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
 	    if pellet:
@@ -107,8 +105,9 @@
 	<code>
 	  def update(self):
 	  <div class="tabLeft">
-	    dt = self.clock.tick(30) / 1000.0<br>
-	    self.checkPelletDrivenEvents()
+	    <p>...</p>
+	    self.checkEvents()<br>
+	    self.checkPelletEvents()
 	    <p>...</p>
 	  </div>
 	</code>

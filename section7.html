@@ -52,7 +52,7 @@
       
       <h4>Create a new method called <span class="mn">getClosestDirection</span></h4>
       <div class="pseudoCode">
-	<p>It is easiest to understand what this method does by referring to the images on the right.  </p>
+	<p>What this method does is take the list of valid directions, and for each of the directions in the list it will determine which direction will get the ghost closer to it's goal.  </p>
       </div>
       <div class="codeText">
 	<code>
@@ -64,7 +64,8 @@
 	      diffVec = self.node.position + direction*WIDTH - self.goal<br>
 	      distances.append(diffVec.magnitudeSquared())
 	    </div>
-	    return distances.index(min(distances))
+	    index = distances.index(min(distances))<br>
+	    return validDirections[index]
 	  </div>
 	</code>
       </div>

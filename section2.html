@@ -36,7 +36,9 @@
 
       <hr/>
       <h3>Code</h3>
+      
       <p>Alright, so in order to get some nodes up on the screen we'll start by creating a Node class.  We'll create a file called nodes.py and add the following class to it.</p>
+      <h4>Create a new file called <span class="filenames">nodes.py</span></h4>
       <div class="pseudoCode">
 	<p>We import pygame, Vector2D, and everything in our constants.py file.  When we create a Node we pass in the row and column values and then compute the x and y position we want to place the Node on the screen.  We also set up the neighbors as a dictionary.  This way it's really easy to know which node is in which direction to this Node.  Then all we need to do is render the Node so it appears on the screen.  We draw all of the paths to the neighbors first as WHITE lines, and we draw the Node itself as a RED circle.  When we're finished with the game we don't actually draw the nodes, but we draw them now while we're developing the game.</p>
       </div>
@@ -72,15 +74,22 @@
 
       <hr/>
       <p>You may have noticed that we added more colors, so we'll need to add them to the constants.py file.</p>
+      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
       <div class="pseudoCode">
 	<p>We'll just add the colors as we need them.  You can put these anywhere in the file, but try and keep all of the colors in one place so it's easy to find them.</p>
       </div>
       <div class="codeText">
-	<span class="var">WHITE</span> = (255, 255, 255)<br>
-	<span class="var">RED</span> = (255, 0, 0)	
+	<code>
+	  <span class="var">WHITE</span> = (255, 255, 255)<br>
+	  <span class="var">RED</span> = (255, 0, 0)
+	</code>
       </div>
-      <hr/>
+    </div><!--End of container-->
+
+    <div class="container">
       <p>Having a Node class is great when dealing with individual nodes, but we're going to be dealing with a lot of nodes.  It would be better if we grouped all of the nodes together so let's create another class in the nodes.py file where we actually create all of the individual nodes.  This class needs to be placed after the <span class="cn">Nodes</span> class.</p>
+      <h4>Modify the <span class="filenames">nodes.py</span> file</h4>
+      <h4>Create a new class called <span class="cn">NodeGroup</span></h4>
       <div class="pseudoCode">
 	<p>We're going to keep all of our Node objects in a list called nodeList, which starts out empty.  After we create our NodeGroup object we'll call a method called <span class="mn">setupTestNodes</span> which is just a temporary method we're using to show how we manually create and link up the nodes together.  When creating each Node you need to pass in the location you want to place the Node in (row, column) format.  Then, after the nodes have been created, we need to link them up together by adding nodes to the neighbors dictionary of each node.  Finally, we add all of the nodes to the nodeList.  When we want to draw all of the nodes we call the <span class="mn">render</span> method which just loops through the nodeList and calls that nodes <span class="mn">render</span> method.</p>
       </div>
@@ -119,7 +128,7 @@
 	    <span class="var">nodeF.neighbors</span>[RIGHT] = nodeG<br>
 	    <span class="var">nodeG.neighbors</span>[UP] = nodeE<br>
 	    <span class="var">nodeG.neighbors</span>[LEFT] = nodeF<br>
-	    <span class="kw">self</span>.nodeList = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG]:<br><br>
+	    <span class="kw">self</span>.nodeList = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG]<br><br>
 	    
 	  </div>
 	  <span class="kw">def</span> <span class="mn">render</span>(<span class="kw">self</span>, screen):<br>
@@ -128,40 +137,50 @@
 	    <div class="tabLeft">
 	      node.render(screen)
 	    </div>
-	  </div>
-				     
-				     
+	  </div>				     
 	</div>
 	</code>
       </div>
-      <hr/>
+    </div><!--End of container-->
+
+    <div class="container">
       <p>Now that we have the <span class="cn">NodeGroup</span> class written we can create an instance of it in the <span class="cn">GameController</span>.  So add the following code to the gamecontrol.py file.</p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <div class="pseudoCode">
 	<p>In order to use the <span class="cn">NodeGroup</span> class we'll need to import it first.</p>
       </div>
       <div class="codeText">
-	<span class="kw">from</span> nodes <span class="kw">import</span> NodeGroup
+	<code>
+	  <span class="kw">from</span> nodes <span class="kw">import</span> NodeGroup
+	</code>
       </div>
       <hr/>
 
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
       <div class="pseudoCode">
 	<p>Add these two lines to the <span class="mn">startGame</span> method.</p>
       </div>
       <div class="codeText">
-	<span class="kw">self</span>.nodes = NodeGroup()<br>
-	<span class="kw">self</span>.nodes.setupTestNodes()
+	<code>
+	  <span class="kw">self</span>.nodes = NodeGroup()<br>
+	  <span class="kw">self</span>.nodes.setupTestNodes()
+	</code>
       </div>
       <hr/>
 
+      <h4>Modify the <span class="mn">render</span> method</h4>
       <div class="pseudoCode">
 	<p>Finally, we want to draw the nodes to the screen.  Add this to the <span class="mn">render</span> method.  The order in which you place things here matter.  It depends if you want objects to appear on top or behind other objects.  Place this code before drawing the Pacman object so that Pacman will appear in front of the nodes.  </p>
       </div>
       <div class="codeText">
-	<span class="kw">self</span>.nodes.render(<span class="kw">self</span>.screen)
+	<code>
+	  <span class="kw">self</span>.nodes.render(<span class="kw">self</span>.screen)
+	</code>
       </div>
-      <hr/>
+    </div><!--End of container-->
+    
 
-      <hr/>
+    <div class="container">
       <h3>Conclusion</h3>
       <p><img src="Images/nodes_simple.png" alt="" width=300 height=400/>So we have a Pacman object that is able to move around the screen.  That's at least more exciting than the last section, right?  We still don't have a game here, just a yellow circle that responds to certain keys.  Right now, Pacman is able to move anywhere he wants on the screen.  Last time I checked Pacman was constrained to only be able to move within a maze.  In the next section I'm going to show you how to constrain his movement by having him move on a predefined grid.  We'll just use the same grid we made in this section.</p>
     </div> <!--End of the main container-->

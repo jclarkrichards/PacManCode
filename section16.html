@@ -39,7 +39,7 @@
       <h3>Modify the <span class="filenames">ghosts.py</span> file</h3>
       <h4>Create a new class called <span class="cn">GhostGroup</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>We want to create this class after the <span class="cn">Ghost</span> class.  </p>
       </div>
       <div class="codeText">
 	<code>
@@ -49,7 +49,7 @@
 	    <div class="tabLeft">
 	      self.nodes = nodes<br>
 	      self.level = level<br>
-	      self.ghosts = []
+	      self.ghosts = []<br>
 	      for i in range(4):
 	      <div class="tabLeft">
 		self.ghosts.append(Ghost(nodes, level))
@@ -177,32 +177,74 @@
       </div>
       <div class="codeText">
 	<code>
-	  if pellet.name == "powerpellet":
-	  <div class="tabLeft">
-	    self.ghosts.setFreightMode()
-	  </div>
 	  <p>...</p>
-	  if self.ghosts.anyInFreightOrSpawn():
-	  <div class="tabLeft">
-	    self.pacman.boostSpeed()
-	  </div>
+	  if pellet:
 	  <p>...</p>
-	  if self.ghosts.anyInFreightOrSpawn():
 	  <div class="tabLeft">
-	    self.pacman.boostSpeed()
+	    if pellet.name == "powerpellet":
+	    <div class="tabLeft">
+	      self.ghostScore = 200<br>
+	      self.ghosts.setFreightMode()
+	    </div>
+	    <p>...</p>
+	    if self.ghosts.anyInFreightOrSpawn():
+	    <div class="tabLeft">
+	      self.pacman.boostSpeed()
+	    </div>
 	  </div>
-	  <p>...</p>
+	  else:
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.ghosts.anyInFreightOrSpawn():
+	    <div class="tabLeft">
+	      self.pacman.boostSpeed()
+	    </div>
+	    <p>...</p>
+	  </div>
 	</code>
       </div>
       <hr/>
 
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>We have more than one ghost to deal with, so we need to know which ghost Pacman is coming into contact with.  We'll also need to modify Pacman's <span class="mn">eatGhost</span> method as well.  Just rewrite this whole method as you see it here.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    ghost = self.pacman.eatGhost(self.ghosts)<br>
+	    if ghost is not None:
+	    <div class="tabLeft">
+	      if ghost.mode.name == "FREIGHT":
+	      <div class="tabLeft">
+		self.score += self.ghostScore<br>
+		self.ghostScore *= 2<br>
+		ghost.setRespawnMode()
+	      </div>
+	      elif ghost.mode.name != "SPAWN":
+	      <div class="tabLeft">
+		self.lives -= 1<br>
+		if self.lives == 0:
+		<div class="tabLeft">
+		  self.lives = 5<br>
+		  self.startGame()
+		</div>
+		self.restartLevel()
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
       <h4>Modify the <span class="mn">restartLevel</span> method</h4>
       <div class="pseudoCode">
 	<p>As before, just replace the previous call to the <span class="cn">Ghost</span> object with this in the same location.</p>
       </div>
       <div class="codeText">
 	<code>
-	  self.ghosts = Ghost(self.nodes, self.level)
+	  self.ghosts = GhostGroup(self.nodes, self.level)
 	</code>
       </div>
       <hr/>
@@ -218,13 +260,50 @@
       </div>
     </div><!--End of container-->
 
+    <div class="container">
+      <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
+      <h4>Modify the <span class="mn">eatGhost</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to loop through all of the ghosts and check which ghost Pacman is colliding with if any.  Return that ghost.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def eatGhost(self, ghosts):
+	  <div class="tabLeft">
+	    for ghost in ghosts:
+	    <div class="tabLeft">
+	      if self.eatObject(ghost):
+	      <div class="tabLeft">
+		return ghost
+	      </div>
+	    </div>
+	    return None
+	  </div>
+	</code>
+      </div>
+    </div><!--End of container-->
     
     <div class="container">
       <p>If you were to run the code above you may be surprised to only see one ghost moving around the screen.  But didn't we just create four ghosts?  We did, but the four ghosts we created were exact duplicates of each other.  So they're going to think the same and make the same decisions on where to go.  So there are four ghosts there, they're just stacked on top of each other.  If we want to show the four ghosts separated (and we do) we'll have to give them all different personalities or basically just different goals.  The easiest way is to give them all different scatter goals.  In doing so we're also going to create a class for each ghost.  </p>
       <hr/>
+      <h3>Modify the <span class="filenames">constants.py</span> file</h3>
+      <div class="pseudoCode">
+	<p>We want to create more colors in order to tell the ghosts apart.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  PINK = (255, 100, 150)<br>
+	  TEAL = (100, 255, 255)<br>
+	  ORANGE = (230, 190, 40)
+	  <p>...</p>
+	</code>
+      </div>
+      <hr/>
+      
       <h3>Modify the <span class="filenames">ghosts.py</span> file</h3>
       <div class="pseudoCode">
-	<p>We're going to create a class for each ghost.  Each class right now only differs by the name, color, and scatter goal of the ghosts.  We'll add more to these classes as we flesh out their personalities.  Notice that each of the classes inherits from the <span class="cn">Ghost</span> class.  The only methods we're going to overwrite for each ghost is the <span class="mn">setScatterGoal</span> method.  We'll overwrite other methods as they become neccessary.</p>
+	<p>We're going to create a class for each ghost.  Each class right now only differs by the name, color, and scatter goal of the ghosts.  We'll add more to these classes as we flesh out their personalities.  Notice that each of the classes inherits from the <span class="cn">Ghost</span> class.  The only methods we're going to overwrite for each ghost is the <span class="mn">setScatterGoal</span> method.  We'll overwrite other methods as they become neccessary. Add all of these methods between the <span class="cn">Ghost</span> class and the <span class="cn">GhostGroup</span> class.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -233,7 +312,7 @@
 	    def __init__(self, nodes, level):
 	    <div class="tabLeft">
 	      Ghost.__init__(self, nodes, level)<br>
-	      self.name = "blinky"
+	      self.name = "blinky"<br>
 	      self.color = RED
 	    </div>
 	    <br>
@@ -249,7 +328,7 @@
 	    def __init__(self, nodes, level):
 	    <div class="tabLeft">
 	      Ghost.__init__(self, nodes, level)<br>
-	      self.name = "pinky"
+	      self.name = "pinky"<br>
 	      self.color = PINK
 	    </div>
 	    <br>
@@ -265,7 +344,7 @@
 	    def __init__(self, nodes, level):
 	    <div class="tabLeft">
 	      Ghost.__init__(self, nodes, level)<br>
-	      self.name = "inky"
+	      self.name = "inky"<br>
 	      self.color = TEAL
 	    </div>
 	    <br>
@@ -281,7 +360,7 @@
 	    def __init__(self, nodes, level):
 	    <div class="tabLeft">
 	      Ghost.__init__(self, nodes, level)<br>
-	      self.name = "clyde"
+	      self.name = "clyde"<br>
 	      self.color = ORANGE
 	    </div>
 	    <br>

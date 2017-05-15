@@ -37,17 +37,19 @@
 	<li><b>"|"</b>: vertical path</li>
       </ul>
       
-With using only these symbols I should be able to generate a text file of any size that defines a maze.  If we were to convert the previous nodes we've been using in the last sections into a text file, then it would look like the following image on the right.  In fact, go ahead and create a text file similar to the image on the right and save it in the same directory as all of our other files.  You don't have to copy the image exactly, but you can initially, then when you see things working you can get creative.</p>
+Using only these symbols I should be able to generate a text file of any size that defines a maze.  If we were to convert the previous nodes we've been using in the last sections into a text file, then it would look like the following image on the right.  In fact, go ahead and create a text file similar to the image on the right and save it in the same directory as all of our other files.  You don't have to copy the image exactly, but you can initially, then when you see things working you can get creative.  I called my file <span class="filenames">mazetest.txt</span>.</p>
       <div class="codeText">
-	0 0 0 0 0 0 0 0<br>
-	0 0 0 0 0 0 0 0<br>
-	0 + - - + 0 0 0<br>
-	0 | 0 0 | 0 0 0<br>
-	0 + - - + - + 0<br>
-	0 | 0 0 0 0 | 0<br>
-	0 | 0 0 0 0 | 0<br>
-	0 + - - - - + 0<br>
-	0 0 0 0 0 0 0 0<br>
+	<code>
+	  0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0<br>
+	  0 + - - + 0 0 0<br>
+	  0 | 0 0 | 0 0 0<br>
+	  0 + - - + - + 0<br>
+	  0 | 0 0 0 0 | 0<br>
+	  0 | 0 0 0 0 | 0<br>
+	  0 + - - - - + 0<br>
+	  0 0 0 0 0 0 0 0<br>
+	</code>
       </div>
       <p>There are a few things we need to understand about this text file.  First off, <span class="important">a path will always lead to another node.</span>  There should never be a path that leads to nothing.  It wouldn't make much sense otherwise.  Also, two nodes are equal if and only if they are located in the same row and the same column.  This is important to remember as we're writing the code because the computer may generate the same node twice.  You'll see why when we get to the code, but if it does generate the same node we need to check for node equality.  The only way to do that is to define what it means to be equal.  <span class="important">Remember, two nodes are equal if and only if they have the same x and y values.</span></p>
     </div>
@@ -62,14 +64,14 @@ With using only these symbols I should be able to generate a text file of any si
       <div class="codeText">
 	<code>
 	  <span class="kw">from</span> stacks <span class="kw">import</span> Stack<br>
-	  <span class="kw">from</span> numpy <span class="kw">import</span> loadtxt<br>
-	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, mazeFile):
+	  <span class="kw">from</span> numpy <span class="kw">import</span> loadtxt<br><br>
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, level):
 	  <div class="tabLeft">
-	    <span class="kw">self</span>.mazeFile = mazeFile<br>
+	    <span class="kw">self</span>.level = level<br>
 	    <span class="kw">self</span>.nodeList = []<br>
 	    <span class="kw">self</span>.grid = <span class="py">None</span><br>
 	    <span class="kw">self</span>.nodeStack = Stack()<br>
-	    <span class="kw">self</span>.<span class="mn">createNodeList</span>(mazeFile, self.nodeList)
+	    <span class="kw">self</span>.<span class="mn">createNodeList</span>(level, self.nodeList)
 	  </div>
 	</code>
       </div><!--End of codeText-->
@@ -89,7 +91,7 @@ With using only these symbols I should be able to generate a text file of any si
 	    <span class="kw">while not self</span>.nodeStack.<span class="mn">isEmpty</span>():
 	    <div class="tabLeft">
 	      <span class="var">node</span> = <span class="kw">self</span>.nodeStack.<span class="mn">pop</span>()<br>
-	      <span class="kw">self</span>.<span class="mn">addNode</span>(node)<br>
+	      <span class="kw">self</span>.<span class="mn">addNode</span>(node, nodeList)<br>
 	      <span class="var">leftNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(LEFT, node.row, node.column-1, nodeList)<br>
 	      <span class="var">rightNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(RIGHT, node.row, node.column+1, nodeList)<br>
 	      <span class="var">upNode</span> = <span class="kw">self</span>.<span class="mn">getPathNode</span>(UP, node.row-1, node.column, nodeList)<br>
@@ -285,7 +287,7 @@ With using only these symbols I should be able to generate a text file of any si
 	      <span class="kw">return self</span>.<span class="mn">pathToFollow</span>(DOWN, row, col, <span class="str">"|"</span>)
 	    </div>
 	    
-	    <span class="kw">else</span>
+	    <span class="kw">else</span>:
 	    <div class="tabLeft">
 	      <span class="kw">return</span> <span class="py">None</span>
 	    </div>
@@ -331,16 +333,17 @@ With using only these symbols I should be able to generate a text file of any si
 	  <span class="kw">def</span> <span class="mn">startGame</span>(<span class="kw">self</span>):
 	  <div class="tabLeft">
 	    <span class="kw">self</span>.nodes = <span class="cn">NodeGroup</span>(<span class="str">"mazetest.txt"</span>)<br>
-	    <span class="kw">self</span>.pacman = <span class="cn">Pacman</span>(<span class="kw">self</span>.nodes.nodeList)
+	    <span class="kw">self</span>.pacman = <span class="cn">Pacman</span>(<span class="kw">self</span>.nodes)
 	  </div>
 	</code>
       </div>
-      <hr/>
+      
     </div><!--End of the code container-->
 
     <div class="container">
       <h3>Creating the maze for the original Pacman game</h3>
-      <p>Now that we have all of this code set up, we can use it for any text file of any size.  So instead of this tiny maze we've been using for testing, let's create the actual Pacmna maze we want to use in our game.  This maze is modeled after the actual Pacman maze from the first game, so it should look familiar to you.  Maybe not in text form, but once we run it, it will I hope.  Life doesn't have to be so hard.</p>
+      <p>Now that we have all of this code set up, we can use it for any text file of any size.  So instead of this tiny maze we've been using for testing, let's create the actual Pacman maze we want to use in our game.  This maze is modeled after the actual Pacman maze from the first game, so it should look familiar to you.  Maybe not in text form, but once we run it, it will I hope.</p>
+      <h4>Create a new file called <span class="filenames">maze1.txt</span></h4>
       <div class="pseudoCode">
 	<p>This is the text file we'll be using for the actual maze.  We'll eventually make more for other mazes as well.  How many nodes are in this map?  I counted 66 nodes.  That's quite a bit and the other maps we'll create may have more or less nodes.  Maybe now you're happy that you don't actually have to connect these by hand.  Remember how much work it was to just connect 7 nodes together?  </p>
       </div>
@@ -384,13 +387,30 @@ With using only these symbols I should be able to generate a text file of any si
 	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 	</code>
       </div>
+      <hr/>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p>Change the name of the file so that we use the big maze we just made.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">startGame</span>(<span class="kw">self</span>):
+	  <div class="tabLeft">
+	    <span class="kw">self</span>.nodes = <span class="cn">NodeGroup</span>(<span class="str">"maze1.txt"</span>)<br>
+	    <p>...</p>
+	  </div>
+	  
+	</code>
+      </div>
+      
     </div><!--End of movement 2 container-->
 
 
 
     <div class="container">  
       <h3>Conclusion</h3>
-      <p>That sure was a lot of code to do something that took us much less code to do.  It almost seems counter-productive.  Although it is true that if we only have a few nodes, then it is easier to just create and link them by hand, however, we don't just have a few nodes.  We're going to have many mazes and each maze can have up to 100 nodes in them.  If you want to take the time to link all of those nodes by hand, then be my guest.  The code in this section is going to save us a ton of time and we won't have to worry about accidently linking up nodes that aren't supposed to be linked or not linking nodes that are supposed to be linked.  This sort of task is the perfect job for a computer to handle.  Now we don't have to think about it again.  All we need to do is create the text files, and that's so much easier for us to handle.  This was a big section with a lot of code, so let's take it easy on the next section before we tackle another big one.  In the next section we're going to learn how to portal between two nodes.</p>
+      <p><img src="Images/firstMap.png" alt="" />When you run the code you should see something similar to the image on the right.  Move Pacman around the maze and get a feel for it.  That sure was a lot of code to do something that previously took us much less code to do.  It almost seems counter-productive.  Although it is true that if we only have a few nodes, then it is easier to just create and link them by hand, however, we don't just have a few nodes.  We're going to have many mazes and each maze can have up to 100 nodes in them.  If you want to take the time to link all of those nodes by hand, then be my guest.  The code in this section is going to save us a ton of time and we won't have to worry about accidently linking up nodes that aren't supposed to be linked or not linking nodes that are supposed to be linked.  This sort of task is the perfect job for a computer to handle.  Now we don't have to think about it again.  All we need to do is create the text files, and that's so much easier for us to handle.  This was a big section with a lot of code, so let's take it easy on the next section before we tackle another big one.  In the next section we're going to learn how to portal between two nodes.</p>
     </div> <!--End of the conclusion container-->
     <hr />
 

@@ -274,6 +274,10 @@
 	  def checkGhostEvents(self, dt):
 	  <div class="tabLeft">
 	    <p>...</p>
+	    if self.ghost is not None:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
 	    if self.pellets.numEaten &gt= 30 or self.idleTimer &gt= 10:
 	    <div class="tabLeft">
 	      self.ghosts.release("inky")
@@ -323,7 +327,6 @@
 	<code>
 	  <p>...</p>
 	  self.guideDog = False<br>
-	  self.exitHome = True<br>
 	  self.leftHome = True
 	</code>
       </div>
@@ -338,7 +341,6 @@
 	<code>
 	  <p>...</p>
 	  self.setGuideStack()<br>
-	  self.exitHome = False<br>
 	  self.leftHome = False
 	</code>
       </div>
@@ -466,22 +468,23 @@
     <div class="container">
       <h3>Guiding the Other Ghosts</h3>
       <p>The only other time we need to guide the ghosts out of the home is when they need to respawn after Pacman eats them.  So, this needs to apply to all of the ghosts.  </p>
-      <h4>Modify the <span class="cn">Blinky</span> and <span class="cn">Pinky</span> classes</h4>
+      <h4>Modify the <span class="cn">Ghost</span> class</h4>
       <h4>Create a new method called <span class="mn">setGuideStack</span></h4>
       <div class="pseudoCode">
 	<p>We already set the guide stacks for Inky and Clyde, but now we need to set up the method for Blinky and Pinky.  The reason is because when they need to respawn, they go back home to do that.  When they get there they need strict instructions on how to leave the home.  We didn't need it before because they start the game leaving the home as opposed to Inky and Clyde.</p>
       </div>
       <div class="codeText">
-	def setGuideStack(self):
-	<div class="tabLeft">
-	  self.guideStack = Stack()<br>
-	  self.guideStack.push(LEFT)<br>
-	  self.guideStack.push(UP)
-	</div>
+	<code>
+	  def setGuideStack(self):
+	  <div class="tabLeft">
+	    self.guideStack = Stack()<br>
+	    self.guideStack.push(LEFT)<br>
+	    self.guideStack.push(UP)
+	  </div>
+	</code>
       </div>
       <hr/>
       
-      <h4>Modify the <span class="cn">Ghost</span> class</h4>
       <h4>Modify the <span class="mn">setRespawnMode</span></h4>
       <div class="pseudoCode">
 	<p>When the ghost needs to respawn we need to set up the <span class="var">guideStack</span> and set the <span class="var">leftHome</span> to <span class="py">False</span>.  So when the ghost reaches his <span class="var">homeNode</span> he'll follow the directions from the <span class="var">guideStack</span> to quickly leave the home like we described above for Inky and Clyde.</p>
@@ -496,7 +499,8 @@
 	  </div>
 	</code>
       </div>
-
+      <hr/>
+      
       <h4>Modify the <span class="mn">setSpawnGoal</span></h4>
       <div class="pseudoCode">
 	<p>Before we had the spawn goal hard-coded in, but now we'll just set it as each ghost's <span class="var">homeNode</span>.</p>

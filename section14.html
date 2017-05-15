@@ -38,11 +38,10 @@
       <h4>Modify the <span class="filenames">constants.py</span> file</h4>
  
        <div class="pseudoCode">
-	 <p>Since the nodes that we need to use to restrict movement are maze dependent we'll add them to the MAZEDATA dictionary.  I know that we're still hard-coding them in, and we'll fix that later.  But for now, it's fine.  The <span class="str">"home"</span> is the node that defines the ghost home entrance.  We'll also add in the four nodes that prevent the ghosts from moving UP.  These are the four blue nodes in the image from before.  We can also add other dictionaries like <span class="str">"restrictDown"</span> or <span class="str">"restrictLeft"</span> or whatever you want to call them if we want to restrict those directions.  We won't need to at least in the first maze, though, so just the UP direction.</p>
+	 <p>Since the nodes that we need to use to restrict movement are maze dependent we'll add them to the MAZEDATA dictionary.  We need to add in the four nodes that prevent the ghosts from moving UP.  These are the four blue nodes in the image from before.  We can also add other dictionaries like <span class="str">"restrictDown"</span> or <span class="str">"restrictLeft"</span> or whatever you want to call them if we want to restrict those directions.  We won't need to at least in the first maze, though, so just the UP direction.  </p>
       </div>
       <div class="codeText">
 	<code>
-	  MAZEDATA[0]["home"] = (216, 272)<br>
 	  MAZEDATA[0]["restrictUp"] = {0:(12*WIDTH, 14*HEIGHT), 1:(15*WIDTH, 14*HEIGHT), 2:(12*WIDTH, 26*HEIGHT), 3:(15*WIDTH, 26*HEIGHT)}
 	</code>
       </div>
@@ -52,7 +51,7 @@
       <h4>Modify the <span class="filenames">nodes.py</span> file</h4>
       <h4>Modify the <span class="cn">Node</span> <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>We're just going to add this variable to the <span class="cn">Node</span> class.  This will only be <span class="py">True</span> for one node, but it will make it easy to find that node at least.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -67,21 +66,14 @@
       <hr/>
       <h4>Modify the <span class="mn">moveHomeNodes</span> method</h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>We define the home node to be the node that represents the entrance to the ghost home nodes.  It is guaranteed that this node will always be the first node in the <span class="var">homeList</span> list because it's always the first node found in the <span class="filenames">home.txt</span> file.  This will never change in any of the mazes we make.</p>
       </div>
       <div class="codeText">
 	<code>
 	  def moveHomeNodes(self):
 	  <div class="tabLeft">
 	    <p>...</p>
-	    for node in self.homeList:
-	    <div class="tabLeft">
-	      <p>...</p>
-	      if node.position.toTuple() == MAZEDATA[self.level]["home"]:
-	      <div class="tabLeft">
-		node.home = True
-	      </div>
-	    </div>
+	    self.homeList[0].home = True
 	  </div>
 	</code>
       </div>
@@ -95,7 +87,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def moveByKey(self):
+	  def moveByKey(self, direction):
 	  <div class="tabLeft">
 	    if self.direction is STOP:
 	    <div class="tabLeft">
@@ -107,7 +99,7 @@
 	      if self.overshotTarget():
 	      <div class="tabLeft">
 		<p>...</p>
-		if self.node.neighbors[direction] is not None and not self.node.home:
+		if (self.node.neighbors[direction] is not None and not self.node.home):
 		<div class="tabLeft">
 		  <p>...</p>
 		  <!--if not self.node.home and direction is not DOWN:
@@ -133,7 +125,7 @@
 	  def getValidDirections(self):
 	  <div class="tabLeft">
 	    <p>...</p>
-	    if self.node.home and DOWN in validDirections and self.mode.name != "SPAWN":
+	    if (self.node.home and DOWN in validDirections and self.mode.name != "SPAWN"):
 	    <div class="tabLeft">
 	      validDirections.remove(DOWN)
 	    </div>
@@ -150,7 +142,7 @@
       <h4>Modify the <span class="filenames">nodes.py</span> file</h4>
       <h4>Modify the <span class="mn">__init__</span> in the <span class="cn">Node</span> class</h4>
       <div class="pseudoCode">
-	<p>Just need to add this to the node class in preparation for the next step.</p>
+	<p>Just need to add this to the node class in preparation for the next step.  I really don't like the name of this, but I can't think of a better name right now.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -202,7 +194,7 @@
 	  </div>
 	</code>
       </div>
-
+      <hr/>
 
       <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
       <h4>Modify the <span class="mn">getValidDirections</span> method</h4>
@@ -255,7 +247,7 @@
 	<code>
 	  def modifySpeed(self):
 	  <div class="tabLeft">
-	    if self.node.portalNode is not None or self.target.portalNode is not None:
+	    if (self.node.portalNode is not None or self.target.portalNode is not None):
 	    <div class="tabLeft">
 	      return self.speed / 2.0
 	    </div>
@@ -287,7 +279,7 @@
       <hr/>
 
       <h4>Modify the <span class="filenames">pacman.py</span> file</h4>
-      <h4>Create two new methods</h4>
+      <h4>Create three new methods</h4>
       <div class="pseudoCode">
 	<p>These three methods will allow us to just set Pacman's speed to normal, slower, or a bit faster when we need it.</p>
       </div>
@@ -330,7 +322,20 @@
 	  </div>
 	</code>
       </div>
+      <hr/>
 
+      <h4>Modify the <span class="filenames">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Just adding the dt to the inputs.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
       <hr/>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
@@ -357,7 +362,7 @@
 	    <div class="tabLeft">
 	      self.idleTimer = 0<br>
 	      <p>...</p>
-	      if self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN":
+	      if (self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN"):
 	      <div class="tabLeft">
 		self.pacman.boostSpeed()
 	      </div>
@@ -369,14 +374,13 @@
 	    else:
 	    <div class="tabLeft">
 	      self.idleTimer += dt<br>
-	      if self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN":
+	      if (self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN"):
 	      <div class="tabLeft">
 		self.pacman.boostSpeed()
 	      </div>
 	      else:
 	      <div class="tabLeft">
-	    if self.idleTimer &gt= 0.5<br>
-
+		if self.idleTimer &gt= 0.5:<br>
 		<div class="tabLeft">
 		  self.pacman.normalSpeed()
 		</div>

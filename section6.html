@@ -55,9 +55,8 @@
 	<code>
 	  import pygame<br>
 	  from vectors import Vector2D<br>
-	  from constants import *<br>
-	  class MazeMouse(object):<br><br>
-
+	  from constants import *<br><br>
+	  class MazeMouse(object):<br>
 	  <div class="tabLeft">
 	    def __init__(self, nodes):<br>
 	    <div class="tabLeft">
@@ -71,87 +70,87 @@
 	      self.radius = 10<br>
 	      self.color = WHITE<br>
 	      <br>
+	    </div>
 
-	      def setPosition(self):
-	      <div class="tabLeft">
-		self.position = self.node.position.copy()<br>
-	      </div>
-	      <br>
+	    def setPosition(self):
+	    <div class="tabLeft">
+	      self.position = self.node.position.copy()<br>
+	    </div>
+	    <br>
 
-	      def update(self, dt):
-	      <div class="tabLeft">
-		self.position += self.direction*self.speed*dt<br>
-		self.moveBySelf()<br>
-	      </div>
-	      <br>
+	    def update(self, dt):
+	    <div class="tabLeft">
+	      self.position += self.direction*self.speed*dt<br>
+	      self.moveBySelf()<br>
+	    </div>
+	    <br>
 
-	      def moveBySelf(self):
+	    def moveBySelf(self):
+	    <div class="tabLeft">
+	      if self.direction is not STOP:
 	      <div class="tabLeft">
-		if self.direction is not STOP:
+		if self.overshotTarget():
 		<div class="tabLeft">
-		  if self.overshotTarget():
+		  self.node = self.target<br>
+		  self.portal()<br>
+		  if self.node.neighbors[self.direction] is not None:
 		  <div class="tabLeft">
-		    self.node = self.target<br>
-		    self.portal()<br>
-		    if self.node.neighbors[self.direction] is not None:
-		    <div class="tabLeft">
-		      self.target = self.node.neighbors[self.direction]<br>
-		    </div>
-		    else:
-		    <div class="tabLeft">
-		      self.setPosition()<br>
-		      self.direction = STOP<br>
-		    </div>
+		    self.target = self.node.neighbors[self.direction]<br>
+		  </div>
+		  else:
+		  <div class="tabLeft">
+		    self.setPosition()<br>
+		    self.direction = STOP<br>
 		  </div>
 		</div>
 	      </div>
-	      <br>
+	    </div>
+	    <br>
 
-	      def overshotTarget(self):
-	      <div class="tabLeft">
-		vec1 = self.target.position - self.node.position<br>
-		vec2 = self.position - self.node.position<br>
-		node2Target = vec1.magnitudeSquared()<br>
-		node2Self = vec2.magnitudeSquared()<br>
-		return node2Self >= node2Target<br>
-	      </div>
-	      <br>
+	    def overshotTarget(self):
+	    <div class="tabLeft">
+	      vec1 = self.target.position - self.node.position<br>
+	      vec2 = self.position - self.node.position<br>
+	      node2Target = vec1.magnitudeSquared()<br>
+	      node2Self = vec2.magnitudeSquared()<br>
+	      return node2Self >= node2Target<br>
+	    </div>
+	    <br>
 
-	      def reverseDirection(self):
-	      <div class="tabLeft">
-		if self.direction is UP: self.direction = DOWN<br>
-		elif self.direction is DOWN: self.direction = UP<br>
-		elif self.direction is LEFT: self.direction = RIGHT<br>
-		elif self.direction is RIGHT: self.direction = LEFT<br>
-		temp = self.node<br>
-		self.node = self.target<br>
-		self.target = temp<br>
-	      </div>
-	      <br>
+	    def reverseDirection(self):
+	    <div class="tabLeft">
+	      if self.direction is UP: self.direction = DOWN<br>
+	      elif self.direction is DOWN: self.direction = UP<br>
+	      elif self.direction is LEFT: self.direction = RIGHT<br>
+	      elif self.direction is RIGHT: self.direction = LEFT<br>
+	      temp = self.node<br>
+	      self.node = self.target<br>
+	      self.target = temp<br>
+	    </div>
+	    <br>
 
-	      def setNextTarget(self, direction):
-	      <div class="tabLeft">
-		self.target = self.node.neighbors[direction]<br>
-		self.direction = direction<br>
-	      </div>
-	      <br>
+	    def setNextTarget(self, direction):
+	    <div class="tabLeft">
+	      self.target = self.node.neighbors[direction]<br>
+	      self.direction = direction<br>
+	    </div>
+	    <br>
 
-	      def portal(self):
+	    def portal(self):
+	    <div class="tabLeft">
+	      if self.node.portalNode:
 	      <div class="tabLeft">
-		if self.node.portalNode:
-		<div class="tabLeft">
-		  self.node = self.node.portalNode<br>
-		  self.setPosition()<br>
-		</div>
+		self.node = self.node.portalNode<br>
+		self.setPosition()<br>
 	      </div>
-	      <br>
+	    </div>
+	    <br>
 
-	      def render(self, screen):
-	      <div class="tabLeft">
-		px = int(self.position.x)<br>
-		py = int(self.position.y)<br>
-		pygame.draw.circle(screen, self.color, (px, py), self.radius)<br>
-	      </div>
+	    def render(self, screen):
+	    <div class="tabLeft">
+	      px = int(self.position.x)<br>
+	      py = int(self.position.y)<br>
+	      pygame.draw.circle(screen, self.color, (px, py), self.radius)<br>
 	    </div>
 	  </div>
 	</code>
@@ -160,7 +159,7 @@
     
     <div class="container">
       <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
-      <p>Since we created this <span class="cn">MazeMouse</span> class we are going to have Pacman inherit from it.  By inheriting we're saying that <span class="cn">Pacman</span> is a <span class="cn">MazeMouse</span>.  Anything that <span class="cn">MazeMouse</span> can do, <span class="cn">Pacman</span> can do to.  </p>
+      <p>Since we created this <span class="cn">MazeMouse</span> class we are going to have Pacman inherit from it.  By inheriting we're saying that <span class="cn">Pacman</span> is a <span class="cn">MazeMouse</span>.  Anything that <span class="cn">MazeMouse</span> can do, <span class="cn">Pacman</span> can do too.  </p>
 
       <div class="pseudoCode">
 	<p>In order to inherit from <span class="cn">MazeMouse</span> we need to import it first.  Then when creating the class instead of saying <span class="mn">object</span> which is the generic class all classes inherit from, we'll say <span class="cn">MazeMouse</span>.  Then in the <span class="mn">__init__</span> method we need to call <span class="cn">MazeMouses</span> <span class="mn">__init__</span> as well.  This way, any variables or methods that are defined inside of <span class="cn">MazeMouse</span> are useable by <span class="cn">Pacman</span>.  What's nice about this is that since we can put all of the generic stuff inside of <span class="cn">MazeMouse</span> we can focus on what's unique about <span class="cn">Pacman</span>.  So we can actually go ahead and delete anything in <span class="cn">Pacman</span> that we moved over to <span class="cn">MazeMouse</span>.  That goes for all of the variables except for <span class="var">name</span> and <span class="var">color</span>.  The methods we can delete are <span class="mn">setPosition</span>, <span class="mn">moveBySelf</span>, <span class="mn">overshotTarget</span>, <span class="mn">reverseDirection</span>, <span class="mn">setNextTarget</span>, <span class="mn">portal</span>, and <span class="mn">render</span>.  When you're finished, the only methods in <span class="cn">Pacman</span> right now are <span class="mn">__init__</span>, <span class="mn">getValidKey</span>, <span class="mn">update</span>, and <span class="mn">moveByKey</span>.  You're probably wondering why we didn't delete the <span class="mn">update</span> method from <span class="cn">Pacman</span>.  After all, <span class="cn">MazeMouse</span> has an <span class="mn">update</span> method as well.  That's fine, if we have a method in the <span class="cn">Pacman</span> class that has the same name in the <span class="cn">MazeMouse</span> class, then the method in the <span class="cn">Pacman</span> class will override the one in the <span class="cn">MazeMouse</span> class.  If you go ahead and run the game you shouldn't notice any difference.  That's good, there shouldn't be any difference, if there is then we messed up somewhere.  </p>
@@ -246,21 +245,25 @@
     </div><!--End of the code container-->
     
     <div class="container">
-      
-      <h3>Modify the <span class="cn">Ghost</span> class</h3>
+      <h3>Modify the <span class="filenames">ghosts.py</span> file</h3>
+      <p>We're going to make the ghost move around the maze randomly at first.  This is the easiest way to make the ghost move around by itself.  We'll actually use it in part of the game, so let's learn how to do it now.</p>
       <div class="pseudoCode">
-      <p>We're going to make the ghost move around the maze randomly at first.  This is the easiest way to make the ghost move around by itself.  We'll actually use it in part of the game, so let's learn how to do it now.  We need to first import a random generator.  Python has one built in, so we'll use that.  We need to make two brand new methods called callsed <span class="cn">getValidDirections</span> and <span class="mn">randomDirection</span>.  The <span class="mn">getValidDirections</span> method will build a list of directions that the ghost can travel in and return that list to whoever is calling it.  We'll expand on this when we add more restrictions to the directions the ghosts can travel in.  The <span class="mn">randomDirection</span> just gets a random direction to move in by first getting a list of valid directions then randomly choosing one.  We'll also override the default <span class="mn">moveBySelf</span> method.  We don't ever have to worry about the ghost stopping, as it can never stop once the game starts.  It will always move in a new direction when reaching a node, or in the same direction.</p>
-      </div><!--End of pseudocode-->
-      
+	<p>We need random numbers, so we need to include this at the top of the file.  </p>
+      </div>
       <div class="codeText">
 	<code>
 	  <p>...</p>
-	  from random import randint<br><br>
-	  def __init__(self, nodes):
-	  <div class="tabLeft">
-	    self.name = "ghost"<br><br>
-	  </div>
-	  
+	  from random import randint
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Create a new method called <span class="mn">getValidDirections</span></h4>
+      <div class="pseudoCode">
+	<p>This method will build a list of valid directions that the ghost can move in.  We'll expand on this when we add more restrictions to the directions the ghosts can travel in.</p>
+      </div>
+      <div class="codeText">
+	<code>
 	  def getValidDirections(self):
 	  <div class="tabLeft">
 	    validDirections = []<br>
@@ -273,13 +276,31 @@
 	    </div>
 	    return validDirections<br><br>
 	  </div>
+	</code>
+      </div>
+      <hr/>
 
+      <h4>Create a new method called <span class="mn">randomDirection</span></h4>
+      <div class="pseudoCode">
+	<p>This method will get the list of directions the ghost can move in, and just randomly choose one of them.</p>
+      </div>
+      <div class="codeText">
+	<code>
 	  def randomDirection(self, validDirections):
 	  <div class="tabLeft">
 	    index = randint(0, len(validDirections) - 1)<br>
 	    return validDirections[index]<br><br>
 	  </div>
+	</code>
+      </div>
+      <hr/>
 
+      <h4>Create a new method called <span class="mn">moveBySelf</span></h4>
+      <div class="pseudoCode">
+	<p>This isn't really a new method since the ghost inherits it from the <span class="cn">MazeMouse</span> class.  However, we do want to override it since we need to modify it a bit for the ghosts.  The original method will only allow the ghost to move in a straight direction until the ghost can't move in that direction anymore, at which point the ghost will stop.  We never want the ghost to stop and we want it to choose it's next direction, but it still moves by itself.  </p>
+      </div>
+      <div class="codeText">
+	<code>
 	  def moveBySelf(self):
 	  <div class="tabLeft">
 	    if self.overshotTarget():
@@ -293,13 +314,11 @@
 	    </div>
 	  </div>
 	</code>
-      </div><!--End of codeText-->
-    </div><!--End of the container-->
+      </div>
+      <hr/>
 
-    <div class="container">
-      <h3>Modify the <span class="cn">Ghost</span> class</h3>
       <h4>Modify the <span class="mn">getValidDirections</span></h4>
-      <p>Remember at the start of this section we made a list of how the ghosts can and can't move around the maze?  Well, one of the restrictions we listed was that the ghosts can't backtrack when they reach a node.  Right now they can, so we need to modify the <span class="mn">getValidDirections</span> method to filter those directions out.</p>
+      <p>Run the code beofre moving on with the rest of this section.  You'll notice that the ghost moves around the maze by itself.  However, remember at the start of this section we made a list of how the ghosts can and can't move around the maze?  Well, one of the restrictions we listed was that the ghosts can't backtrack when they reach a node.  Right now they can, so we need to modify the <span class="mn">getValidDirections</span> method to filter those directions out.</p>
       <div class="pseudoCode">
 	<p>When we're getting the list of valid directions we need to add an extra check to make sure that we remove the direction we just came from so we don't backtrack.  What happens if we're left with no directions then?  There is only one instance where this can possibly happen.  I'll explain it when we get there, but just in case we're left with no directions then we can force the ghost to backtrack since that's the only direction he can move in when this situation occurs.  We know that's the only direction he can move in since that's how he got to where he is in the first place.</p>
       </div><!--End of pseudoCode-->

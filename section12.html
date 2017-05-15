@@ -89,9 +89,9 @@
 	<code>
 	  def update(self):
 	  <div class="tabLeft">
-	    dt = self.clock.tick(30) / 1000.0<br>
-	    self.checkGhostEvents()
 	    <p>...</p>
+	    self.checkGhostEvents()<br>
+	    self.render()
 	  </div>
 	</code>
       </div>
@@ -207,10 +207,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkGhostEvents(self, dt):
+	  def checkGhostEvents(self):
 	  <div class="tabLeft">
-	    ghost = self.pacman.eatGhost(self.ghosts)<br>
-	    if ghost is not None:
+	    if self.pacman.eatGhost(self.ghost):
 	    <div class="tabLeft">
 	      if ghost.mode.name == "FREIGHT":
 	      <div class="tabLeft">
@@ -230,7 +229,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletEvents(self, dt):
+	  def checkPelletEvents(self):
 	  <div class="tabLeft">
 	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
 	    if pellet:

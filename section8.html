@@ -138,7 +138,7 @@
 	  <div class="tabLeft">
 	    def __init__(self, x, y):
 	    <div class="tabLeft">
-	      Pellet.__init__(self, x, y)
+	      Pellet.__init__(self, x, y)<br>
 	      self.name = "powerpellet"<br>
 	      self.radius = 8<br>
 	      self.value = 50
@@ -179,11 +179,11 @@
 		<div class="tabLeft">
 		  if (grid[row][col] == "p" or grid[row][col] == "n"):
 		  <div class="tabLeft">
-		    self.pelletList.append(Pellet(row*WIDTH, col*HEIGHT))
+		    self.pelletList.append(Pellet(col*WIDTH, row*HEIGHT))
 		  </div>
 		  if (grid[row][col] == "P" or grid[row][col] =="N"):
 		  <div class="tabLeft">
-		    self.pelletList.append(PowerPellet(row*WIDTH, col*HEIGHT))<br><br>
+		    self.pelletList.append(PowerPellet(col*WIDTH, row*HEIGHT))<br><br>
 		  </div>
 		</div>
 	      </div>

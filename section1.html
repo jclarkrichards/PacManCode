@@ -48,7 +48,7 @@
 
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>Now in our <span class="mn">update</span> method in the gamecontrol.py file we'll add the following.  We divide it by 1000.0 because clock.tick returns the time in milliseconds and we want our &Delta;t to be in seconds.</p>
+	<p>Now in our <span class="mn">update</span> method in the gamecontrol.py file we'll add the following.  We divide it by 1000.0 because clock.tick returns the time in milliseconds and we want our &Delta;t to be in seconds.  Add it on the first line in that method, so it should be the first thing this method does.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -67,12 +67,12 @@
       </div>
       <div class="codeText">
 	<code>
-	  <span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br>
-	  <span class="var">UP</span> Vector2D(0, -1)<br>
-	  <span class="var">DOWN</span> Vector2D(0, 1)<br>
-	  <span class="var">LEFT</span> Vector2D(-1, 0)<br>
-	  <span class="var">RIGHT</span> Vector2D(1, 0)<br>
-	  <span class="var">STOP</span> Vector2D()<br><br>
+	  <span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br><br>
+	  <span class="var">UP</span> = Vector2D(0, -1)<br>
+	  <span class="var">DOWN</span> = Vector2D(0, 1)<br>
+	  <span class="var">LEFT</span> = Vector2D(-1, 0)<br>
+	  <span class="var">RIGHT</span> = Vector2D(1, 0)<br>
+	  <span class="var">STOP</span> = Vector2D()<br><br>
 	  <span class="var">YELLOW</span> = (255, 255, 0)
 	</code>
       </div>
@@ -161,6 +161,7 @@
 
     <div class="container">
       <p>Now that we have our Pacman class written we need to use it by creating a Pacman object.  So let's add the following code into our gamecontrol.py file.  I'm not going to write out the entire class like before, just where we need to make the changes.  Everything else stays the same.  </p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <div class="pseudoCode">
 	<p>Somewhere at the top of the file we need to import our Pacman class.</p>
       </div>
@@ -170,7 +171,8 @@
 	</code>
       </div>
       <hr/>
-      
+
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
       <div class="pseudoCode">
 	<p>In our <span class="mn">startGame</span> method we'll create the Pacman object.</p>
       </div>
@@ -183,7 +185,8 @@
 	</code>
       </div>
       <hr/>
-      
+
+      <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
 	<p>We'll modify the <span class="mn">update</span> again by telling it to update the Pacman object as well.</p>
       </div>
@@ -200,6 +203,7 @@
       </div>
       <hr/>
 
+      <h4>Modify the <span class="mn">render</span> method</h4>
       <div class="pseudoCode">
 	<p>Finally we update our <span class="mn">render</span> method by adding these two new lines of code.  The first one we add in order to redraw the background.  If we don't add this then if there are any objects that move then they'll appear as if they are smearing across the screen.  We need to erase the objects and redraw them at their new positions.  The object will still move, but all of the images of the object at the previous positions will still be on screen as well.  So we need to basically erase all of the objects and redraw them at their new positions.  Try the code out with this line commented out to see what I mean.  And of course we need to tell the Pacman object to render as well.</p>
       </div>

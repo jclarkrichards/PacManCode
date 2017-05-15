@@ -51,13 +51,16 @@
 	<p>The first thing we're going to modify is the <span class="filenames">pacman.py</span> file.  We need to pass in the list of nodes that make up the maze.  Instead of specifying a random pixel position vector for Pacman to start out on we need to tell him which node we want him to start out on.  Right now it doesn't matter so we'll just have him start out on the first node, so we set his position to be the same as that nodes position.  So nodes is the <span class="cn">NodeGroup</span> class and <span class="var">node</span> is the node that Pacman is currently on.  Then we call a method called <span class="mn">setPosition</span>.  We also introduce a temporary variable called "keyDown".  The only reason we have this is so Pacman will only move one node at a time with each key press.</p>
       </div>
       <div class="codeText">
-	<span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, nodes):<br>
-	<div class="tabLeft">
-	  <span class="kw">self</span>.nodes = nodes<br>
-	  <span class="kw">self</span>.node = nodes.nodeList[0]<br>
-	  <span class="kw">self</span>.setPosition()<br>
-	  <span class="kw">self</span>.keyDown = <span class="py">False</span>
-	</div>
+	<code>
+	  <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, nodes):<br>
+	  <div class="tabLeft">
+	    <p>...</p>
+	    <span class="kw">self</span>.nodes = nodes<br>
+	    <span class="kw">self</span>.node = nodes.nodeList[0]<br>
+	    <span class="kw">self</span>.<span class="mn">setPosition</span>()<br>
+	    <span class="kw">self</span>.keyDown = <span class="py">False</span>
+	  </div>
+	</code>
       </div>
       <hr/>
 
@@ -83,7 +86,12 @@
 	<code>
 	<span class="kw">def</span> <span class="mn">update</span>(<span class="kw">self</span>, dt):<br>
 	<div class="tabLeft">
-	  <span class="str">#self.position += self.direction*self.speed*dt</span>
+	  <span class="str">#self.position += self.direction*self.speed*dt</span><br>
+	  direction = self.getValidKey()<br>
+	  <span class="kw">if</span> direction:
+	  <div class="tabLeft">
+	    <span class="kw">self</span>.<span class="mn">moveByKey</span>(direction)
+	  </div>
 	</div>
 	</code>
       </div>
@@ -103,7 +111,7 @@
 	    <div class="tabLeft">
 	      <span class="kw">self</span>.direction = direction<br>
 	      <span class="kw">self</span>.node = <span class="kw">self</span>.node.neighbors[<span class="kw">self</span>.direction]<br>
-	      <span class="kw">self</span>.setPosition()<br>
+	      <span class="kw">self</span>.<span class="mn">setPosition</span>()<br>
 	      <span class="kw">self</span>.keyDown = <span class="py">True</span>
 	    </div>
 	  </div>
@@ -121,9 +129,9 @@
 	<code>
 	<span class="kw">def</span> <span class="mn">startGame</span>(<span class="kw">self</span>):<br>
 	<div class="tabLeft">
-	  <span class="kw">self</span>.nodes = NodeGroup()<br>
-	  <span class="kw">self</span>.nodes.setupTestNodes()<br>
-	  <span class="kw">self</span>.pacman = Pacman(<span class="kw">self</span>.nodes)
+	  <span class="kw">self</span>.nodes = <span class="cn">NodeGroup</span>()<br>
+	  <span class="kw">self</span>.nodes.<span class="mn">setupTestNodes</span>()<br>
+	  <span class="kw">self</span>.pacman = <span class="cn">Pacman</span>(<span class="kw">self</span>.nodes)
 	</div>
 	</code>
       </div>
@@ -167,10 +175,31 @@
       <p><img src="Images/overshoot.png" alt=""/>In order to understand Pacman can overshoot a node and how we check for it I have this image on the right.  I have two nodes labeled 'T' and 'N'.  These letters stand for TARGET and NODE respectively.  The TARGET node is always the node Pacman is moving towards.  The NODE node is always Pacman's current node.  Pacman is always either stationary on his current node or moving away from it.  The top part of the image shows him moving away from his current node and towards the target node.  The bottom part of the image shows the case of him overshooting the target node.  In both cases we're comparing the length between the distance between the two nodes and the distance from the current node to Pacman.  We can easily see that when the distance from the current node to Pacman exheeds the distance from the current node to the target node, then Pacman has overshot the target node.</p>
       <hr/>
 
-      <h3>Changes in the <span class="filenames">pacman.py</span> file</h3>
+      <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
+      <h4>Modify the <span class="mn">checkEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Modify this method so that it looks like this again.  Just get rid of the bit we added for the <span class="var">keyDown</span>.  We only added that to show the previous movement.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <span class="kw">def</span> <span class="mn">checkEvents</span>(self):
+	  <div class="tabLeft">
+	    <span class="kw">for</span> event <span class="kw">in</span> pygame.event.get():
+	    <div class="tabLeft">
+	      <span class="kw">if</span> event.type == <span class="py">QUIT</span>:
+	      <div class="tabLeft">
+		<span class="py">exit</span>()
+	      </div>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-	<p>First off, get rid of all instances of the <span class="var">keyDown</span> variable in this file and in the <span class="filenames">gamecontrol.py</span> file.  We don't need it anymore since it was only to show how the first type of movement worked.  Then we'll add the <span class="var">target</span> to the <span class="filenames">pacman.py</span> file after defining the <span class="kw">self.node</span> variable.  The target node is usually the node Pacman needs to move towards, but if Pacman is stationary on a node then the target node and his current node are the same node.  In other words, the target node can never be <span class="py">None</span>.</p>
+	<p>We'll add the <span class="var">target</span> variable after defining the <span class="kw">self.node</span> variable.  The target node is usually the node Pacman needs to move towards, but if Pacman is stationary on a node then the target node and his current node are the same node.  In other words, the target node can never be <span class="py">None</span>.  Also remove the <span class="var">keyDown</span> variable.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -203,7 +232,7 @@
 
       <h4>Modify the <span class="mn">moveByKey</span> method</h4>
       <div class="pseudoCode">
-	<p>The only changes we need to make here is to remove the <span class="mn">setPosition</span> method because we don't want to make Pacman jump from node to node.  Also, instead of setting his new node to be the neighbor node in that direction like we did before we set it as the target node.  Basically, when the user presses a valid key in a valid direction and Pacman is STOPPED (which means he is resting on a node), then set the keyed direction as his new direction and set the node that is the neighbor in that direction as the target node.  </p>
+	<p>The only changes we need to make here is to remove the <span class="mn">setPosition</span> method because we don't want to make Pacman jump from node to node.  Also, instead of setting his new node to be the neighbor node in that direction like we did before we set it as the target node.  Basically, when the user presses a valid key in a valid direction and Pacman is STOPPED (which means he is resting on a node), then set the keyed direction as his new direction and set the node that is the neighbor in that direction as the target node.  To make it easy, just replace the code we previously had in this method with what you see here.</p>
       </div>
 
       <div class="codeText">
@@ -214,8 +243,8 @@
 	  <div class="tabLeft">
 	  <span class="kw">if self</span>.node.neighbors[direction] <span class="kw"> is not</span> <span class="py">None</span>:<br>
 	    <div class="tabLeft">
-	      <span class="kw">self</span>.direction = direction<br>
 	      <span class="kw">self</span>.target = <span class="kw">self</span>.node.neighbors[direction]<br>
+	      <span class="kw">self</span>.direction = direction
 	    </div>
 	  </div>
 	</div>
@@ -226,33 +255,28 @@
       
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We want to uncomment out the first line where we update the position.  Then after we detect the key presses we'll check to see if we overshot the target node by calling the method we just wrote.  If we did overshoot the target node, then we set our current node as the target node and make Pacman STOP since that's the point of this type of movement.  Also remove the statement in the <span class="kw">else</span> where we STOP Pacman if a key isn't being pressed, and replace it with <span class="kw">pass</span>.  We'll add code here later.  But from now on we want to have Pacman move in a direction all by himself without the player having to hold down the key.</p>
+	<p>We want to uncomment out the first line where we update the position.  Then after we detect the key presses we'll check to see if we overshot the target node by calling the method we just wrote.  If we did overshoot the target node, then we set our current node as the target node and make Pacman STOP since that's the point of this type of movement.  From now on we want to have Pacman move in a direction all by himself without the player having to hold down the key.</p>
       </div>
       <div class="codeText">
 	<code>
 	  <span class="kw">def</span> <span class="mn">update</span>(<span class="kw">self</span>, dt):<br>
 	  <div class="tabLeft">
 	    <span class="kw">self</span>.position += <span class="kw">self</span>.direction*<span class="kw">self</span>.speed*dt<br>
-	    <span class="var">direction</span> = <span class="kw">self</span>.getValidKey()<br>
+	    <span class="var">direction</span> = <span class="kw">self</span>.<span class="mn">getValidKey</span>()<br>
 	    <span class="kw">if</span> direction:<br>
 	    <div class="tabLeft">
-	      <span class="kw">self</span>.moveByKey(direction):<br>
+	      <span class="kw">self</span>.<span class="mn">moveByKey</span>(direction):<br><br>
 	    </div>
-	    <span class="kw">else</span>:<br>
-	    <div class="tabLeft">
-	      <span class="kw">pass</span>
-	    </div>
-	    <span class="kw">if self</span>.overshotTarget():<br>
+	    
+	    <span class="kw">if self</span>.<span class="mn">overshotTarget</span>():<br>
 	    <div class="tabLeft">
 	      <span class="kw">self</span>.node = <span class="kw">self</span>.target<br>
-	      <span class="kw">self</span>.setPosition()<br>
+	      <span class="kw">self</span>.<span class="mn">setPosition</span>()<br>
 	      <span class="kw">self</span>.direction = STOP<br>
 	    </div>
 	  </div>
 	</code>
 	</div>
-
-      <hr/>
       
     </div><!--End of movement 2 container-->
 
@@ -314,7 +338,7 @@
       
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>In this method we're just going to replace <span class="kw">pass</span> with the <span class="mn">moveBySelf</span> method.  Also delete the <span class="mn">overshotTarget</span> stuff below it.  </p>
+	<p>In this method we're going to add an <span class="kw">else</span> so that Pacman can move by himself if no keys are being pressed.  Also delete the <span class="mn">overshotTarget</span> stuff below it.  </p>
       </div>
       <div class="codeText">
 	<code>
@@ -341,12 +365,8 @@
 	  <div class="tabLeft">
 	    <span class="kw">if self</span>.direction <span class="kw">is</span> STOP:
 	    <div class="tabLeft">
-	      <span class="kw">if self</span>.node.neighbors[direction] <span class="kw">is not</span> <span class="py">None</span>:
-	      <div class="tabLeft">
-		<span class="kw">self</span>.target = <span class="kw">self</span>.node.neighbors[direction]<br>
-		<span class="kw">self</span>.direction = direction<br>
-	      </div>
-	      </div>
+	      <p>...</p>
+	    </div>
 	    <span class="kw">else</span>:
 	    <div class="tabLeft">
 	      <span class="kw">if</span> direction == <span class="kw">self</span>.direction * -1:
@@ -382,7 +402,6 @@
 	  </div>
 	</code>
       </div>
-      <hr/>
       
     </div><!--End of movement 3 container-->
 
@@ -390,7 +409,7 @@
 
     <div class="container">  
       <h3>Conclusion</h3>
-      <p>Now we have Pacman constrained to a map of nodes and moving just like we want him to move.  If we really wanted him to move like he does in the actual games then we would deal with cornering.  If you don't know what cornering is, then don't worry about it.  If you do know what it is then you can try to modify the code above to make use of cornering.  I don't really care about it, but I do decide that it is necessary then I'll try and figure out how to program it.  Maybe you can figure it out and let me know.  But in the meantime, now that we have Pacman moving the way we want him to move let's put him in a bigger maze.  The size and layout of the maze shouldn't matter.  However, if you remember the last section, it was a lot of work to lay down these nodes by hand and there's only 7 of them.  In an actual Pacman maze there could be up to 100 nodes.  We don't want to program all of those by hand, we could but that is extremely tedious work.  Any time we have tedious work we try to figure out a way to make the computer do it for us.  That is what the next section is all about.  How to generate a Pacman maze automatically.</p>
+      <p>Now we have Pacman constrained to a map of nodes and moving just like we want him to move.  If we really wanted him to move like he does in the actual games then we would deal with cornering.  If you don't know what cornering is, then don't worry about it.  If you do know what it is then you can try to modify the code above to make use of cornering.  I don't really care about it, but if I do decide that it is necessary then I'll try and figure out how to program it.  Maybe you can figure it out and let me know.  But in the meantime, now that we have Pacman moving the way we want him to move let's put him in a bigger maze.  The size and layout of the maze shouldn't matter.  However, if you remember in the last section, it was a lot of work to lay down these nodes by hand and there's only 7 of them.  In an actual Pacman maze there could be up to 100 nodes.  We don't want to program all of those by hand, we could but that is extremely tedious work.  Any time we have tedious work we try to figure out a way to make the computer do it for us.  That is what the next section is all about.  How to generate a Pacman maze automatically.</p>
     </div> <!--End of the conclusion container-->
     <hr />
 

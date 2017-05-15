@@ -39,15 +39,11 @@
       <hr/>
       <h4>Modify the <span class="filenames">constants.py</span> file</h4>
       <div class="pseudoCode">
-	<p>We're going to rewrite the MAZEDATA dictionary since it was getting kind of long and this breaks it up a bit.  The last line is the new line where we define the starting node for Pacman and the ghost.  For the ghost you'll notice that the starting position is the same as the respawn node.</p>
+	<p>We're just going to add the starting position for Pacman and the ghost.  For the ghost you'll notice that the starting position is the same as the respawn node.</p>
       </div>
       <div class="codeText">
 	<code>
-	  MAZEDATA = {}<br>
-	  MAZEDATA[0] = {}<br>
-	  MAZEDATA[0]["file"] = "maze1.txt"<br>
-	  MAZEDATA[0]["portal"] ={(0, 17*HEIGHT):(27*WIDTH, 17*HEIGHT)}<br>
-	  MAZEDATA[0]["linkNodes"] = {0:(12*WIDTH, 14*HEIGHT), 1:(15*WIDTH, 14*HEIGHT)}<br>
+	  <p>...</p>
 	  MAZEDATA[0]["start"] = {"pacman":(15*WIDTH, 26*HEIGHT), "ghost":(216, 272)}
 	</code>
       </div>
@@ -101,7 +97,8 @@
 	  def setStartPosition(self):
 	  <div class="tabLeft">
 	    self.direction = LEFT<br>
-	    self.node = self.nodes.getNode(*MAZEDATA[self.level]["start"]["pacman"], nodeList=self.nodes.nodeList)<br>
+	    pos = MAZEDATA[self.level]["start"]["pacman"]<br>
+	    self.node = self.nodes.getNode(*pos, nodeList=self.nodes.nodeList)<br>
 	    self.target = self.node.neighbors[self.direction]<br>
 	    self.setPosition()<br>
 	    halfway = (self.node.position.x - self.target.position.x) / 2<br>
@@ -135,8 +132,8 @@
 	<code>
 	  def setStartPosition(self):
 	  <div class="tabLeft">
-	    node = MAZEDATA[self.level]["start"]["ghost"]<br>
-	    self.node = self.nodes.getNode(*node, nodeList=self.nodes.homeList)<br>
+	    pos = MAZEDATA[self.level]["start"]["ghost"]<br>
+	    self.node = self.nodes.getNode(*pos, nodeList=self.nodes.homeList)<br>
 	    self.direction = UP<br>
 	    self.target = self.node.neighbors[self.direction]<br>
 	    self.setPosition()
@@ -211,7 +208,7 @@
       <hr/>
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We just check to see if the game is paused or not.  If it is not paused, then it will run as normal.  If it is paused, then we don't update Pacman or the ghost or check for their events.  But we still want to check for key presses and we still want to draw them to the screen.  </p>
+	<p>We just check to see if the game is paused or not.  If it is not paused, then it will run as normal.  If it is paused, then we don't update Pacman or the ghost or check for their events.  But we still want to check for key presses and we still want to draw them to the screen.  So we do not include those two in the <span class="kw">if</span> statement.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -222,8 +219,8 @@
 	    <div class="tabLeft">
 	      self.pacman.update(dt)<br>
 	      self.ghost.update(dt, self.pacman)<br>
-	      self.checkGhostEvents()<br>
 	      self.checkPelletEvents()<br>
+	      self.checkGhostEvents()
 	    </div>
 	    self.checkEvents()<br>
 	    self.render()
@@ -286,7 +283,7 @@
 	    <div class="tabLeft">
 	      if self.ghost.mode.name == "FREIGHT":
 	      <div class="tabLeft">
-		self.ghost.setRespawnMode()
+		<p>...</p>
 	      </div>
 	      elif self.ghost.mode.name != "SPAWN":
 	      <div class="tabLeft">
