@@ -43,7 +43,26 @@
       </ol></p>
     </div><!--End of Setup container-->
 
-
+    <div class="container">
+      <h3>Modifying the Scatter Goals</h3>
+      <p>So why isn't Blinky going to the upper right corner like he was before?  When we play the game as it now is, he just circles the ghost home.  Don't worry, there isn't anything wrong with the code.  Blinky is just following instructions.  At the start of the game we're forcing him to move LEFT.  He can't move UP at the first node he comes to because we're restricing that direction on that node for all of the ghosts.  So he has to go straight until he gets to the next node, which only has one possible direction which is DOWN.  At this point Pinky correctly moves to the LEFT, then UP and to his corner, but Blinky continues moving DOWN.  It's just that he has determined that moving DOWN will get him closer to his goal than moving LEFT.  It seems wrong, but if we actually calculate it, it's true.  </p>
+      <p>Let's do it ourselves.  Blinky's scatter goal in (column, row) format is (28, 0).  That's the upper right corner of the screen because the screen is 28 columns wide.  The node where he moves DOWN instead of moving LEFT is at (9, 17).  When Blinky gets to this point he needs to figure out which direction will get hime closer to his goal.  Remember we do that by hypothetically asking ourselves if we were to move one unit in each direction, and then comparing the distances from all of those positions to the goal, which distance is the shortest?  We only have two directions here:  DOWN and LEFT.  One unit DOWN is (9, 18) and one unit LEFT is (8, 17).  Checking the DOWN direction, the distance from (9, 18) to (28, 0) is 685.  The actual distance is the square root of 685, but we're comparing distances so there's no point in taking the square root.  Checking the LEFT direction, the distance from (8, 17) to (28, 0) is 689.  So that's why Blinky chooses the DOWN direction because 685 &lt 689.  But we would like him to move LEFT at this node so we need to adjust his scatter goal.  We can try (27, 0), (26, 0) and so on until we find a point where moving LEFT at that node is the shorter distance.  You can do it yourself, it's not hard and won't take that long, but I'll just go ahead and tell you that that position is (22, 0).  </p>
+      <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
+      <h4>Modify the <span class="cn">Blinky</span> class</h4>
+      <h4>Modify the <span class="mn">setScatterGoal</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to adjust the column value by bringing it in closer to the center by 6 units.  Now you'll notice that Blinky no longer circles around the ghost home, but will initially go to his corner.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def setScatterGoal(self):
+	  <div class="tabLeft">
+	    self.goal = Vector2D(WIDTH * (NCOLS-6), 0)
+	  </div>
+	</code>
+      </div>
+    </div><!--End of container-->
+    
     <div class="container">
       <h3>Reversing Direction For the Ghosts</h3>
       <h4>Create a new method called <span class="mn">reverseGhostDirection</span></h4>
@@ -71,11 +90,14 @@
 	<code>
 	  def modeUpdate(self, dt):
 	  <div class="tabLeft">
-	    <p>...</p>
-	    if self.modeTimer >= self.mode.time:
+	    self.modeTimer += dt<br>
+	    if self.mode.time is not None:
 	    <div class="tabLeft">
-	      self.reverseGhostDirection()<br>
-	      <p>...</p>
+	      if self.modeTimer >= self.mode.time:
+	      <div class="tabLeft">
+		self.reverseGhostDirection()<br>
+		<p>...</p>
+	      </div>
 	    </div>
 	  </div>
 	</code>
@@ -119,7 +141,7 @@
 	  <p>...</p>
 	  self.pauseTimer = 0<br>
 	  self.pauseTime = 0<br>
-	  self.playerPaused = False
+	  self.playerPaused = True
 	</code>
       </div>
       <hr/>
@@ -137,14 +159,13 @@
 	    <div class="tabLeft">
 	      if self.paused:
 	      <div class="tabLeft">
-		self.paused = False<br>
 		self.playerPaused = False
 	      </div>
 	      else:
 	      <div class="tabLeft">
-		self.paused = True<br>
 		self.playerPaused = True
 	      </div>
+	      self.paused = not self.paused
 	    </div>
 	  </div>
 	</code>
@@ -247,7 +268,7 @@
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>So instead of calling <span class="mn">restartLevel</span> method directly as we've been doing we just set the <span class="var">restartDelay</span> variable to <span class="py">True</span>.  If we called the <span class="mn">restartLevel</span> method here, then the game wouldn't pause like we want it to.  We'll need to call that method after the pause period has finished.</p>
+	<p>So instead of calling <span class="mn">restartLevel</span> method directly as we've been doing we just set the <span class="var">restartDelay</span> variable to <span class="py">True</span>.  If we called the <span class="mn">restartLevel</span> method here, then the game wouldn't pause like we want it to.  We'll need to call that method after the pause period has finished.  Remember to remove the call to the <span class="mn">restartLevel</span> method here.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -317,7 +338,7 @@
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>We set the <span class="var">startDelay</span> to <span class="py">True</span> so the game will pause for the specified time before restarting the game.</p>
+	<p>We set the <span class="var">startDelay</span> to <span class="py">True</span> so the game will pause for the specified time before restarting the game.  Remember to remove the call to the <span class="mn">startGame</span> method here.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -374,25 +395,172 @@
 
     <div class="container">
       <h3>Getting Rid of Hard-Coded Values</h3>
+      <p>Having hard-coded values makes it harder to implement more mazes, which we eventually want to do.  There are some things that are common to all mazes and there are things that are unique to each maze.  The things that are unique to each maze we've been putting in the MAZEDATA dictionary.  For example, things that we are currently hard-coding in are:
+      <ol>
+	<li>Pacaman's starting position</li>
+	<li>The Ghost's starting positino</li>
+	<li>The fruit's position</li>
+	<li>The home node for the ghost home</li>
+	<li>Portal nodes</li>
+	<li>Nodes that restrict UP movement</li>
+      </ol>
+      It would be nice if we didn't have to figure out which node values we need to input into the MAZEDATA dictionary for a particular maze.  In order to do that though, we'll need to introduce a few more symbols for the <span class="cn">NodeGroup</span> class.  We've created new symbols before when we put in the pellets, so this concept shouldn't be new.  We'll follow the same procedures, just with a few more symbols.  The new symbols we're going to include are:
+      <ol>
+	<li>"M": Pacman's starting node.  This will tell the program what value to place in MAZEDATA["start"]["pacman"].  We are using an "M" because we are already using "P" for the pellets.  The symbol just has to be unique, so "M" is just as good as any symbol.  </li>
+	<li>"F": The fruit's node.  This will tell the program what value to place in MAZEDATA["fruit"].</li>
+	<li>"H": The home node.  This will tell the program what value to place in MAZEDATA["home"].</li>
+      </ol>
+      </p>
+      <h4>Modify the <span class="filenames">nodes.py</span> file</h4>
+      <h4>Modify the <span class="cn">NodeGroup</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-	
+	<p>We're defining more and more symbols for different types of nodes.  Let's just gather them all into a list to make things easier on ourselves.  We have the three original node symbols plus the three new ones.  Make sure you place it before the call to the <span class="mn">createMainList</span> and the <span class="mn">createHomeList</span> methods.</p>
       </div>
       <div class="codeText">
 	<code>
-
+	  self.nodeSymbols = ["+", "n", "N", "M", "H", "F"]
 	</code>
       </div>
       <hr/>
 
-    </div><!--End of container-->
+      <h4>Modify the <span class="mn">findFirstNode</span> method</h4>
+      <div class="pseudoCode">
+	<p>We just replaced all of the comparison checks with checking to see if the symbol is in our <span class="var">nodeSymbols</span> list.  This way if we need to add more node symbols, we just add it to the list and we won't have to touch this method again.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def findFirstNode(self, rows, cols):
+	  <div class="tabLeft">
+	    nodeFound = False<br>
+	    for row in range(rows):
+	    <div class="tabLeft">
+	      for col in range(cols):
+	      <div class="tabLeft">
+		if self.grid[row][col] in self.nodeSymbols:
+		<div class="tabLeft">
+		  return Node(row, col)
+		</div>
+	      </div>
+	    </div>
+	    return None
+	  </div>
+	</code>
+      </div>
+      <hr/>
 
+      <h4>Modify the <span class="mn">pathToFollow</span> method</h4>
+      <div class="pseudoCode">
+	<p>Similar to the method above, we can just check to see if the symbol for the node is in our list instead of having all of those checks.  We're also going to create a new method and call it here after the while loop.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def pathToFollow(self, direction, row, col, path):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    while self.grid[row][col] not in self.nodeSymbols:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	    self.updateMazeData(self.grid[row][col])
+	  </div>
+	</code>
+      </div>
+      <hr/>
 
+      <h4>Create a new method called <span class="mn">updateMazeData</span></h4>
+      <div class="pseudoCode">
+	<p>Here we just check to see if the symbol is one of the new symbols we defined.  If it is, then we calculate the update the MAZEDATA dictionary.  We can also either leave the MAZEDATA dictionary as it is, or delete the values we hard-coded in for these entries.  It shouldn't matter at this point.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def updateMazeData(self, symbol):
+	  <div class="tabLeft">
+	    if symbol == "M":
+	    <div class="tabLeft">
+              MAZEDATA[self.level]["start"]["pacman"] = (col*WIDTH, row*HEIGHT)
+	    </div>
+	    elif symbol == "H":
+	    <div class="tabLeft">
+              MAZEDATA[self.level]["home"] = (col*WIDTH, row*HEIGHT)
+	    </div>
+	    elif symbol == "F":
+	    <div class="tabLeft">
+              MAZEDATA[self.level]["fruit"] = (col*WIDTH,row*HEIGHT)
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
 
-    
+      <h4>Modify the <span class="mn">moveHomeNodes</span> method</h4>
+      <div class="pseudoCode">
+	<p>We want to calculate the position of the ghost home as well after we move it.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def moveHomeNodes(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    ghostHome = self.homeList[0].neighbors[DOWN]<br>
+	    MAZEDATA[self.level]["start"]["ghost"] = ghostHome.position.toTuple()
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      
+      <h4>Update the <span class="filenames">maze1.txt</span> file</h4>
+      <div class="pseudoCode">
+	<p>We just need to updat the file for the maze data.  I highlighted where I placed these new symbols in this maze.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 N P P P P N P P P P P N 0 0 N P P P P P N P P P P N 0<br>
+	  0 P 0 0 0 0 P 0 0 0 0 0 P 0 0 P 0 0 0 0 0 P 0 0 0 0 P 0<br>
+	  0 P 0 0 0 0 P 0 0 0 0 0 P 0 0 P 0 0 0 0 0 P 0 0 0 0 P 0<br>
+	  0 P 0 0 0 0 P 0 0 0 0 0 P 0 0 P 0 0 0 0 0 P 0 0 0 0 P 0<br>
+	  0 N P P P P N P P N P P N P P N P P N P P N P P P P N 0<br>
+	  0 P 0 0 0 0 P 0 0 P 0 0 0 0 0 0 0 0 P 0 0 P 0 0 0 0 P 0<br>
+	  0 P 0 0 0 0 P 0 0 P 0 0 0 0 0 0 0 0 P 0 0 P 0 0 0 0 P 0<br>
+	  0 N P P P P N 0 0 N P P N 0 0 N P P N 0 0 N P P P P N 0<br>
+	  0 0 0 0 0 0 P 0 0 0 0 0 | 0 0 | 0 0 0 0 0 P 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 P 0 0 0 0 0 | 0 0 | 0 0 0 0 0 P 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 P 0 0 + - - + - - <span class="new">H</span> - - + 0 0 P 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 p 0 0 | 0 0 0 0 0 0 0 0 | 0 0 p 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 p 0 0 | 0 0 0 0 0 0 0 0 | 0 0 p 0 0 0 0 0 0<br>
+	  + - - - - - n - - + 0 0 0 0 0 0 0 0 + - - n - - - - - +<br>
+	  0 0 0 0 0 0 p 0 0 | 0 0 0 0 0 0 0 0 | 0 0 p 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 p 0 0 | 0 0 0 0 0 0 0 0 | 0 0 p 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 p 0 0 + - - - - - - - - <span class="new">F</span> 0 0 p 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 p 0 0 | 0 0 0 0 0 0 0 0 | 0 0 p 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 p 0 0 | 0 0 0 0 0 0 0 0 | 0 0 p 0 0 0 0 0 0<br>
+	  0 n p p p p n p p n p p n 0 0 n p p n p p n p p p p n 0<br>
+	  0 p 0 0 0 0 p 0 0 0 0 0 p 0 0 p 0 0 0 0 0 p 0 0 0 0 p 0<br>
+	  0 p 0 0 0 0 p 0 0 0 0 0 p 0 0 p 0 0 0 0 0 p 0 0 0 0 p 0<br>
+	  0 N p n 0 0 n p p n p p n p p <span class="new">M</span> p p n p p n 0 0 n p N 0<br>
+	  0 0 0 p 0 0 p 0 0 p 0 0 0 0 0 0 0 0 p 0 0 p 0 0 p 0 0 0<br>
+	  0 0 0 p 0 0 p 0 0 p 0 0 0 0 0 0 0 0 p 0 0 p 0 0 p 0 0 0<br>
+	  0 n p n p p n 0 0 n p p n 0 0 + p p n 0 0 n p p n p n 0<br>
+	  0 p 0 0 0 0 0 0 0 0 0 0 p 0 0 p 0 0 0 0 0 0 0 0 0 0 p 0<br>
+	  0 p 0 0 0 0 0 0 0 0 0 0 p 0 0 p 0 0 0 0 0 0 0 0 0 0 p 0<br>
+	  0 n p p p p p p p p p p n p p n p p p p p p p p p p n 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+	</code>
+      </div>
+      <hr/>
+      </div>
+      
     
     <div class="container">  
       <h3>Conclusion</h3>
-      <p>Well, there you have it.  I think we can actually call this a game.  It has a start and an ending.  There are goals to achieve, and it's something you can get better at with repeated play.  Even so, nobody would bat an eyelash at this as it stands.  People have come to expect some form of graphics in their games.  Animation, sound, and music is also a given.  None of that really affects the way the game is played, so that's why I didn't cover any of that in this phase.  This phase was all about getting the gameplay down.  Now that we have that we can focus on adding the visual aspects of the game.  It's important to note that anything we add from here on out should not change the way the game is played or break the game.  Anything we add should only change the way the game looks.  </p>
+      <p>Well, there you have it.  I think we can actually call this a game.  It has a start and an ending.  There are goals to achieve, and it's something you can get better at with repeated play.  Even so, nobody would bat an eyelash at this as it stands.  People have come to expect some form of graphics in their games.  Animation, sound, and music is also a given.  None of that really affects the way the game is played, so that's why I didn't cover any of that in this phase.  This phase was all about getting the gameplay down.  Now that we have that we can focus on adding the visual aspects of the game.  It's important to note that anything we add from here on out should not change the way the game is played or break the game.  Anything we add should only change the way the game looks.  Before we end this phase, let me show you how to add more mazes in the next section.</p>
 
     </div> <!--End of the conclusion container-->
     <hr />

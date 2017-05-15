@@ -323,6 +323,11 @@ input[type="submit"]:focus, input[type="submit"]:hover {
     
 }
 
+.new {
+    color: white;
+    font-weight: bold;
+}
+
 .codeText {
     font-family: "Courier New";
     clear: right;
