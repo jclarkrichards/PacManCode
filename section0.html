@@ -76,14 +76,13 @@
 	    <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>):<br>
 	    <div class="tabLeft">
 	      pygame.init()<br>
-	      <span class="kw">self</span>.screen = <span class="py">None</span><br>
+	      <span class="kw">self</span>.screen = pygame.display.set_mode(SCREENSIZE, 0, 32)<br>
 	      <span class="kw">self</span>.background = <span class="py">None</span><br>
 	      <span class="kw">self</span>.setBackGround()<br><br>
 	    </div>
 	    
 	    <span class="kw">def</span> <span class="mn">setBackGround</span>(<span class="kw">self</span>):<br>
 	    <div class="tabLeft">
-	      <span class="kw">self</span>.screen = pygame.display.set_mode(SCREENSIZE, 0, 32)<br>
 	      <span class="kw">self</span>.background = pygame.surface.Surface(SCREENSIZE).convert()<br>
 	      <span class="kw">self</span>.background.fill(BLACK)<br><br>
 	    </div>

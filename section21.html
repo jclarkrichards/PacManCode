@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 21:  Introducing Spritesheets</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>As we saw in the last section, drawing an image to the screen using an image file is really easy.  We can go ahead and make all of the image files we want for all of our objects.  Nothiing wrong with that, it's just that's not the best practice.  Even the simplest of games use a lot of images for various things.  Not only that, but a lot of images have animation.  If your character has 8 frames of animation while walking, then that's 8 separate images just for your one character, and that's just for walking.  If you want to animate your character running, or jumping, or anything else, then that's even more images just for one character.  Add up all of the animations you want to do for all of the characters in the game, and you're looking at possibly hundreds of images.  That's a lot, and it's not very efficient to handle images as separate files because you have to open and close every image.  It's better to group all of the images into one file, and just extract the image you want from this file.  This file is refered to as a spritesheet, because it's a sheet that contains sprites.  </p>
+<p><img src="Images/fruit.png" alt=""/>The image on the right shows a small example of a spritesheet.  This sheet just shows three images of fruit.  These are just three of the fruits that we'll use in the game: an apple, banana, and cherries.  It's up to you how you want to organize the sprites in your spritesheet.  Just as long as you know how to extract them, which we'll get into in a bit.  You can have them scattered, but it's better to use as less space as possible so grouping sprites of similar size together in rows and columns is usually how I do it.  In the image on the right, the sprites are arranged in 1 row and three columns and they are all the same size.  In this section we're going to write up code that extracts the images from this spritesheet and displays it in the game.  The code that we write here will be used when dealing with much larger spritesheets later.</p>
+    </div><!--End of Setup container-->
+
+
+    <div class="container">
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+
+    </div><!--End of container-->
+
+    <div class="container">
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	</code>
+      </div>
+      <hr/>
+      
+
+    </div><!--End of container-->
+
+
+    
+    <div class="container">  
+      <h3>Conclusion</h3>
+<p>Running the code now you should see that the yellow circles at the bottom left corner of the screen are replaced by the pacman image.  Yeah, it doesn't look that much different yet, but we're just getting started.  You can see that it's really easy to draw images to the screen at least.  In the next section we will take our image drawing a step further and introduce something called a sprite sheet.</p>
+
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>lifeicons.py</li>
+	  <li>maze1.txt</li>
+	  <li>maze2.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	  <li>Images</li>
+	  <ul>
+	    <li>pacman.png</li>
+	  </ul>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section20.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section21.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -112,12 +112,21 @@
       </div>
       <hr/>
 
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
       <div class="pseudoCode">
-	
+	<p>When we lose all of our lives, we want to reset back to the first level.</p>
       </div>
       <div class="codeText">
 	<code>
-	  
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.lives == 0:
+	    <div class="tabLeft">
+	      self.level = 0
+	      <p>...</p>
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
