@@ -35,22 +35,168 @@
 
 
     <div class="container">
+      <h3>Get Ready for the Images</h3>
+      <h4>Modify the <span class="filenames">entities.py</span> file</h4>
       <div class="pseudoCode">
+	<p>We will include an image variable and set it to None.  When we start to replace the basic shapes with actual images, then this will contain those images we want to show.</p>
       </div>
       <div class="codeText">
 	<code>
+	  def __init__(self, nodes, level):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.image = None
+	  </div>
 	</code>
       </div>
       <hr/>
       
+      <h4>Modify the <span class="mn">render</span> method</h4>
       <div class="pseudoCode">
+	<p>If we have an image to draw to the screen, then draw that image, otherwise draw the basic shape we've always been drawing.  </p>
       </div>
       <div class="codeText">
 	<code>
+	  def render(self, screen):
+	  <p>...</p>
+	  if self.image is not None:
+	  <div class="tabLeft">
+	    screen.blit(self.image, (px, py))
+	  </div>
+	  else:
+	  <div class="tabLeft">
+	    pygame.draw.circle(screen, self.color, (px, py), self.radius)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Get Image Clips</h3>
+      <h4>Create a new file called <span class="filenames">spritesheet.py</span></h4>
+      <div class="pseudoCode">
+	<p>We will create a new file which will define a new class that will handle our sprite sheet.  Right now we will say that our sprite sheet is the image with the three fruits.  It will actually contain all of the graphics our game needs.  There's a method called <span class="mn">getImage</span> which will clip out an image from the sheet given the (x, y) position and the width and height of the image.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  import pygame<br>
+	  from constants import *<br><br>
+	  class SpriteSheet(object):
+	  <div class="tabLeft">
+	    def __init__(self):
+	    <div class="tabLeft">
+	      self.sheet = pygame.image.load("Images/fruit.png").convert()<br>
+	      self.sheet.set_colorkey(TRANSPARENT)<br><br>
+	    </div>
+	    def getImage(self, x, y, width, height):
+	    <div class="tabLeft">
+	      self.sheet.set_clip(pygame.Rect(x, y, width, height))<br>
+	      return self.sheet.subsurface(self.sheet.get_clip())
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
       
+    </div><!--End of container-->
+
+
+    <div class="container">
+      <h3></h3>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to import the class we just created and make an instance of it.  We only need one sprite sheet.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  from spritesheet import SpriteSheet
+	  <p>...</p>
+	  def __init__(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.sheet = SpriteSheet()
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Right now we're only using the sprite sheet for the fruit.  When creating the fruit we need to pass in the sprite sheet.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.fruit = CollectedFruit(self.nodes, self.level, self.displayedLevel, self.sheet)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+    </div><!--End of container-->
+
+
+
+
+
+    <div class="container">
+      <h3></h3>
+      <h4>Modify the <span class="filenames">fruit.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to modify this so that the fruit can accept the sprite sheet.  All of the fruit images will be 32x32 pixels so we can hard-code that in here.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  <p>...</p>
+	  from utils import getImage
+	  <p>...</p>
+	  def __init__(self, nodes, level, displayedLevel, sheet):
+	  <div class="tabLeft">
+	    self.name = "fruit"<br>
+	    self.sheet = sheet<br>
+	    self.width, self.height = 32, 32
+	    <p>...</p>
+	    
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="mn">chooser</span> method</h4>
+      <div class="pseudoCode">
+	<p>Right now we only have three images on the sprite sheet:  an apple, banana, and cherries.  So when we create those objects we need to pull the right image from the sprite sheet.  I know where those images are so we can just pass in their coordinates.  I don't think we'll be able to automate this.  We have to know the actual coordinates and the size of the images we want to clip from the sprite sheet.  Maybe the <span class="cn">SpriteSheet</span> class can keep track of all of the image locations and dimensions so that there's only one place to modify that information.  We'll figure that out later.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def chooser(self, level):
+	  <div class="tabLeft">
+	    level %= 5<br>
+	    if level == 0:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.image = self.sheet.getImage(64, 0, self.width, self.height)
+	    </div>
+	    elif level == 1:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.image = self.sheet.getImage(32, 0, self.width, self.height)
+	    </div>
+	    elif level == 2:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.image = self.sheet.getImage(0, 0, self.width, self.height)
+	    </div>
+	  </div>
+	</code>
+      </div>
+      
+
 
     </div><!--End of container-->
 
@@ -71,14 +217,13 @@
       </div>
       <hr/>
       
-
     </div><!--End of container-->
 
 
     
     <div class="container">  
       <h3>Conclusion</h3>
-<p>Running the code now you should see that the yellow circles at the bottom left corner of the screen are replaced by the pacman image.  Yeah, it doesn't look that much different yet, but we're just getting started.  You can see that it's really easy to draw images to the screen at least.  In the next section we will take our image drawing a step further and introduce something called a sprite sheet.</p>
+      <p>This section introduced the concept of the sprite sheet and how to get images from the sprite sheet.  Right now we are only using the sprite sheet for the three pieces of fruit.  In the next section we are going to take a big leap and define the spritesheet for all of the images we want to use in the game.  </p>
 
 
     </div> <!--End of the conclusion container-->
@@ -101,6 +246,7 @@
 	  <li>nodes.py</li>
 	  <li>pacman.py</li>
 	  <li>pellets.py</li>
+	  <li>spritesheet.py</li>
 	  <li>stacks.py</li>
 	  <li>vectors.py</li>
 	  <li>Images</li>
@@ -119,7 +265,7 @@
 	<ul>
 	  <li><a href="section20.html">Previous</a></li>
 	  <li><a href="#top">Top</a></li>
-	  <li><a href="section21.html">Next</a></li>
+	  <li><a href="section22.html">Next</a></li>
 	</ul>
       </div>
     </footer>

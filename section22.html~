@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 22:  Full Game Spritesheet</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p>Now that I've introduced the sprite sheet and how to get images from the sprite sheet, I'll stop beating around the bush and show you the full sprite sheet that we'll be using for our Pacman game.  </p>
+      <p><img src="Images/spritesheet.png" alt=""/>Well, here it is.  On this sprite sheet you'll see every image that we will use in our Pacman game.  At least every image we'll use during the actual gameplay.  I should begin by explaining each image and the reasoning behind them.  You'll notice that I have several images for Pacman and Ms Pacman.  I want the player to choose to play as either Pacman or Ms Pacman.  You see that I have images of Pacman and Ms Pacman pointing in all four directions.  This seems wasteful since I can just rotate a single image during the game.  However, rotating an image is expensive and I generally try to avoid doing that unless it is absolutely necessary.  So instead of bothering with rotation, I just provide the images pre-rotated.  I'm sure in a simple game like Pacman, there wouldn't be any issue with rotation, but in general I try to avoid it.  I have the images of all four ghosts and their FREIGHT mode and SPAWN mode images.  I have all of the fruit, and Pacman's death sequence.  You can use a different death sequence for Ms Pacman or just use this same one.  Below that are all of the images we'll use to make the first maze of the game.  We'll actually use it for all of the mazes at first, but we'll want to make different maze images for all of the different mazes so we can visually tell them apart.  Then we have all of the letters and numbers that we'll use.  We don't have to worry about lower case letters since we won't use them in this game.</p>
+    </div><!--End of Setup container-->
+    
+
+    <div class="container">
+      <h3></h3>
+      <h4></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+      
+      <h4></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+      
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3></h3>
+      <h4></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+      
+      <h4></h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+
+	</code>
+      </div>
+      <hr/>
+      
+    </div><!--End of container-->
+
+    <div class="container">  
+      <h3>Conclusion</h3>
+      <p>This section introduced the concept of the sprite sheet and how to get images from the sprite sheet.  Right now we are only using the sprite sheet for the three pieces of fruit.  In the next section we are going to take a big leap and define the spritesheet for all of the images we want to use in the game.  </p>
+
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>lifeicons.py</li>
+	  <li>maze1.txt</li>
+	  <li>maze2.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>spritesheet.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	  <li>Images</li>
+	  <ul>
+	    <li>pacman.png</li>
+	  </ul>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section21.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section22.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>

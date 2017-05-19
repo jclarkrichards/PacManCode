@@ -30,24 +30,36 @@
     <div class="container">
       <h3>Setup</h3>
       <p>Alright, so at this point, if you've been following along, you have a version of Pacman that you can play.  Sure, it may not be the most fun version of the game you've played, but it works.  From here on out we don't want to change anything we've done so far.  We don't want to change the way the game is played or anything.  All we want to do now is make it look good.  In order to do that we'll have to use graphics other than the primitives we've been using.  Circles and lines are great for prototyping, but now that we have a working version of Pacman, we can use actual images.  In order to use images, we'll have to understand how images work within pygame.</p>
-<p><img src="Images/pacman.png" alt=""/>We'll use the image on the right to replace the life icons in the lower left corner of the screen.  We'll keep things simple for now.  You can just right-click the image and save it to your computer.  Name it something like <span class="filenames">pacman.png</span>.</p>
+<p><img src="Images/pacmanSprite.png" alt=""/>We'll use the image on the right to replace the life icons in the lower left corner of the screen.  We'll keep things simple for now.  You can just right-click the image and save it to your computer.  Name it something like <span class="filenames">pacman.png</span>.</p>
 <hr/>
 <h3>Positioning of Images</h3>
-<p>The first thing we need to understand when we're drawing images to the screen is how they are positioned.  We were using pygames circle to draw most of our graphics before.  The position of a circle is measured from the center of the circle.  For all of the images we're going to use, the position of the image is measured from the top left corner of the image.  This is because all images are rectangles.  It doesn't matter if you have an image of a circle, the computer will just see it as a rectangle.  For now we just need to remember that images aren't positioned on the screen using the center of the image, but rather the top left corner of the image.  When we start using images to draw Pacman and the ghosts, we need to remember this so we can make adjustments.  I'll bring it up again when we get there.</p>
+<p>The first thing we need to understand when we're drawing images to the screen is how they are positioned.  We were using pygames circle to draw most of our graphics before.  The position of a circle is measured from the center of the circle.  For all of the images we're going to use, the position of the image is measured from the top left corner of the image.  This is because all images are rectangles.  It doesn't matter if you have an image of a circle, the computer will just see it as a rectangle.  For now we just need to remember that images aren't positioned on the screen using the center of the image, but rather the top left corner of the image.  When we start using images to draw Pacman and the ghosts, we need to remember this so we can make adjustments.  I'll bring it up again when we get there.  Also notice that the background of the image is a pink color.  This particular pink corresponds to RGB value (255, 0, 255).  Like I just said, all images are rectangles, but Pacman isn't.  So the rest of the image that isn't Pacman needs to disappear during gameplay.  We do that by defining a color to be transparent.  I chose this color because it's a color that I pretty much never use.  You can define any color really, it doesn't have to be this color.  But just know that all of my images will have this background color.  </p>
     </div><!--End of Setup container-->
 
 
     <div class="container">
       <h3>Replacing the Life Icons</h3>
-	<p>Before we were handling the drawing of the life icons in the <span class="mn">render</span> method of the <span class="cn">GameController</span> class.  Let's just make a class of their own and handle it in there.  We could have just as easily made this class in the last phase, I just didn't think it was necessary.  Anyways, I created a new folder called Images and placed teh <span class="filenames">pacman.png</span> file in that folder.  So the <span class="cn">Lives</span> class handles all of the life icons instead of having each life icon being its own object.  It's just there to display the number of lives the player has left.</p>
+      <p>Before we were handling the drawing of the life icons in the <span class="mn">render</span> method of the <span class="cn">GameController</span> class.  Let's just make a class of their own and handle it in there.  We could have just as easily made this class in the last phase, I just didn't think it was necessary.  Anyways, I created a new folder called Images and placed teh <span class="filenames">pacman.png</span> file in that folder.  So the <span class="cn">Lives</span> class handles all of the life icons instead of having each life icon being its own object.  It's just there to display the number of lives the player has left.</p>
+      <h4>Modify the <span class="filenames">constants.py</span> file</h4>
+      <div class="pseudoCode">
+	<p>Let's define the color I mentioned above to be the transparent color that we'll use for all of our images.  Remember, you can use any color you want, just specify it here and remember to use it in all of your images.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  TRANSPARENT = (255, 0, 255)
+	</code>
+      </div>
+      <hr/>
+
+
+
       <h4>Create a new file called <span class="filenames">lifeicons.py</span></h4>
       <div class="pseudoCode">
-	<p>The first thing we want to do is load the image.  When I load the image I also convert it to the screen's color space.  You need to have this here otherwise the image will be converted automatically every time it renders, and that's just wasted time.  I mean, in our game you can get away with not having it there and everything will run fine.  Just get into the habit of including it.  So I'm loading the image into a variable called <span class="var">image</span> which is a pygame Surface.  Surfaces are just like sheets of paper, you can draw stuff to them and move them around.  We're basically just drawing the pacman image onto a Surface object.  We then set the colorkey to WHITE.  That's because in this image we want WHITE to be transparent.  If we didn't do this we'd see the pacman image being framed by a white rectangle.  So, it basically just makes the WHITE disappear.  It's better to use a color that's less commonly used.  We then get the width and the height of the image.  This isn't necessarily the width and height of the pacman image itself, but the width and the height of the image that contains pacman.  Remember, all images are rectangular.  The gap is the spacing between the life icons.  The render method is similar to what we had before with a few changes.  Notice that we're no longer drawing with pygame.draw.circle because that's how you draw a circle and not an image.  We want to blit the image to the screen and place it at the (x, y) position on the screen.  We also want to pass in the number of life icons to draw to the screen.</p>
+	<p>The first thing we want to do is load the image.  When I load the image I also convert it to the screen's color space.  You need to have this here otherwise the image will be converted automatically every time it renders, and that's just wasted time.  I mean, in our game you can get away with not having it there and everything will run fine.  Just get into the habit of including it.  So I'm loading the image into a variable called <span class="var">image</span> which is a pygame Surface.  Surfaces are just like sheets of paper, you can draw stuff to them and move them around.  We're basically just drawing the pacman image onto a Surface object.  We then set the colorkey to TRANSPARENT.  If we didn't do this we'd see the pacman image being surrounded by a pink background.  So, it basically just makes the pink color disappear.  It's better to use a color that's less commonly used.  We then get the width and the height of the image.  This isn't necessarily the width and height of the pacman image itself, but the width and the height of the image that contains pacman.  Remember, all images are rectangular.  The gap is the spacing between the life icons.  The render method is similar to what we had before with a few changes.  Notice that we're no longer drawing with pygame.draw.circle because that's how you draw a circle and not an image.  We want to blit the image to the screen and place it at the (x, y) position on the screen.  We also want to pass in the number of life icons to draw to the screen.</p>
       </div>
       <div class="codeText">
 	<code>
 	  import pygame<br>
-	  from vectors import Vector2D<br>
 	  from constants import *<br><br>
 
 	  class Lives(object):
@@ -55,7 +67,7 @@
 	    def __init__(self):
 	    <div class="tabLeft">
               self.image = pygame.image.load("Images/pacman.png").convert()<br>
-              self.image.set_colorkey(WHITE)<br>
+              self.image.set_colorkey(TRANSPARENT)<br>
               self.width, self.height = self.image.get_size()<br>
               self.gap = 10<br><br>
 	    </div>
