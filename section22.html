@@ -30,13 +30,13 @@
     <div class="container">
       <h3>Setup</h3>
       <p>Now that I've introduced the sprite sheet and how to get images from the sprite sheet, I'll stop beating around the bush and show you the full sprite sheet that we'll be using for our Pacman game.  </p>
-      <p><img src="Images/spritesheet.png" alt=""/>Well, here it is.  On this sprite sheet you'll see every image that we will use in our Pacman game.  At least every image we'll use during the actual gameplay.  I should begin by explaining each image and the reasoning behind them.  You'll notice that I have several images for Pacman and Ms Pacman.  I want the player to choose to play as either Pacman or Ms Pacman.  You see that I have images of Pacman and Ms Pacman pointing in all four directions.  This seems wasteful since I can just rotate a single image during the game.  However, rotating an image is expensive and I generally try to avoid doing that unless it is absolutely necessary.  So instead of bothering with rotation, I just provide the images pre-rotated.  I'm sure in a simple game like Pacman, there wouldn't be any issue with rotation, but in general I try to avoid it.  I have the images of all four ghosts and their FREIGHT mode and SPAWN mode images.  I have all of the fruit, and Pacman's death sequence.  You can use a different death sequence for Ms Pacman or just use this same one.  Below that are all of the images we'll use to make the first maze of the game.  We'll actually use it for all of the mazes at first, but we'll want to make different maze images for all of the different mazes so we can visually tell them apart.  Then we have all of the letters and numbers that we'll use.  We don't have to worry about lower case letters since we won't use them in this game.</p>
+      <p><img src="Images/spritesheet.png" alt=""/>Well, here it is.  On this sprite sheet you'll see every image that we will use in our Pacman game.  At least every image we'll use during the actual gameplay.  I should begin by explaining each image and the reasoning behind them.  You'll notice that I have several images for Pacman and Ms Pacman.  I want the player to choose to play as either Pacman or Ms Pacman.  You see that I have images of Pacman and Ms Pacman pointing in all four directions.  This seems wasteful since I can just rotate a single image during the game.  However, rotating an image is expensive and I generally try to avoid doing that unless it is absolutely necessary.  So instead of bothering with rotation, I just provide the images pre-rotated.  I'm sure in a simple game like Pacman, there wouldn't be any issue with rotation, but in general I try to avoid it.  I have the images of all four ghosts and their FREIGHT mode and SPAWN mode images.  I have all of the fruit, and Pacman's death sequence.  You can use a different death sequence for Ms Pacman or just use this same one.  Below that are all of the images we'll use to make all of the mazes in the game.  Then we have all of the letters and numbers that we'll use.  We don't have to worry about lower case letters since we won't use them in this game.  We also won't conern ourselves with punctuation symbols.  The rest of the sections are basiclly about how to extrat the right images from this sprite sheet.</p>
       <p>Let's go ahead and rewrite the code we did in the last two sections to use this new sprite sheet.</p>
     </div><!--End of Setup container-->
     
 
     <div class="container">
-      <h3></h3>
+      <h3>Make Adjustments to Previous Code</h3>
       <h4>Modify the <span class="filenames">spritesheet.py</span> file</h4>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
@@ -53,48 +53,208 @@
       </div>
       <hr/>
       
-      <h4></h4>
+      <h4>Modify the <span class="filenames">lifeicons.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to pass in the spritesheet into the <span class="cn">Lives</span> class.  Then we get the 32x32 image that is at the spritesheet's position (0, 0).  This is the image of Pacman that we want to use to display the lives.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, spritesheet):
+	  <div class="tabLeft">
+	    self.width, self.height = 32, 32<br>
+	    self.image = spritesheet.getImage(0, 0, self.width, self.height)<br>
+	    self.gap = 10
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">pacman.py</span> file</h4>
+      <div class="pseudoCode">
+	<p>Replace the previous code where we got the images with this line.  I'm just getting the 32x32 image at the spritesheets top left corner to represent our Pacman character.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.image = spritesheet.getImage(0, 0, 32, 32)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">fruit.py</span> file</h4>
+      <div class="pseudoCode">
+	<p>We were already passing in a spritesheet before, but now we're passing in a different one, so the positions of the fruit changed.  So we just need to update where the fruit are located.  Let's go ahead and do if for all of the fruit.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def chooser(self, level):
+	  <div class="tabLeft">
+	    level % 6<br>
+	    
+	    if level == 0:
+	    <div class="tabLeft">
+	      self.name = "cherry"<br>
+	      <p>...</p>
+	      self.image = self.sheet.getImage(8, 2, self.width, self.height)<br>
+	    </div>
+	    elif level == 1:
+	    <div class="tabLeft">
+	      self.name = "banana"<br>
+	      <p>...</p>
+	      self.image = self.sheet.getImage(9, 2, self.width, self.height)<br>
+	    </div>
+	    elif level == 2:
+	    <div class="tabLeft">
+	      self.name = "apple"<br>
+	      <p>...</p>
+	      self.image = self.sheet.getImage(10, 2, self.width, self.height)<br>
+	    </div>
+	    elif level == 3:
+	    <div class="tabLeft">
+	      self.name = "strawberry"<br>
+	      <p>...</p>
+	      self.image = self.sheet.getImage(8, 3, self.width, self.height)<br>
+	    </div>
+	    elif level == 4:
+	    <div class="tabLeft">
+	      self.name = "orange"<br>
+	      <p>...</p>
+	      self.image = self.sheet.getImage(9, 3, self.width, self.height)<br>
+	    </div>
+	    elif level == 5:
+	    <div class="tabLeft">
+	      self.name = "watermelon"<br>
+	      <p>...</p>
+	      self.image = self.sheet.getImage(10, 3, self.width, self.height)<br>
+	    </div>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>After creating the spritesheet object, create this object and pass in the spritesheet object to it.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.lifeIcons = Lives(self.sheet)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">startGame</span> and <span class="mn">restartLevel</span> methods</h4>
+      <div class="pseudoCode">
+	<p>We just need to modify this so we pass in the sprite sheet.  Notice that we are also passing it into the GhostGroup object as well.  So we'll need to modify that object to accept the sprite sheet.  We're adding it now because we're about to do the same thing to the ghosts as what we did to Pacman.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.pacman = Pacman(self.nodes, self.level, self.sheet)<br>
+	  self.ghosts = GhostGroup(self.nodes, self.level, self.sheet)
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
+      <h4>Modify the <span class="cn">GhostGroup</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.ghosts.append(Blinky(nodes, level, spritesheet))<br>
+	    self.ghosts.append(Plinky(nodes, level, spritesheet))<br>
+	    self.ghosts.append(Inky(nodes, level, spritesheet))<br>
+	    self.ghosts.append(Clyde(nodes, level, spritesheet))<br>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="cn">Blinky</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
 	<p></p>
       </div>
       <div class="codeText">
 	<code>
-
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.image = spritesheet.getImage(0, 2, 32, 32)
+	  </div>
 	</code>
       </div>
       <hr/>
+      
+      <h4>Modify the <span class="cn">Pinky</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.image = spritesheet.getImage(0, 3, 32, 32)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="cn">Inky</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.image = spritesheet.getImage(0, 4, 32, 32)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="cn">Clyde</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.image = spritesheet.getImage(0, 5, 32, 32)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
       
     </div><!--End of container-->
 
-    <div class="container">
-      <h3></h3>
-      <h4></h4>
-      <div class="pseudoCode">
-	<p></p>
-      </div>
-      <div class="codeText">
-	<code>
-
-	</code>
-      </div>
-      <hr/>
-      
-      <h4></h4>
-      <div class="pseudoCode">
-	<p></p>
-      </div>
-      <div class="codeText">
-	<code>
-
-	</code>
-      </div>
-      <hr/>
-      
-    </div><!--End of container-->
 
     <div class="container">  
       <h3>Conclusion</h3>
-      <p>This section introduced the concept of the sprite sheet and how to get images from the sprite sheet.  Right now we are only using the sprite sheet for the three pieces of fruit.  In the next section we are going to take a big leap and define the spritesheet for all of the images we want to use in the game.  </p>
+      <p>At this point we should have images representing Pacman, the ghosts, the fruit, and the life icons.  Right now, however, we are just using single images to represent our objects.  This is fine for things that don't move like the fruit and life icons, but Pacman and the ghosts need to show some animation as they move.  In the next section we are going to figure out how to animate Pacman and the ghosts as they move around the maze.</p>
 
 
     </div> <!--End of the conclusion container-->

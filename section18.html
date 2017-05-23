@@ -39,7 +39,8 @@
 	<li>When Pacman eats a ghost that is in FREIGHT mode, the game pauses for half a second.  The game does not pause when Pacman eats a fruit, however.  </li>
 	<li>We need to make the collision radiuses for Pacman and the Ghosts a bit smaller.  They really shouldn't collide unless they're right on top of each other.  We should allow a bit of overlap of the objects before we register a collision.  It just looks better that way. </li>
 	<li>When Pacman loses a life, we need to pause the game for one second.  This time will be used to show the death animation later on in the next phase.</li>
-	<li>It would also be nice to get rid of some of the hard-coded values.  I know at the time I mentioned that I was going to eventually do that.  Well, now is the time.</li>  
+	  <li>It would also be nice to get rid of some of the hard-coded values.  I know at the time I mentioned that I was going to eventually do that.  Well, now is the time.</li>
+	  <li>When a certain number of points have been reached, it would be nice to give the player an extra life.  They can get an extra life at every 10,000 point marker.  The maximum number of lives should never be more than 5 however.</li>
       </ol></p>
     </div><!--End of Setup container-->
 
@@ -554,9 +555,115 @@
 	  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 	</code>
       </div>
-      <hr/>
+    </div><!--End of container-->
+
+    <div class="container">
+      <h3>Gaining Extra Lives</h3>
+      <p>We want to give the player an extra life every time they gain 10,000 points.  However, they can still never have more than 5 extra lives at any one time.  So if they already have 5 extra lives by the time they reach 10,000 points, then they won't get a sixth extra life.  The first chance at an extra life should come at the 10,000 point mark.  The second chance for an extra life should come at the 20,000 point mark and so on.  The difficulty comes when we realize that the player may not land exactly on the 10,000 point mark, but will most likely jump past it.  For example, the player at one point may have 9,900 points, then the player eats a fruit worth 1000 points which will make the player's score jump to 10,900 points.  What we need to do is check the score before and after in order to see exactly when the player passes the 10,000 point mark.  In order to do that we'll need to have a score accumulator which will gather the points earned in any one frame. </p>
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span>, <span class="mn">startGame</span>, and <span class="mn">restartLevel</span> methods</h4>
+      <div class="pseudoCode">
+	<p>We are going to add a new variable which will gather all of the points earned during any one frame.  There are only three ways the player can gain points:  eating pellets, eating fruit, and eating ghosts.  So, when those situations occur, instead of adding those points to the score variable directly, we'll add those points to this variable.</p>
       </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.scoreAccumulator = 0<br>
+	    self.maxLives = 5
+	  </div>
+	</code>
+      </div>
+      <hr/>
       
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Replace the code where we added the pellet value to the score with this line of code.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkPelletEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.scoreAccumulator += pellet.value
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Replace the code where we added the ghost score to the score variable with this code.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkGhostEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.scoreAccumulator += self.ghostScore
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="mn">checkFruitEvents</span> method</h4>
+      <div class="pseudoCode">
+	<p>Replace the code where we added the fruit value to the score variable with this code.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def checkFruitEvents(self, dt):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.scoreAccumulator += self.fruit.value
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Create a new method called <span class="mn">applyScore</span></h4>
+      <div class="pseudoCode">
+	<p>What this does is checks to see when we cross the 10000 point marks.  Everytime we cross the 10,000, 20,000, 30,000, 40,000, and so on we increment our lives if we have less than 5 lives.  Then we update our score.  10,000 points is a good number since it takes at least one level to get that many points.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def applyScore(self):
+	  <div class="tabLeft">
+	    newScore = self.score + self.scoreAccumulator<br>
+	    if ((newScore % 10000 - self.score % 10000) &lt 0 or newScore - self.score &gt= 10000):
+	    <div class="tabLeft">
+	      if self.lives &lt self.maxLives:
+	      <div class="tabLeft">
+		self.lives += 1
+	      </div>
+	    </div>
+	    self.score += self.scoreAccumulator<br>
+	    self.scoreAccumulator = 0
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="mn">update</span> method</h4>
+      <div class="pseudoCode">
+	<p>After we check the pellet, ghost,, and fruit events we call this method which will apply all of the accumulated points to the player's score.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def update(self):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.applyScore()
+	  </div>
+	</code>
+      </div>
+
+      
+    </div><!--End of container-->
     
     <div class="container">  
       <h3>Conclusion</h3>
