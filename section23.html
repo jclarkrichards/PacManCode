@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 23:  Animation</h2>
+    <div class="container">
+      <h3>Setup</h3>
+
+      <h3>Make Adjustments to Previous Code</h3>
+	<p>So we have actual images representing Pacman and the ghosts instead of the circles that we had previously.  But we are only using one image for each object.  So they are just static images moving around the maze.  During the game Pacman's mouth is moving and he also points in the direction he is moving.  The ghosts also have different images depending on which direction they are moving.  The only difference in their images is which way their eyes are looking.  They also have some animation to them.  Pacman is a simple game, so that's all the animation there is.  But, once we learn how to do it for Pacman, then it will be easier to apply that knowledge to other more complex animations.</p>
+
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="filenames">pacman.py</span> file</h4>
+	<h4>Modify the <span class=="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We are going to add a new variable that will keep track of the last direction Pacman was moving in.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.previousDirection = self.direction
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
+	<div class="pseudoCode">
+	  <p>This method will check the direction Pacman is moving, and depending on that direction will get the image we want to use.  This will at least get Pacman pointing in the right direction.  It only gets the image when the direction changes.  It would be a waste of time to get the same image if he is moving in the same direction.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def checkDirectionChange(self):
+	    <div class="tabLeft">
+	      if self.direction != self.previousDirection:
+	      <div class="tabLeft">
+		self.previousDirection = self.direction<br>
+		if self.direction == LEFT:
+		<div class="tabLeft">
+		  self.image = self.spritesheet.getImage(0, 0, 32, 32)
+		</div>
+		if self.direction == RIGHT:
+		<div class="tabLeft">
+		  self.image = self.spritesheet.getImage(1, 0, 32, 32)
+		</div>
+		if self.direction == DOWN:
+		<div class="tabLeft">
+		  self.image = self.spritesheet.getImage(2, 0, 32, 32)
+		</div>
+		if self.direction == UP:
+		<div class="tabLeft">
+		  self.image = self.spritesheet.getImage(3, 0, 32, 32)
+		</div>
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+      
+	<h4>Modify the <span class="mn">update</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We will call this method at the end of this method.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def update(self, dt):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.checkDirectionChange()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h3>Modify the <span class="filenames">ghost.py</span> file</h3>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    self.previousDirection = None
+	  </code>
+	</div>
+	<hr/>
+      
+	<h4>Modify the <span class="mn">setStartPosition</span> method</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def setStartPosition(self):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.checkDirectionChange()
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+      
+	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def checkDirectionChange(self):
+	    <div class="tabLeft">
+	      if self.direction != self.previousDirection:
+	      <div class="tabLeft">
+		self.previousDirection = self.direction<br>
+		row = self.imageRow<br>
+		col = 0
+		if self.mode.name == "SPAWN":
+		<div class="tabLeft">
+		  row, col = self.setSpawnImages()
+		</div>
+		elif self.mode.name == "FREIGHT":
+		<div class="tabLeft">
+		  row = 6<br>
+		  col = 0
+		</div>
+		else:
+		<div class="tabLeft">
+		  if self.direction == LEFT:
+		  <div class="tabLeft">
+		    self.imageCol = 4
+		  </div>
+		  elif self.direction == RIGHT:
+		  <div class="tabLeft">
+		    self.imageCol = 6
+		  </div>
+		  elif self.direction == DOWN:
+		  <div class="tabLeft">
+		    self.imageCol = 2
+		  </div>
+		  elif self.direction == UP:
+		  <div class="tabLeft">
+		    self.imageCol = 0
+		  </div>
+		</div>
+		self.setImage(row, col)
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">setImage</span></h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    def setImage(self, row, col):
+	    <div class="tabLeft">
+	      self.image = self.spritesheet.getImage(col, row, 32, 32)
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">setSpawnImages</span></h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    def setSpawnImages(self):
+	    <div class="tabLeft">
+	      row = 6<br>
+	      if self.direction == LEFT:
+	      <div class="tabLeft">
+		col = 6
+	      </div>
+	      elif self.direction == RIGHT:
+	      <div class="tabLeft">
+		col = 7
+	      </div>
+	      elif self.direction == DOWN:
+	      <div class="tabLeft">
+		col = 4
+	      </div>
+	      elif self.direction == UP:
+	      <div class="tabLeft">
+		col = 5
+	      </div>
+
+	      return row, col
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Blinky</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Blinky's images are on row 2 in the spritesheet, so this never changes.  Delete the call to the spritesheet's <span class="mn">getIMage</span> method as well.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 2<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Pinky</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Pinky's images are on row 3 in the spritesheet, so this never changes</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 3<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Inky</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Inky's images are on row 4 in the spritesheet, so this never changes</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 4<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Clyde</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Clyde's images are on row 5 in the spritesheet, so this never changes</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 5<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+
+      <div class="container">
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+    <div class="container">  
+      <h3>Conclusion</h3>
+
+
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>lifeicons.py</li>
+	  <li>maze1.txt</li>
+	  <li>maze2.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>spritesheet.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	  <li>Images</li>
+	  <ul>
+	    <li>pacman.png</li>
+	  </ul>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section22.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section23.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>
