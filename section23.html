@@ -46,6 +46,11 @@
 	    def __init__(self, nodes, level, spritesheet):
 	    <div class="tabLeft">
 	      <p>...</p>
+	      self.imageRow = 0<br>
+	      self.imageCol = 0<br>
+	      self.animateFrame = 0<br>
+	      self.setStartPosition()<br>
+	      <p>...</p>
 	      self.previousDirection = self.direction
 	    </div>
 	  </code>
@@ -65,19 +70,19 @@
 		self.previousDirection = self.direction<br>
 		if self.direction == LEFT:
 		<div class="tabLeft">
-		  self.image = self.spritesheet.getImage(0, 0, 32, 32)
+		  self.imageCol = 0
 		</div>
 		if self.direction == RIGHT:
 		<div class="tabLeft">
-		  self.image = self.spritesheet.getImage(1, 0, 32, 32)
+		  self.imageCol = 1
 		</div>
 		if self.direction == DOWN:
 		<div class="tabLeft">
-		  self.image = self.spritesheet.getImage(2, 0, 32, 32)
+		  self.imageCol = 2
 		</div>
 		if self.direction == UP:
 		<div class="tabLeft">
-		  self.image = self.spritesheet.getImage(3, 0, 32, 32)
+		  self.imageCol = 3
 		</div>
 	      </div>
 	    </div>
@@ -94,10 +99,43 @@
 	    def update(self, dt):
 	    <div class="tabLeft">
 	      <p>...</p>
-	      self.checkDirectionChange()
+	      self.checkDirectionChange()<br>
+	      if self.direction != STOP:
+	      <div class="tabLeft">
+		row, col = self.animate()<br>
+		self.animateFrame += 1<br>
+		if self.animateFrame > 5:
+		<div class="tabLeft">
+		  self.animateFrame = 0
+		</div>
+		self.setImage(row, col)
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		self.setImage(0, 4)
+	      </div>
 	    </div>
 	  </code>
 	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">animate</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def animate(self):
+	    <div class="tabLeft">
+	      row = self.imageRow<br>
+	      col = self.imageCol<br>
+	      rowSequence = [0,0,1,0,1,0]<br>
+	      colSequence = [4] + [self.imageCol] * 5
+	      return rowSequence[self.animateFrame], colSequence[self.animateFrame]
+	    </div>
+	  </code>
+	</div>
+	
       </div><!--End of container-->
 
       <div class="container">
