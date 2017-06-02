@@ -32,325 +32,300 @@
 
       <h3>Make Adjustments to Previous Code</h3>
 	<p>So we have actual images representing Pacman and the ghosts instead of the circles that we had previously.  But we are only using one image for each object.  So they are just static images moving around the maze.  During the game Pacman's mouth is moving and he also points in the direction he is moving.  The ghosts also have different images depending on which direction they are moving.  The only difference in their images is which way their eyes are looking.  They also have some animation to them.  Pacman is a simple game, so that's all the animation there is.  But, once we learn how to do it for Pacman, then it will be easier to apply that knowledge to other more complex animations.</p>
+	<p>This section is all about writing the animation code, then we'll apply it to the Pacman and the Ghost objects in the next section.  You don't need to read any books on animation to understand this section.  As long as you understand that I'm defining animation as a series of images then you'll be fine.  </p>
+	<p>I think we've all done some kind of animation in the past, or at the very least we know the very basics of how to animate something.  As a kid we would have little flip books that we would use to draw little stick figures on each page.  Each page represented one animation frame.  As you flipped the book you would see the stick figure walk or something.  The faster you flipped the book, the faster the animation.  The smoothness of the animation depended on how many images you drew depicting a certain motion.  The more images you use and the smaller the change between each image, the smoother the animation.  </p>
 
       </div><!--End of container-->
 
       <div class="container">
-	<h4>Modify the <span class="filenames">pacman.py</span> file</h4>
-	<h4>Modify the <span class=="mn">__init__</span> method</h4>
+	<h4>Create a new file called <span class="filenames">animation.py</span></h4>
+	<h4>Create a class called <span class="cn">Animation</span></h4>
 	<div class="pseudoCode">
-	  <p>We are going to add a new variable that will keep track of the last direction Pacman was moving in.</p>
+	  <p>To get an idea of how this works, an Animation object is just a list of images.  We won't worry about getting those images yet, we already know how to get single images anyways.  We'll assume for now that we have a list of images which is stored in the <span class="var">frames</span> variable.  Each <span class="cn">Animation</span> object will also have a <span class="var">name</span> to describe it.  This is just a unique string like <span class="str">"walking"</span> or something descriptive.  We need to be able to move forward through the <span class="var">frames</span> list as we are performing the animation.  We will keep track of the position in the list by the <span class="var">col</span> variable.  I like to think of an animation as a row of images where each image is in its own column, so that's why I named that variable <span class="var">col</span>.  We can move forward through an animation list or move backwards.  If we are moving forward, then our <span class="var">forward</span> variable is set to <span class="py">True</span>.  If we are moving backward, then it would be set to <span class="py">False</span>.  We also need to be able to move through the animation at whatever speed we want.  The higher the number we store in the <span class="var">speed</span> variable, the faster the animation.  For example, if <span class="var">speed</span> = 10, then we want to display 10 animation frames per second.  We will use the <span class="var">dt</span> variable to help with the speed.  Some animations don't go on forever, but have an end.  When the animation ends we need to be able to say that it is finished.  When an animation is finished then we'll set the <span class="var">finished</span> variable to <span class="py">True</span>.  </p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
+	    class Animation(object):
 	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 0<br>
-	      self.imageCol = 0<br>
-	      self.animateFrame = 0<br>
-	      self.setStartPosition()<br>
-	      <p>...</p>
-	      self.previousDirection = self.direction
-	    </div>
-	  </code>
-	</div>
-	<hr/>
-
-	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
-	<div class="pseudoCode">
-	  <p>This method will check the direction Pacman is moving, and depending on that direction will get the image we want to use.  This will at least get Pacman pointing in the right direction.  It only gets the image when the direction changes.  It would be a waste of time to get the same image if he is moving in the same direction.  </p>
-	</div>
-	<div class="codeText">
-	  <code>
-	    def checkDirectionChange(self):
-	    <div class="tabLeft">
-	      if self.direction != self.previousDirection:
+	      def __init__(self, name):
 	      <div class="tabLeft">
-		self.previousDirection = self.direction<br>
-		if self.direction == LEFT:
-		<div class="tabLeft">
-		  self.imageCol = 0
-		</div>
-		if self.direction == RIGHT:
-		<div class="tabLeft">
-		  self.imageCol = 1
-		</div>
-		if self.direction == DOWN:
-		<div class="tabLeft">
-		  self.imageCol = 2
-		</div>
-		if self.direction == UP:
-		<div class="tabLeft">
-		  self.imageCol = 3
-		</div>
+		self.name = name<br>
+		self.frames = []<br>
+		self.col = 0<br>
+		self.forward = True<br>
+		self.speed = 0<br>
+		self.dt = 0<br>
+		self.finished = False<br>
 	      </div>
 	    </div>
 	  </code>
 	</div>
 	<hr/>
       
-	<h4>Modify the <span class="mn">update</span> method</h4>
+	<h4>Add methods to add frames and get frames</h4>
 	<div class="pseudoCode">
-	  <p>We will call this method at the end of this method.</p>
+	  <p>These two methods should be pretty self explanitory.  When we are creating our animation we need to be able to add as many frames as we want.  We'll just call the <span class="mn">addFrame</span> method to do that.  In order to get a specific frame to display we'll simply call the <span class="mn">getFrame</span> method.  We'll just return the frame the <span class="var">col</span> variable is pointing to.</p>
 	</div>
+
 	<div class="codeText">
 	  <code>
-	    def update(self, dt):
+	    def addFrame(self, frame):
 	    <div class="tabLeft">
-	      <p>...</p>
-	      self.checkDirectionChange()<br>
-	      if self.direction != STOP:
-	      <div class="tabLeft">
-		row, col = self.animate()<br>
-		self.animateFrame += 1<br>
-		if self.animateFrame > 5:
-		<div class="tabLeft">
-		  self.animateFrame = 0
-		</div>
-		self.setImage(row, col)
-	      </div>
-	      else:
-	      <div class="tabLeft">
-		self.setImage(0, 4)
-	      </div>
+	      self.frames.append(frame)
+	    </div>
+	    <br><br>
+	    def getFrame(self):
+	    <div class="tabLeft">
+	      return self.frames[self.col]
 	    </div>
 	  </code>
 	</div>
 	<hr/>
 
-	<h4>Create a new method called <span class="mn">animate</span></h4>
+	<h4>Create a new method called <span class="mn">nextFrame</span></h4>
 	<div class="pseudoCode">
-	  <p></p>
+	  <p>One of the most important parts of animation is advancing from one frame to the next.  We first update the <span class="var">dt</span> variable and then check if enough time has passed to increment or decrement the <span class="var">col</span> variable.  The </p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def animate(self):
+	    def nextFrame(self, dt):
 	    <div class="tabLeft">
-	      row = self.imageRow<br>
-	      col = self.imageCol<br>
-	      rowSequence = [0,0,1,0,1,0]<br>
-	      colSequence = [4] + [self.imageCol] * 5
-	      return rowSequence[self.animateFrame], colSequence[self.animateFrame]
-	    </div>
-	  </code>
-	</div>
-	
-      </div><!--End of container-->
-
-      <div class="container">
-	<h3>Modify the <span class="filenames">ghost.py</span> file</h3>
-	<h4>Modify the <span class="mn">__init__</span> method</h4>
-	<div class="pseudoCode">
-	  <p></p>
-	</div>
-	<div class="codeText">
-	  <code>
-	    <p>...</p>
-	    self.previousDirection = None
-	  </code>
-	</div>
-	<hr/>
-      
-	<h4>Modify the <span class="mn">setStartPosition</span> method</h4>
-	<div class="pseudoCode">
-	  <p></p>
-	</div>
-	<div class="codeText">
-	  <code>
-	    def setStartPosition(self):
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.checkDirectionChange()
-	    </div>
-	  </code>
-	</div>
-	<hr/>
-      
-	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
-	<div class="pseudoCode">
-	  <p></p>
-	</div>
-	<div class="codeText">
-	  <code>
-	    def checkDirectionChange(self):
-	    <div class="tabLeft">
-	      if self.direction != self.previousDirection:
+	      self.dt += dt<br>
+	      if self.dt &gt= 1.0 / self.speed:
 	      <div class="tabLeft">
-		self.previousDirection = self.direction<br>
-		row = self.imageRow<br>
-		col = 0
-		if self.mode.name == "SPAWN":
+		if self.forward:
 		<div class="tabLeft">
-		  row, col = self.setSpawnImages()
-		</div>
-		elif self.mode.name == "FREIGHT":
-		<div class="tabLeft">
-		  row = 6<br>
-		  col = 0
+		  self.col += 1
 		</div>
 		else:
 		<div class="tabLeft">
-		  if self.direction == LEFT:
-		  <div class="tabLeft">
-		    self.imageCol = 4
-		  </div>
-		  elif self.direction == RIGHT:
-		  <div class="tabLeft">
-		    self.imageCol = 6
-		  </div>
-		  elif self.direction == DOWN:
-		  <div class="tabLeft">
-		    self.imageCol = 2
-		  </div>
-		  elif self.direction == UP:
-		  <div class="tabLeft">
-		    self.imageCol = 0
-		  </div>
+		  self.col -= 1
 		</div>
-		self.setImage(row, col)
+		self.dt = 0
 	      </div>
 	    </div>
 	  </code>
 	</div>
 	<hr/>
 
-	<h4>Create a new method called <span class="mn">setImage</span></h4>
+	<h4>Create a new method called <span class="mn">loop</span></h4>
 	<div class="pseudoCode">
+	  <p>When we want an animation to loop we'll use this method.  A good example is when you have a character walking.  You may have 5 or 10 animation frames that define one walking cycle.  So when the walking cycle ends, you want it to start over again from the start as long as the character is walking.  If we are moving forward, then when the <span class="var">col</span> variable goes beyond the number of frames that we have for our animation, then we reset it to 0, which is the first frame.  If we are moving backwards through the animation, then we are decrementing and so we need to check when <span class="var">col</span> becomes -1.  When it does we set it to the end of the <span class="var">frames</span> list.</p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def setImage(self, row, col):
+	    def loop(self, dt):
 	    <div class="tabLeft">
-	      self.image = self.spritesheet.getImage(col, row, 32, 32)
+	      self.nextFrame(dt)<br>
+	      if self.forward:
+	      <div class="tabLeft">
+		if self.col == len(self.frames):
+		<div class="tabLeft">
+		  self.col = 0
+		</div>
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		if self.col == -1:
+		<div class="tabLeft">
+		  self.col = len(self.frames) - 1
+		</div>
+	      </div>
 	    </div>
 	  </code>
 	</div>
 	<hr/>
 
-	<h4>Create a new method called <span class="mn">setSpawnImages</span></h4>
+	<h4>Create a new method called <span class="mn">onePass</span></h4>
 	<div class="pseudoCode">
+	  <p>This type of animation only goes through the list once, then stops.  When it ends, whether it is going forward or backward, then we'll set the <span class="var">finished</span> variable to <span class="py">True</span>.</p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def setSpawnImages(self):
+	    def onePass(self, dt):
 	    <div class="tabLeft">
-	      row = 6<br>
-	      if self.direction == LEFT:
+	      self.nextFrame(dt)<br>
+	      if self.forward:
 	      <div class="tabLeft">
-		col = 6
+		if self.col == len(self.frames):
+		<div class="tabLeft">
+		  self.col = len(self.frames) - 1<br>
+		  self.finished = True
+		</div>
 	      </div>
-	      elif self.direction == RIGHT:
+	      else:
 	      <div class="tabLeft">
-		col = 7
+		if self.col == -1:
+		<div class="tabLeft">
+		  self.col = 0<br>
+		  self.finished = True
+		</div>
 	      </div>
-	      elif self.direction == DOWN:
-	      <div class="tabLeft">
-		col = 4
-	      </div>
-	      elif self.direction == UP:
-	      <div class="tabLeft">
-		col = 5
-	      </div>
-
-	      return row, col
 	    </div>
 	  </code>
 	</div>
 	<hr/>
 
-      </div><!--End of container-->
-
-      <div class="container">
-	<h4>Modify the <span class="cn">Blinky</span> class</h4>
-	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<h4>Create a new method called <span class="mn">ping</span></h4>
 	<div class="pseudoCode">
-	  <p>All of Blinky's images are on row 2 in the spritesheet, so this never changes.  Delete the call to the spritesheet's <span class="mn">getIMage</span> method as well.</p>
+	  <p>This is a different type of looping animation, except when we reach the end of the animation we reverse the animation so it goes backwards.  When it reaches the start of the aniation again then we set it to go forward again.  I called this method <span class="mn">ping</span> because this animation is like a game of ping pong.  Think of the <span class="var">col</span> variable as the ball and it just bounces back and forth between the two ends.  This is the type of animation we'll use for Pacman while he is eating pellets since this is a good animation for something that opens and closes like a mouth.  </p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
+	    def ping(self, dt):
 	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 2<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
+	      self.nextFrame(dt)<br>
+	      if self.col == len(self.frames):
+	      <div class="tabLeft">
+		self.forward = False<br>
+		self.col -= 2
+	      </div>
+	      elif self.col == -1:
+	      <div class="tabLeft">
+		self.forward = True<br>
+		self.col = 1
+	      </div>
 	    </div>
 	  </code>
 	</div>
       </div><!--End of container-->
+      
 
       <div class="container">
-	<h4>Modify the <span class="cn">Pinky</span> class</h4>
-	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<p>An object may have multiple animations for different situations.  For example, you may have walking, running, squatting, jumping, shooting, and idle animations for a single character.  We'll use this class to store all of those animations for that character.  It just helps to make the code cleaner and more manageable.  It also helps to link animations together.  For example, let's say we have a walking animation.  If we switch to a running animation in the middle of the walking animation, then we want to start the running animation at the same <span class="var">col</span> position instead of starting the running animation from the start.  Assuming that the walking and running animations have the same number of frames.  It just makes for smoother transitions between animations.  That's what I mean by linking animations together.  It doesn't make a difference in Pacman, but it's good to have and understand so we'll implement it.  The <span class="var">animations</span> variable is just a list of <span class="cn">Animation</span> objects that we've already defined.  The <span class="var">animation</span> variable stores the active animation that the character is using.  The <span class="var">col</span> variable helps link the animations together as I mentioned before.</p>
+	<h4>Create a new class called <span class="cn">AnimationGroup</span></h4>
 	<div class="pseudoCode">
-	  <p>All of Pinky's images are on row 3 in the spritesheet, so this never changes</p>
+	  
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
+	    class AnimationGroup(object):
 	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 3<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
+	      def __init__(self):
+	      <div class="tabLeft">
+		self.animations = []<br>
+		self.animation = None<br>
+		self.col = 0
+	      </div>
 	    </div>
 	  </code>
 	</div>
-      </div><!--End of container-->
+	<hr/>
 
-      <div class="container">
-	<h4>Modify the <span class="cn">Inky</span> class</h4>
-	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<h4>Create a new method called <span class="mn">add</span></h4>
 	<div class="pseudoCode">
-	  <p>All of Inky's images are on row 4 in the spritesheet, so this never changes</p>
+	  <p>We are keeping all of our <span class="cn">Animation</span> objects in a list called <span class="var">animations</span>.  </p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
+	    def add(self, animation):
 	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 4<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
+	      self.animations.append(animation)
 	    </div>
 	  </code>
 	</div>
-      </div><!--End of container-->
+	<hr/>
 
-      <div class="container">
-	<h4>Modify the <span class="cn">Clyde</span> class</h4>
-	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<h4>Create a new method called <span class="mn">setAnimation</span></h4>
 	<div class="pseudoCode">
-	  <p>All of Clyde's images are on row 5 in the spritesheet, so this never changes</p>
+	  <p>Set the animation based on the name of the animation.  If linking the animations together then set where you want the animation to start based on the value of the <span class="var">col</span> variable.</p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
+	    def setAnimation(self, name, col):
 	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 5<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
+	      self.animation = self.getAnimation(name)<br>
+	      self.animation.col = col
 	    </div>
 	  </code>
 	</div>
-      </div><!--End of container-->
+	<hr/>
 
-
-      <div class="container">
+	<h4>Create a new method called <span class="mn">getAnimation</span></h4>
 	<div class="pseudoCode">
+	  <p>This just searches for the animation with the given name and returns that animation.  If it did not find that animation, then it will return <span class="py">None</span>.</p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    
+	    def getAnimation(self, name):
+	    <div class="tabLeft">
+	      for anim in self.animations:
+	      <div class="tabLeft">
+		if anim.name == name:
+		<div class="tabLeft">
+		  return anim
+		</div>
+	      </div>
+	      return None
+	    </div>
 	  </code>
 	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">getImage</span></h4>
+	<div class="pseudoCode">
+	  <p>If we have a specific image we want from the animation then we can use this method.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def getImage(self, frame):
+	    <div class="tabLeft">
+	      return self.animation.frames[frame]
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">loop</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def loop(self, dt):
+	    <div class="tabLeft">
+	      self.animation.loop(dt)<br>
+	      return self.animation.getFrame()
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">onePass</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def onePass(self, dt):
+	    <div class="tabLeft">
+	      self.animation.onePass(dt)<br>
+	      return self.animation.getFrame()
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">ping</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def ping(self, dt):
+	    <div class="tabLeft">
+	      self.animation.ping(dt)<br>
+	      return self.animation.getFrame()
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
       </div><!--End of container-->
 
     <div class="container">  
       <h3>Conclusion</h3>
-
+      <p>This section was all about defining our animation classes that we'll use to animate the characters in our game.  We havent' applied it to anything yet, but in the next section we'll use it on Pacman and the ghosts.</p>
 
 
     </div> <!--End of the conclusion container-->
@@ -361,6 +336,7 @@
       <ul>
 	<li>Pacman</li>
 	<ul>
+	  <li>animation.py</li>
 	  <li>constants.py</li>
 	  <li>entities.py</li>
 	  <li>fruit.py</li>
@@ -378,7 +354,7 @@
 	  <li>vectors.py</li>
 	  <li>Images</li>
 	  <ul>
-	    <li>pacman.png</li>
+	    <li>spritesheet.png</li>
 	  </ul>
 	</ul>
       </ul>
@@ -392,7 +368,7 @@
 	<ul>
 	  <li><a href="section22.html">Previous</a></li>
 	  <li><a href="#top">Top</a></li>
-	  <li><a href="section23.html">Next</a></li>
+	  <li><a href="section24.html">Next</a></li>
 	</ul>
       </div>
     </footer>

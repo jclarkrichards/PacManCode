@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 24:  Applying the Animation</h2>
+    <div class="container">
+      <h3>Setup</h3>
+
+      </div><!--End of container-->
+
+      <div class="container">
+	<h3>Applying Animation to Pacman</h3>
+	<h4>Modify the <span class="filenames">pacman.py</span> file</h4>
+	<div class="pseudoCode">
+	  <p>You need to import the animation classes we created in the last section.  We start by creating an AnimateGroup object that starts off as empty.  We'll populate it in a bit.  We then define a variable called <span class="var">animateName</span> which will basically just hold a string representation of the direction we are traveling.  We want Pacman to start moving left so that's the initial value for this variable.  We then call a method that we haven't created yet which will create all of the animations and populate the <span class="cn">animate</span> object.  We the set the initial animation which will be the "left" animation.  We then define a couple more variables that will help us know when Pacman dies and when his death animation is finished.  We'll see the importance of these when we get to that point.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    from animation import Animation, AnimationGroup<br><br>
+	    class Pacman(MazeMouse):
+	    <div class="tabLeft">
+	      def __init__(self, nodes, level, spritesheet):
+	      <div class="tabLeft">
+		<p>...</p>
+		self.animate = AnimateGroup()<br>
+		self.animateName = "left"<br>
+		self.defineAnimations()<br>
+		self.animate.setAnimation(self.animateName, 0)<br>
+		self.image = self.animate.getImage(0)<br>
+		self.alive = True<br>
+		self.deathSequenceFinished = False
+		
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+	
+	<h4>Create a new method called <span class="mn">defineAnimations</span></h4>
+	<div class="pseudoCode">
+	  <p>In this method we define all of the animations that Pacman will use.  There are five animations:  "left", "right", "down", "up", and "death".  We need to specify where in the spritesheet all of these images are and create an <span class="cn">Animation</span> object for each one, then add that object to the animate object.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def defineAnimations(self):
+	    <div class="tabLeft">
+	      anim = Animation("left")<br>
+	      anim.speed = 20<br>
+	      anim.addFrame(self.spritesheet.getImage(4, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(0, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(0, 1, 32, 32))<br>
+	      self.animate.add(anim)<br><br>
+
+	      anim = Animation("right")<br>
+	      anim.speed = 20<br>
+	      anim.addFrame(self.spritesheet.getImage(4, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(1, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(1, 1, 32, 32))<br>
+	      self.animate.add(anim)<br><br>
+
+	      anim = Animation("down")<br>
+	      anim.speed = 20<br>
+	      anim.addFrame(self.spritesheet.getImage(4, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(2, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(2, 1, 32, 32))<br>
+	      self.animate.add(anim)<br><br>
+
+	      anim = Animation("up")<br>
+	      anim.speed = 20<br>
+	      anim.addFrame(self.spritesheet.getImage(4, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(3, 0, 32, 32))<br>
+	      anim.addFrame(self.spritesheet.getImage(3, 1, 32, 32))<br>
+	      self.animate.add(anim)<br><br>
+
+
+	      anim = Animation("death")
+              anim.speed = 10
+              anim.addFrame(self.spritesheet.getImage(0, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(1, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(2, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(3, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(4, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(5, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(6, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(7, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(8, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(9, 7, 32, 32))<br>
+              anim.addFrame(self.spritesheet.getImage(10, 7, 32, 32))<br>
+	      self.animate.add(anim)
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    def checkDirectionChange(self):
+	    <div class="tabLeft">
+	      if self.direction != self.previousDirection:
+	      <div class="tabLeft">
+		self.previousDirection = self.direction<br>
+		if self.direction == LEFT:
+		<div class="tabLeft">
+		  self.animateName = "left"
+		</div>
+		elif self.direction == RIGHT:
+		<div class="tabLeft">
+		  self.animateName = "right"
+		</div>
+		elif self.direction == DOWN:
+		<div class="tabLeft">
+		  self.animateName = "down"
+		</div>
+		elif self.direction == UP:
+		<div class="tabLeft">
+		  self.animateName = "up"
+		</div>
+		self.animate.setAnimation(self.animateName, self.animate.animation.col)
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">update</span> method</h4>
+	<div class="pseudoCode">
+	  <p>Pacman is either alive or he is dead.  If he is alive, then he does what he did before plus he checks for the direction changes and if Pacman is moving then we animate him using the <span class="mn">ping</span> method, otherwise we just draw his first frame to the screen.  If Pacman is dead, then we use the <span class="mn">onePass</span> method and then check when that animation finishes.</p>
+	  
+	</div>
+	<div class="codeText">
+	  <code>
+	    def update(self, dt):
+	    <div class="tabLeft">
+	      if self.alive:
+	      <div class="tabLeft">
+		<p>...</p>
+		self.checkDirectionChange()<br>
+		if self.direction != STOP:
+		<div class="tabLeft">
+		  self.image = self.animate.ping(dt)
+		</div>
+		else:
+		<div class="tabLeft">
+		  self.image = self.animate.getImage(0)
+		</div>
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		self.image = self.animate.onePass(dt)<br>
+		if self.animate.animation.finished:
+		<div class="tabLeft">
+		  self.deathSequenceFinished = True
+		</div>
+	      </div>
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+
+	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+	<div class="pseudoCode">
+	  <p>When Pacman collides with a ghost and the ghost is not in SPAWN or FREIGHT mode, then he needs to die.  We already had him losing a life and pausing the game for about 1 second.  We still pause the game, but we don't need to specify for how long because the game will remain paused until Pacman's death sequence is complete.  We decrement his lives counter, say he is not alive, and change his animation to the "death" animation we defined above.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def checkGhostEvents(self, dt):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if ghost is not None:
+	      <div class="tabLeft">
+		<p>...</p>
+	      </div>
+	      elif ghost.mode.name != "SPAWN":
+	      <div class="tabLeft">
+		self.paused = True<br>
+		self.lives -= 1<br>
+		self.pacman.alive = False<br>
+		self.pacman.animate.setAnimation("death", 0)
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">update</span> method</h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    def update(self):
+	    <div class="tabLeft">
+	      if not self.paused:
+	      <div class="tabLeft">
+		<p>...</p>
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		if not self.playerPaused:
+		<div class="tabLeft">
+		  if not self.pacman.alive:
+		  <div class="tabLeft">
+		    self.pacman.update(dt)<br>
+		    if self.pacman.deathSequenceFinished:
+		    <div class="tabLeft">
+		      self.restartLevel()
+		    </div>
+		  </div>
+		  else:
+		  <div class="tabLeft">
+		    <p>...</p>
+		  </div>
+		</div>
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4></h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	  </code>
+	</div>
+	<hr/>
+
+
+      </div><!--End of container-->
+      
+
+
+
+
+
+
+      <div class="container">
+	<h3>Modify the <span class="filenames">ghost.py</span> file</h3>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    self.previousDirection = None
+	  </code>
+	</div>
+	<hr/>
+      
+	<h4>Modify the <span class="mn">setStartPosition</span> method</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def setStartPosition(self):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.checkDirectionChange()
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+      
+	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def checkDirectionChange(self):
+	    <div class="tabLeft">
+	      if self.direction != self.previousDirection:
+	      <div class="tabLeft">
+		self.previousDirection = self.direction<br>
+		row = self.imageRow<br>
+		col = 0
+		if self.mode.name == "SPAWN":
+		<div class="tabLeft">
+		  row, col = self.setSpawnImages()
+		</div>
+		elif self.mode.name == "FREIGHT":
+		<div class="tabLeft">
+		  row = 6<br>
+		  col = 0
+		</div>
+		else:
+		<div class="tabLeft">
+		  if self.direction == LEFT:
+		  <div class="tabLeft">
+		    self.imageCol = 4
+		  </div>
+		  elif self.direction == RIGHT:
+		  <div class="tabLeft">
+		    self.imageCol = 6
+		  </div>
+		  elif self.direction == DOWN:
+		  <div class="tabLeft">
+		    self.imageCol = 2
+		  </div>
+		  elif self.direction == UP:
+		  <div class="tabLeft">
+		    self.imageCol = 0
+		  </div>
+		</div>
+		self.setImage(row, col)
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">setImage</span></h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    def setImage(self, row, col):
+	    <div class="tabLeft">
+	      self.image = self.spritesheet.getImage(col, row, 32, 32)
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">setSpawnImages</span></h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    def setSpawnImages(self):
+	    <div class="tabLeft">
+	      row = 6<br>
+	      if self.direction == LEFT:
+	      <div class="tabLeft">
+		col = 6
+	      </div>
+	      elif self.direction == RIGHT:
+	      <div class="tabLeft">
+		col = 7
+	      </div>
+	      elif self.direction == DOWN:
+	      <div class="tabLeft">
+		col = 4
+	      </div>
+	      elif self.direction == UP:
+	      <div class="tabLeft">
+		col = 5
+	      </div>
+
+	      return row, col
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Blinky</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Blinky's images are on row 2 in the spritesheet, so this never changes.  Delete the call to the spritesheet's <span class="mn">getIMage</span> method as well.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 2<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Pinky</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Pinky's images are on row 3 in the spritesheet, so this never changes</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 3<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Inky</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Inky's images are on row 4 in the spritesheet, so this never changes</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 4<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="cn">Clyde</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>All of Clyde's images are on row 5 in the spritesheet, so this never changes</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, nodes, level, spritesheet):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.imageRow = 5<br>
+	      self.imageCol = 0<br>
+	      self.setStartPosition()
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+
+      <div class="container">
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	    
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+    <div class="container">  
+      <h3>Conclusion</h3>
+
+
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>animation.py</li>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>lifeicons.py</li>
+	  <li>maze1.txt</li>
+	  <li>maze2.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>spritesheet.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	  <li>Images</li>
+	  <ul>
+	    <li>spritesheet.png</li>
+	  </ul>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section23.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section25.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>

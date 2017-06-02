@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 26:  Displaying Text</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p><img src="Images/spritesheet.png" alt="" />We need to be able to add text to our game so that we can display the scores, level, and any other information we want to convey to the player.  Like everything else in the game, the text is just sprite images in the spritesheet.  As you can see the only text we will use are the numbers 0-9 and the upper case letters A-Z.  We will not use lower-case letters or puncuation.  If you want puncuation, then go to school!  If you're game includes a story which requires you to write sentences, then you'll want some puncuation images as well.  But we are not going to include a story in our game, just a few words at a time.  In any case we need to be able to input a word or two and output the correct images to represent that word in the correct location.</p>
+
+      </div><!--End of container-->
+
+      <div class="container">
+	<p>The nice thing about text is that there's a one-to-one relationship between the text and the images.  There's only one possible image for an uppercase A and only one image for the number 5 for example.  So we can just put the images into a dictionary.  When we receive a word a some string to convert into the images, we just look them up using the dictionary.  Making the dictionary is a pain though because we'll just have to specify exactly where to find each image on the spritesheet for each character.  It's tedious, but I don't know any other way to automate this process.  I mean the letters and numbers can be anywhere in the spritesheet and in any order.  So sometimes you just have to do some boring coding like this.</p>
+	<h4>Create a new file called <span class="filenames">maze.py</span></h4>
+	<h4>Create a new class called <span class="cn">Maze</span></h4>
+	<div class="pseudoCode">
+	</div>
+	<div class="codeText">
+	  <code>
+	  </code>
+	</div>
+	<hr/>
+      </div><!--End of container-->
+
+
+    <div class="container">  
+      <h3>Conclusion</h3>
+
+
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>animation.py</li>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>lifeicons.py</li>
+	  <li>maze.py</li>
+	  <li>maze1.txt</li>
+	  <li>maze2.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>spritesheet.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	  <li>Images</li>
+	  <ul>
+	    <li>spritesheet.png</li>
+	  </ul>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section25.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section26.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>

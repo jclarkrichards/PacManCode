@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pacman Code</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins|Press+Start+2P' rel='stylesheet' type='text/css'>  
+  </head>
+
+  <body>
+    <div id="top"></div>
+    <div class="page">
+      <div class="navigation">
+	<header>
+	  <h1><img src="Images/pacman.png"/>... Pacman Code ...<img src="Images/pacman.png"/></h1>
+	  <hr/>
+	  <nav>
+	    <ul>
+	      <li><a href="index.html">Home</a></li>
+	      <li><a href="code.html">Code</a></li>
+	      <li><a href="clones.html">Clones</a></li>
+	      <li><a href="about.html">About</a></li>
+	      <li><a href="contact.html">Contact</a></li>
+	    </ul>
+	  </nav>
+	</header>
+      </div><!--End of navigation-->
+    <hr/>
+
+    <h2>Section 25:  Drawing the Maze with Sprites</h2>
+    <div class="container">
+      <h3>Setup</h3>
+      <p><img src="Images/spritesheet.png" alt="" />It is time that we replaced the nodes and lines connectin the nodes with an actual maze.  We have all of the sprites we need to draw the maze in our spritesheet already.  We just need to figure out a way to draw it.  Looking at the spritesheet again we can see that the images that make up the mazes are on the bottom of the sheet.  The bottom five rows in fact because we want to define 5 different maze styles.  Right now we'll just deal with the first row of that group.  It's the row with blue on the left and white on the right.  I'll explain that in a bit too, but for now just concentrate on the blue portion of that row.  You'll notice that these sprites are smaller than the ones above it.  All of the sprites on a sprite sheet don't have to be the same size.  They can be whatever size you want them to be.  On this sprite sheet I have two different sprite sizes:  32x32 pixels and 16x16 pixels.  Everything on the sprite sheet is 32x32 pixels except for the numbers, letters, and the maze sprites.  </p>
+      <p>There are 10 sprites that define a maze layout.  Each of those 10 sprites can also be rotated 90, 180 and 270 degrees.  For example, the first sprite is a corner piece that defines the top left outer corner of the maze.  However, we can rotate that same sprite 90, 180, and 270 degrees to define the other three corners.  All of the other pieces can be rotated to define other parts of the maze as well.  So basically the maze is made up of 10 unique pieces.  All of those 10 pieces will be rotated four ways to make up a total of 40 pieces that define a maze.  </p>
+      <p>Anyways, the goal here is to try and find a way to represent each piece and it's orientation in a txt file so I can write a program that reads that txt file and figures out which piece and how many times to rotate that piece at any particular location.  I need to be able to define 40 unique characters.  I can use the alphabet with upper and lower case symbols since there are 52 of those characters minus the ones I'm already using taking it down to 44.  But that will just make the whole txt file really hard to read for a human.  Not that it has to be easy for a human to read, a human does have to create it.  Another method is to use two digits for each piece.  Since there are 10 unique pieces I can label each piece from 0 to 9 with the first digit.  The second digit can be how that piece is oriented.  0 means not rotations, 1 means rotated 90 degrees, 2 means rotated 180 degrees and 3 means rotated 270 degrees or -90 degrees.  That can work but then my maze txt files won't be neatly lined up when reading them unless I make all of the characters double digits.  There's no perfect solution for this as far as I can tell, we'll just have to use the best solution we can think of.  Right now the best solution I can think of is using the double digits for the maze sprites.  </p>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Create a new file called <span class="filenames">maze.py</span></h4>
+	<h4>Create a new class called <span class="cn">Maze</span></h4>
+	<div class="pseudoCode">
+	  <p>This class will load the necessary txt file that contains the maze layout and then draw the pieces in the correct locations.  When we create this object we will pass in the level the player is on which can be any value greater than 1.  We will also pass in the spritesheet object  so we can extract the images from it.  We want to know how many unique maze layouts there are defined so we get that from len(MAZEDATA).  The <span class="var">skin</span> variable represents the look of the maze.  We currently have 5 different looks that only differ by color in our spritesheet.  We are only going to use the default for now which is located on row 16.  Later we'll add the ability to either cycle through them as we progress in each level, or choose a scheme for every level.  We are going to store all of the 10 unqiue maze pieces in the <span class="var">pieces</span> list.  Finally we call a method called <span class="mn">extractMazeSprites</span> that we will create next.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    import pygame<br>
+	    from constants import *<br>
+	    from vectors import Vector2D<br>
+	    from numpy import loadtxt<br><br>
+	    
+	    class Maze(object):
+	    <div class="tabLeft">
+	      def __init__(self, level, spritesheet):
+	      <div class="tabLeft">
+		self.level = level<br>
+		self.spritesheet = spritesheet<br>
+		self.numMazes = len(MAZEDATA)<br>
+		self.skin = 16<br>
+		self.pieces = []<br>
+		self.extractMazeSprites()
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+
+	<h4>Create a new method called <span class="mn">extractMazeSprites</span></h4>
+	<div class="pseudoCode">
+	  <p>We are going to loop 10 times because for every level skin there are 10 unique pieces.  Each image is 16x16 pixels and we just get each image from the sprite sheet and store it in our <span class="var">pieces</span> list.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def extractMazeSprites(self):
+	    <div class="tabLeft">
+	      for i in range(10):
+	      <div class="tabLeft">
+		self.pieces.append(self.spritesheet.getImage(i, self.skin, 16, 16))
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">rotate</span></h4>
+	<div class="pseudoCode">
+	  <p>We need to be able to rotate the images.  If we pass in an image and a value of 1, then that image will be rotated 90 degrees clock-wise.  A value of 2 will rotate the image 180 degrees and a value of 3 rotates the image 90 degrees counter clock-wise.  Any other value will just return the image unaltered.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def rotate(self, image, value):
+	    <div class="tabLeft">
+	      if value == 1:
+	      <div class="tabLeft">
+		return pygame.transform.rotate(image, -90)
+	      </div>
+	      elif value == 2:
+	      <div class="tabLeft">
+		return pygame.transform.rotate(image, 180)
+	      </div>
+	      elif value == 3:
+	      <div class="tabLeft">
+		return pygame.transform.rotate(image, 90)
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		return image
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">fillMaze</span></h4>
+	<div class="pseudoCode">
+	  <p>What this method will do is loop through all of the values in the maze text file and check what that value is.  If that value is one of the values that we are using to represent the maze pieces such as '00', '01', '02', '04', '10', '11',...'90', '91', '92', and '93' then we draw the image there with the indicated rotation.  Remember every two digit value uses the first digit to define which of the 10 images to use 0-9.  The second digit is used to describe the rotation of that image 0-3.  We get the image from the <span class="var">pieces</span> list and pass that image along with the rotation value.  We then draw or blit that image to the background.  This basically just builds a static background image using tiles.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def fillMaze(self, background):
+	    <div class="tabLeft">
+	      level = self.level % self.numMazes<br>
+	      self.grid = loadtxt(MAZEDATA[level]["file"], dtype=str)<br>
+	      rows, cols = self.grid.shape<br>
+	      for row in range(rows):
+	      <div class="tabLeft">
+		for col in range(cols):
+		<div class="tabLeft">
+		  x = col * 16<br>
+		  y = row * 16<br>
+		  for i in range(10):
+		  <div class="tabLeft">
+		    for r in range(4):
+		    <div class="tabLeft">
+		      if self.grid[row][col] == str(i)+str(r):
+		      <div class="tabLeft">
+			piece = self.rotate(self.pieces[i], r)<br>
+			background.blit(piece, (x, y))
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	      </div>
+	    </div>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+	<h4>Modify the <span class="mn">startGame</span> method</h4>
+	<div class="pseudoCode">
+	  <p>The only thing we need to do in this file is import the class we just created, then create an instance of it in this method.  Then we pass in the background so it can be filled with the maze pieces.  We only need to call this when we start the game.  We don't need to render the pieces because we are already rendering the background.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    from maze import Maze
+	    <p>...</p>
+	    def startGame(self):
+	    <div class="tabLeft">
+	      self.setBackground()<br>
+	      self.maze = Maze(self.level, self.sheet)<br>
+	      self.maze.fillMaze(self.background)
+	      <p>...</p>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">render</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We are actually not adding any code here, but taking code away.  Now that we are able to draw the maze background, we don't need to draw the nodes anymore.  We were only drawing the nodes so we could know where we could go.  So delete the line that renders the nodes.  Even though we are not drawing the nodes and their connections anymore, it does not mean that they aren't there.  Everything will work as normal.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	  </code>
+	</div>
+	<hr/>
+
+
+      </div><!--End of container-->
+
+      <div class="container">
+	<h4>Modify the <span class="filenames">maze1.txt</span> file</h4>
+	<div class="pseudoCode">
+	  <p>This is what the actual file looks like now.  I know that it just looks like a bunch of jumbled numbers with no rhyme or reason.  But if you copy this into a text file and line everything up, then it will be easier to see the maze.   </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0<br>
+	     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0<br>
+	     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0<br>
+	     00 10 10 10 10 10 10 10 10 10 10 10 10 70 80 10 10 10 10 10 10 10 10 10 10 10 10 01<br>
+	     13  n  p  p  p  p  n  p  p  p  p  p  n 33 31  n  p  p  p  p  p  n  p  p  p  p  n 11<br>
+	     13  p 20 30 30 21  p 20 30 30 30 21  p 33 31  p 20 30 30 30 21  p 20 30 30 21  p 11<br>
+	     13  P 33  0  0 31  p 33  0  0  0 31  p 33 31  p 33  0  0  0 31  p 33  0  0 31  P 11<br>
+	     13  p 23 32 32 22  p 23 32 32 32 22  p 23 22  p 23 32 32 32 22  p 23 32 32 22  p 11<br>
+	     13  n  p  p  p  p  n  p  p  n  p  p  n  p  p  n  p  p  n  p  p  n  p  p  p  p  n 11<br>
+	     13  p 20 30 30 21  p 20 21  p 20 30 30 30 30 30 30 21  p 20 21  p 20 30 30 21  p 11<br>
+	     13  p 23 32 32 22  p 33 31  p 23 32 32 91 90 32 32 22  p 33 31  p 23 32 32 22  p 11<br>
+	     13  n  p  p  p  p  n 33 31  n  p  p  n 33 31  n  p  p  n 33 31  n  p  p  p  p  n 11<br>
+	     03 12 12 12 12 61  p 33 93 30 30 21  | 33 31  | 20 30 30 92 31  p 60 12 12 12 12 02<br>
+	     0  0  0  0  0 13  p 33 90 32 32 22  | 23 22  | 23 32 32 91 31  p 11  0  0  0  0  0<br>
+	     0  0  0  0  0 13  p 33 31  +  -  -  +  -  -  H  -  -  + 33 31  p 11  0  0  0  0  0<br>
+	     0  0  0  0  0 13  p 33 31  | 40 50 50  0  0 50 50 41  | 33 31  p 11  0  0  0  0  0<br>
+	     10 10 10 10 10 62  p 23 22  | 53  0  0  0  0  0  0 51  | 23 22  p 63 10 10 10 10 10<br>
+	     +  -  -  -  -  -  n  -  -  + 53  0  0  0  0  0  0 51  +  -  -  n  -  -  -  -  -  +<br>
+	     12 12 12 12 12 61  p 20 21  | 53  0  0  0  0  0  0 51  | 20 21  p 60 12 12 12 12 12<br>
+	     0  0  0  0  0 13  p 33 31  | 43 52 52 52 52 52 52 42  | 33 31  p 11  0  0  0  0  0<br>
+	     0  0  0  0  0 13  p 33 31  +  -  -  -  -  -  -  -  -  F 33 31  p 11  0  0  0  0  0<br>
+	     0  0  0  0  0 13  p 33 31  | 20 30 30 30 30 30 30 21  | 33 31  p 11  0  0  0  0  0<br>
+	     00 10 10 10 10 62  p 23 22  | 23 32 32 91 90 32 32 22  | 23 22  p 63 10 10 10 10 01<br>
+	     13  n  p  p  p  p  n  p  p  n  p  p  n 33 31  n  p  p  n  p  p  n  p  p  p  p  n 11<br>
+	     13  p 20 30 30 21  p 20 30 30 30 21  p 33 31  p 20 30 30 30 21  p 20 30 30 21  p 11<br>
+	     13  p 23 32 91 31  p 23 32 32 32 22  p 23 22  p 23 32 32 32 22  p 33 90 32 22  p 11<br>
+	     13  N  p  n 33 31  n  p  p  n  p  p  n  -  -  M  p  p  n  p  p  n 33 31  n  p  N 11<br>
+	     83 30 21  p 33 31  p 20 21  p 20 30 30 30 30 30 30 21  p 20 21  p 33 31  p 20 30 71<br>
+	     73 32 22  p 23 22  p 33 31  p 23 32 32 91 90 32 32 22  p 33 31  p 23 22  p 23 32 81<br>
+	     13  n  p  n  p  p  n 33 31  n  p  p  n 33 31  n  p  p  n 33 31  n  p  p  n  p  n 11<br>
+	     13  p 20 30 30 30 30 92 93 30 30 21  p 33 31  p 20 30 30 92 93 30 30 30 30 21  p 11<br>
+	     13  p 23 32 32 32 32 32 32 32 32 22  p 23 22  p 23 32 32 32 32 32 32 32 32 22  p 11<br>
+	     13  n  p  p  p  p  p  p  p  p  p  p  n  p  p  n  p  p  p  p  p  p  p  p  p  p  n 11<br>
+	     03 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 02<br>
+	     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0<br>
+	     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0<br>
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+      <div class="container">
+	<p>By now you may have noticed that Pacman, the ghosts, and the pellets are a bit off in relation to the maze.  If you've been following along with these sections then you may already know why.  When we drew the maze with the nodes and lines we were using pygame's circles and lines primitives.  The position of a circle is the center.  Then we switched over to sprites which are just rectangular images.  The position of all sprites is measured from the top left corner of the image.  So all of the pellets are being drawn at the top left corner of the images.  The pellets were centered when we were just dealing with circles, but now they are no longer in the center of each image.  It's actually a really easy fix though.  We just need to move the pellets down by 8 pixels and right by 8 pixels.  That will put the pellets in the center of each image.  We move them by 8 pixels because each image is 16x16 pixels.  We need to do the same thing for Pacman, the ghosts, and the fruit that appears in the maze.  They all share the <span class="cn">MazeMouse</span> class so we'll make the change there.  In order to center them we'll have to move them up and to the left.   </p>
+	<h4>Modify the <span class="filenames">pellets.py</span> file</h4>
+	<h4>Modify the <span class="cn">Pellet</span> class</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def render(self, screen):
+	    <div class="tabLeft">
+	      px = int(self.position.x + 8)<br>
+	      py = int(self.position.y + 8)
+	      <p>...</p>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="filenames">entities.py</span> file</h4>
+	<h4>Modify the <span class="cn">MazeMouse</span> class</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    px = int(self.position.x - 8)<br>
+	    py = int(self.position.y - 8)
+	    <p>...</p>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new class called <span class="cn">Maze</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	  </code>
+	</div>
+	<hr/>
+
+
+
+      </div><!--End of container-->
+
+    <div class="container">  
+      <h3>Conclusion</h3>
+      <p>By now we should have something that looks an awful lot like Pacman.  You can go ahead and create more mazes by following the same procedures for those files as we did for the <span class="filenames">maze1.txt</span> file.  I think the game is more fun with more mazes, so the more the better.  You may think that we are finished, but not quite.  Yes we have a game that we can play and show off to our friends.  But a big part of Pacman is the score and getting a better score every time you play.  We need to be able to display text.  I want text that says "Start" at the beginning of the level and "Game Over" when we lose all of our lives.  We need the current score and the hi score displayed at the top of the window and perhaps the level we are on.  So in the next section we will learn how to display text.  It's really not much different than what we've been doing because like everything else, the text is just a bunch of images in the spritesheet after all.</p>
+
+
+    </div> <!--End of the conclusion container-->
+    <hr />
+
+    <div class="container">
+      <h2>File Structure</h2>
+      <ul>
+	<li>Pacman</li>
+	<ul>
+	  <li>animation.py</li>
+	  <li>constants.py</li>
+	  <li>entities.py</li>
+	  <li>fruit.py</li>
+	  <li>gamecontrol.py</li>
+	  <li>ghosts.py</li>
+	  <li>home.txt</li>
+	  <li>lifeicons.py</li>
+	  <li>maze.py</li>
+	  <li>maze1.txt</li>
+	  <li>maze2.txt</li>
+	  <li>nodes.py</li>
+	  <li>pacman.py</li>
+	  <li>pellets.py</li>
+	  <li>spritesheet.py</li>
+	  <li>stacks.py</li>
+	  <li>vectors.py</li>
+	  <li>Images</li>
+	  <ul>
+	    <li>spritesheet.png</li>
+	  </ul>
+	</ul>
+      </ul>
+    </div><!--End of File Structure container-->
+    </div><!--End of Page container-->
+
+
+    <div class="buffer"></div>
+    <footer>
+      <div class="bottomNav">
+	<ul>
+	  <li><a href="section24.html">Previous</a></li>
+	  <li><a href="#top">Top</a></li>
+	  <li><a href="section26.html">Next</a></li>
+	</ul>
+      </div>
+    </footer>
+  </body>
+</html>

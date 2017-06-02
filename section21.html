@@ -199,12 +199,19 @@
 
 
     </div><!--End of container-->
-
+    
     <div class="container">
+      <h4>Modify the <span class="cn">DisplayedFruit</span> class</h4>
       <div class="pseudoCode">
       </div>
       <div class="codeText">
 	<code>
+	  def __init__(self, fruit):
+	  <div class="tabLeft">
+	    <p>...</p>
+	    self.image = fruit.image<br>
+	    self.width = fruit.width
+	  </div>
 	</code>
       </div>
       <hr/>
@@ -213,6 +220,33 @@
       </div>
       <div class="codeText">
 	<code>
+	  self.setPosition(self, index):
+	  <div class="tabLeft">
+	    x = WIDTH*NCOLS - (5 + self.width) * (index + 1)<br>
+	    y = HEIGHT*(NROWS - 2)
+	    <p>...</p>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <div class="pseudoCode">
+      </div>
+      <div class="codeText">
+	<code>
+	  def render(self, screen):
+	  <div class="tabLeft">
+	    x = int(self.position.x)<br>
+	    y = int(self.position.y)<br>
+	    if self.image is not None:
+	    <div class="tabLeft">
+	      screen.blit(self.image, (x, y))
+	    </div>
+	    else:
+	    <div class="tabLeft">
+	      pygame.draw.circle(screen, self.color, (x, y), self.radius)
+	    </div>
+	  </div>
 	</code>
       </div>
       <hr/>
