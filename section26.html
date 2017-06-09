@@ -29,27 +29,351 @@
     <h2>Section 26:  Displaying Text</h2>
     <div class="container">
       <h3>Setup</h3>
-      <p><img src="Images/spritesheet.png" alt="" />We need to be able to add text to our game so that we can display the scores, level, and any other information we want to convey to the player.  Like everything else in the game, the text is just sprite images in the spritesheet.  As you can see the only text we will use are the numbers 0-9 and the upper case letters A-Z.  We will not use lower-case letters or puncuation.  If you want puncuation, then go to school!  If you're game includes a story which requires you to write sentences, then you'll want some puncuation images as well.  But we are not going to include a story in our game, just a few words at a time.  In any case we need to be able to input a word or two and output the correct images to represent that word in the correct location.</p>
+      <p>We need to be able to add text to our game so that we can display the scores, level, and any other information we want to convey to the player.  The top portion of the screen is reserved for textual information in case you were wondering before.  We can fit three lines of text where each character is 16 pixels high.  Below is a list of all of the text that we need to display to the player while the level is being played.</p>
+      <p>
+	<ul>
+	  <li><span class="str">"HI SCORE"</span>:  This should be placed in the top left corner of the screen and have a height of 16 pixels.  This is just a label string and does not change.</li>
+	  <li><span class="str">"SCORE"</span>:  This should be placed in the top middle of the screen and have a height of 16 pixels.  This is just a label string and does not change.</li>
+	  <li><span class="str">"LEVEL"</span>:  This should be placed in the top right corner of the screen and have a height of 16 pixels.  This is just a label string and does not change.</li>
+	  <li>hi score value:  This is the actual number hi score which should be placed underneath the <span class="str">"HI SCORE"</span> label.  </li>
+	  <li>score value:  This is the actual numbered score which should be placed underneath the <span class="str">"SCORE"</span> label.</li>
+	  <li>level value:  This is the actual numbered level which should be placed underneath the <span class="str">"LEVEL"</span> label.</li>
+	  <li><span class="str">"BEGIN"</span>:  This displays in the middle of the screen whenever the game begins or when the level restarts.  It goes away when the player presses the space key to start the level.  This text should be yellow.</li>
+	  <li><span class="str">"PAUSE"</span>:  This displays in the middle of the screen when the player pauses the game by pressing the space key.  It disappears when the game is unpaused.  It appears in the same location as the <span class="str">"BEGIN"</span>.</li>
+	  <li><span class="str">"GAME OVER"</span>:  This displays in the middle of the screen when the player loses all lives.  This text is in the same location as the previous two labels.  This text should be red.</li>
+	  <li>ghost/fruit value:  When pacman eats a ghost or a fruit the value of the ghost or the fruit appears in the location of the ghost or fruit.  This text is white and should be 8 pixels high.  </li>
+	    
+	</ul>
+      </p>
+
+      <p></p>
 
       </div><!--End of container-->
 
       <div class="container">
-	<p>The nice thing about text is that there's a one-to-one relationship between the text and the images.  There's only one possible image for an uppercase A and only one image for the number 5 for example.  So we can just put the images into a dictionary.  When we receive a word a some string to convert into the images, we just look them up using the dictionary.  Making the dictionary is a pain though because we'll just have to specify exactly where to find each image on the spritesheet for each character.  It's tedious, but I don't know any other way to automate this process.  I mean the letters and numbers can be anywhere in the spritesheet and in any order.  So sometimes you just have to do some boring coding like this.</p>
-	<h4>Create a new file called <span class="filenames">maze.py</span></h4>
-	<h4>Create a new class called <span class="cn">Maze</span></h4>
+	<h3>Pygame Text Basics</h3>
+	<p>Getting text to display on the screen is pretty easy.  The first thing we need is a font to use.  We can use built-in fonts that are installed on most computers, but those fonts are pretty basic, and we can't guarantee that a user will have any particular font.  So instead we'll download a specific font and include it in our folder structure.  The font that I'm using is called <span class="filenames">PressStart2P.ttf</span> and can be found at <a href="http://www.fontspace.com/codeman38/press-start-2p" target="_blank">fontspace.com/codeman38/press-start-2p</a>.  You can use any font you want, this is just the font that I will be using.  So download it, and place it in the same folder as our .py files.  </p>
+	<p>Once we have a font downloaded we can use it by doing the following:</p>
 	<div class="pseudoCode">
+	  <p>We're not adding the code yet, this is just the basic structure of using the font.  The first thing we need to do is define the font we want to use and the height of the font in pixels.  We store this in a variable called <span class="var">font</span>.  Once we have that defined we can create any text labels by using the font.render.  Don't confuse this with drawing the text to the screen, this just creates the label that we will eventually draw to the screen.  All we do here is define the actual text we want to display and the color of that text.  Finally, when we are ready to display the text to the screen we use the blit and define where we want to draw the text on the screen in pixels.</p>
 	</div>
 	<div class="codeText">
 	  <code>
+	    font = pygame.font.Font("path/to/font", 16)
+	    <p>...</p>
+	    label = font.render("Text to display", 1, COLOR)
+	    <p>...</p>
+	    screen.blit(label, (x, y))
 	  </code>
 	</div>
 	<hr/>
       </div><!--End of container-->
 
+      <div class="container">
+	<h3></h3>
+	<p>We are going to group all of the text in a single class that will handle all of the text we need to display.  When we want to display any text we just add it to this group and everything in the group will be displayed.  We also need to be able to remove any text from the group.</p>
+	<h4>Create a new file called <span class="filenames">text.py</span></h4>
+	<h4>Create a new classes called <span class="cn">Text</span> and <span class="cn">TextGroup</span></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    import pygame<br>
+	    from vectors import Vector2D<br>
+	    from constants import *<br><br>
+	    
+	    class Text(object):
+	    <div class="tabLeft">
+	      def __init__(self, name, text, x, y):
+	      <div class="tabLeft">
+		self.name = name<br>
+		self.text = text<br>
+		self.position = Vector2D(x, y)<br><br>
+
+	      </div>
+	      def render(self, screen):
+	      <div class="tabLeft">
+		screen.blit(self.text, self.position.toTuple())
+	      </div>
+	    </div>
+	    <br><br>
+
+	    class TextGroup(object):
+	    <div class="tabLeft">
+	      def __init__(self):
+	      <div class="tabLeft">
+		self.words = []<br>
+		self.font_path = "PressStart2P.ttf"<br>
+		self.font_size = WIDTH<br>
+		self.font = pygame.font.Font(self.font_path, self.font_size)<br><br>
+	      </div>
+
+	      def add(self, name, text, x=0, y=0, align="", size=1.0, color=WHITE):
+	      <div class="tabLeft">
+		if size != 1.0:
+		<div class="tabLeft">
+		  font = pygame.font.Font(self.font_path, int(self.font_size*size))
+		</div>
+		else:
+		<div class="tabLeft">
+		  font = self.font
+		</div>
+		if align == "left":
+		<div class="tabLeft">
+		</div>
+		elif align == "center":
+		<div class="tabLeft">
+		  x = (SCREENSIZE[0] - (self.font_size*size * len(str(text)))) / 2
+		</div>
+		elif align == "right":
+		<div class="tabLeft">
+		  x = SCREENSIZE[0] - (self.font_size*size * len(str(text)))
+		</div>
+		label = font.render(str(text), 1, color)<br>
+		self.words.append(Text(name, label, x, y))<br><br>
+	      </div>
+
+	      def remove(self, name):
+	      <div class="tabLeft">
+		word = self.findWord(name)<br>
+		if word is not None:
+		<div class="tabLeft">
+		  self.words.remove(word)
+		</div>
+	      </div>
+
+	      def findWord(self, name):
+	      <div class="tabLeft">
+		for word in self.words:
+		<div class="tabLeft">
+		  if word.name == str(name):
+		  <div class="tabLeft">
+		    return word
+		  </div>
+		</div>
+		return None<br><br>
+	      </div>
+
+	      def render(self, screen):
+	      <div class="tabLeft">
+		for word in self.words:
+		<div class="tabLeft">
+		  word.render(screen)
+		</div>
+	      </div>
+
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h3></h3>
+	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    from text import TextGroup<br><br>
+	    class GameController(object):
+	    <div class="tabLeft">
+	      def __init__(self):
+	      <div class="tabLeft">
+		<p>...</p>
+		self.allText = TextGroup()<br>
+		self.allText.add("hi_score_label", "HI SCORE", align="left")<br>
+		self.allText.add("score_label", "SCORE", align="center")<br>
+		self.allText.add("level_label", "LEVEL", align="right")<br>
+		self.allText.add("start_label", "BEGIN", y=20*HEIGHT, align="center", color=YELLOW)<br>
+		self.allText.add("score", self.score, y=HEIGHT, align = "center")<br>
+		self.allText.add("level", self.displayedLevel, y=2*HEIGHT, align = "right")<br><br>
+	      </div>
+	      <p>...</p>
+
+
+
+
+
+
+
+
+
+
+
+
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">restartLevel</span> method</h4>
+	<h4></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	      def restartLevel(self):
+	      <div class="tabLeft">
+		<p>...</p>
+		self.allText.add("start_label", "BEGIN", y=20*HEIGHT, align="center", color=YELLOW)
+	      </div>
+
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">update</span> method</h4>
+	<h4></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	      def update(self):
+	      <div class="tabLeft">
+		<p>...</p>
+		if not self.paused:
+		<div class="tabLeft">
+		  <p>...</p>
+		</div>
+		else:
+		<div class="tabLeft">
+		  if not self.playerPaused:
+		  <div class="tabLeft">
+		    if not self.pacman.alive:
+		    <div class="tabLeft">
+		      <p>...</p>
+		      if self.pacman.deathSequenceFinished:
+		      <div class="tabLeft">
+			if self.lives > 0:
+			<div class="tabLeft">
+			  self.restartLevel()
+			</div>
+			else:
+			<div class="tabLeft">
+			  self.allText.add("game_over_label", "GAME OVER", y=20*HEIGHT, align="center", color=RED)
+			</div>
+		      </div>
+		    </div>
+		    
+		  </div>
+		</div>
+	      </div>
+
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">checkEvents</span> method</h4>
+	<h4></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	      def checkEvents(self):
+	      <div class="tabLeft">
+		for event in pygame.event.get():
+		<div class="tabLeft">
+		  <p>...</p>
+		  if event.type == KEYDOWN:
+		  <div class="tabLeft">
+		    if event.key == K_SPACE:
+		    <div class="tabLeft">
+		      self.allText.remove("start_label")<br>
+		      if self.paused:
+		      <div class="tabLeft">
+			<p>...</p>
+			self.allText.remove("paused_label")
+		      </div>
+		      else:
+		      <div class="tabLeft">
+			<p>...</p>
+			self.allText.add("paused_label", "PAUSED", y=20*HEIGHT, align="center", color=GREEN)
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	      </div>
+
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+	<h4></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	      def checkGhostEvents(self, dt):
+	      <div class="tabLeft">
+		<p>...</p>
+		if ghost is not None:
+		<div class="tabLeft">
+		  if ghost.mode.name == "FREIGHT":
+		  <div class="tabLeft">
+		    self.allText.add("ghost_score", self.ghostScore, x=ghost.position.x, y=ghost.position.y, size=0.5)
+		  </div>
+		</div>
+	      </div>
+
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">applyScore</span> method</h4>
+	<h4></h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def applyScore(self):
+	    <div class="tabLeft">
+	      if self.scoreAccumulator > 0:
+	      <div class="tabLeft">
+		<p>...</p>
+		self.allText.remove("score")<br>
+		self.score = newScore<br>
+		self.allText.add("score", self.score, y=HEIGHT, align="center")
+	      </div>
+	    </div>
+
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">render</span> method</h4>
+	<div class="pseudoCode">
+	  <p></p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def render(self):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.allText.render(self.screen)
+	    </div>
+
+	  </code>
+	</div>
+	<hr/>
+
+      </div><!--End of container-->
+
+
+
 
     <div class="container">  
       <h3>Conclusion</h3>
-
+      <p></p>
 
 
     </div> <!--End of the conclusion container-->
@@ -74,8 +398,10 @@
 	  <li>nodes.py</li>
 	  <li>pacman.py</li>
 	  <li>pellets.py</li>
+	  <li>PressStart2P.ttf</li>
 	  <li>spritesheet.py</li>
 	  <li>stacks.py</li>
+	  <li>text.py</li>
 	  <li>vectors.py</li>
 	  <li>Images</li>
 	  <ul>
@@ -93,7 +419,7 @@
 	<ul>
 	  <li><a href="section25.html">Previous</a></li>
 	  <li><a href="#top">Top</a></li>
-	  <li><a href="section26.html">Next</a></li>
+	  <li><a href="section27.html">Next</a></li>
 	</ul>
       </div>
     </footer>

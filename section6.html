@@ -53,35 +53,35 @@
       </div><!--End of pseudoCode-->
       <div class="codeText">
 	<code>
-	  import pygame<br>
-	  from vectors import Vector2D<br>
-	  from constants import *<br><br>
-	  class MazeMouse(object):<br>
+	  <span class="kw">import</span> pygame<br>
+	  <span class="kw">from</span> vectors <span class="kw">import</span> Vector2D<br>
+	  <span class="kw">from</span> constants <span class="kw">import</span> *<br><br>
+	  <span class="kw">class</span> <span class="cn">MazeMouse</span>(<span class="kw">object</span>):<br>
 	  <div class="tabLeft">
-	    def __init__(self, nodes):<br>
+	    <span class="kw">def</span> <span class="mn">__init__</span>(<span class="kw">self</span>, nodes):<br>
 	    <div class="tabLeft">
-	      self.name = ""<br>
-	      self.nodes = nodes<br>
-	      self.node = nodes.nodeList[0]<br>
-	      self.target = self.node<br>
-	      self.setPosition()<br>
-	      self.direction = STOP<br>
-	      self.speed = 100<br>
-	      self.radius = 10<br>
-	      self.color = WHITE<br>
+	      <span class="kw">self</span>.name = ""<br>
+	      <span class="kw">self</span>.nodes = nodes<br>
+	      <span class="kw">self</span>.node = nodes.nodeList[0]<br>
+	      <span class="kw">self</span>.target = <span class="kw">self</span>.node<br>
+	      <span class="kw">self</span>.<span class="mn">setPosition</span>()<br>
+	      <span class="kw">self</span>.direction = STOP<br>
+	      <span class="kw">self</span>.speed = 100<br>
+	      <span class="kw">self</span>.radius = 10<br>
+	      <span class="kw">self</span>.color = WHITE<br>
 	      <br>
 	    </div>
 
-	    def setPosition(self):
+	    <span class="kw">def</span> <span class="mn">setPosition</span>(<span class="kw">self</span>):
 	    <div class="tabLeft">
-	      self.position = self.node.position.copy()<br>
+	      <span class="kw">self</span>.position = <span class="kw">self</span>.node.position.<span class="mn">copy</span>()<br>
 	    </div>
 	    <br>
 
-	    def update(self, dt):
+	    <span class="kw">def</span> <span class="mn">update</span>(<span class="kw">self</span>, dt):
 	    <div class="tabLeft">
-	      self.position += self.direction*self.speed*dt<br>
-	      self.moveBySelf()<br>
+	      <span class="kw">self</span>.position += <span class="kw">self</span>.direction*<span class="kw">self</span>.speed*dt<br>
+	      <span class="kw">self</span>.<span class="mn">moveBySelf</span>()<br>
 	    </div>
 	    <br>
 
