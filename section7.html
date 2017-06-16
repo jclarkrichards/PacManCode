@@ -41,11 +41,7 @@
       </div><!--End of pseudoCode-->
       <div class="codeText">
 	<code>
-	  def __init__(self, nodes):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.goal = Vector2D()
-	  </div>
+	  self.goal = Vector2D()
 	</code>
       </div><!--End of codeText-->
       <hr/>
@@ -76,16 +72,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def moveBySelf(self):
-	  <div class="tabLeft">
-	    if self.overshotTarget():
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.direction = self.getClosestDirection(validDirections)<br>
-	      self.target = self.node.neighbors[self.direction]<br>
-	      self.setPosition()
-	    </div>
-	  </div>
+	  self.direction = self.getClosestDirection(validDirections)<br>
 	</code>
       </div>
       <hr/>
@@ -176,13 +163,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, nodes):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.modeStack = self.setupModeStack()<br>
-	    self.mode = self.modeStack.pop()<br>
-	    self.modeTimer = 0
-	  </div>
+	  self.modeStack = self.setupModeStack()<br>
+	  self.mode = self.modeStack.pop()<br>
+	  self.modeTimer = 0
 	</code>
       </div>
       <hr/>
@@ -263,14 +246,7 @@
 
       <div class="codeText">
 	<code>
-	  def update(self):
-	  <div class="tabLeft">
-	    dt = self.clock.tick(30) / 1000.0<br>
-	    self.pacman.update(dt)<br>
-	    self.ghost.update(dt, self.pacman)<br>
-	    self.checkEvents()<br>
-	    self.render()
-	  </div>
+	  self.ghost.update(dt, self.pacman)<br>
 	</code>
       </div><!--End of codeText-->
     </div><!--End of the code container-->

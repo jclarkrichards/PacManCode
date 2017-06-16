@@ -84,39 +84,31 @@
 	  <div class="tabLeft">
 	    self.setHomeNode()<br>
 	    self.direction = self.startDirection<br>
-	    self.target = self.node.neighbors[self.direction]<br>
-	    self.setPosition()
+	    <p>...</p>
 	  </div>
 	</code>
       </div>
       <hr/>
+
       <h4>Modify the <span class="cn">Pinky</span> class</h4>
       <div class="pseudoCode">
 	<p></p>
       </div>
       <div class="codeText">
 	<code>
-	  def __init(self, nodes, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.setStartPosition()
-	  </div>
+	  self.setStartPosition()
 	</code>
       </div>
       <hr/>
       
       <h4>Modify the <span class="cn">Blinky</span> class</h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>At the start of the game Blinky will move towards the LEFT.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def __init(self, nodes, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.startDirection = LEFT<br>
-	    self.setStartPosition()
-	  </div>
+	  self.startDirection = LEFT<br>
+	  self.setStartPosition()
 	</code>
       </div>
       <hr/>
@@ -124,16 +116,12 @@
 
       <h4>Modify the <span class="cn">Inky, Clyde</span> classes</h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>At the start of the game Inky and Clyde move DOWN.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def __init(self, nodes, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.startDirection = DOWN<br>
-	    self.setStartPosition()
-	  </div>
+	  self.startDirection = DOWN<br>
+	  self.setStartPosition()
 	</code>
       </div>
       <hr/>
@@ -141,7 +129,7 @@
       <h4>Modify the <span class="cn">Blinky</span> class</h4>
       <h4>Create a new method called <span class="mn">setHomeNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>Blinky starts the game on the node directly above the home node.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -158,7 +146,7 @@
       <h4>Modify the <span class="cn">Pinky</span> class</h4>
       <h4>Create a new method called <span class="mn">setHomeNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>Pinky starts the game directly on the home node.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -175,7 +163,7 @@
       <h4>Modify the <span class="cn">Inky</span> class</h4>
       <h4>Create a new method called <span class="mn">setHomeNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>Inky starts the game on the node directly to the LEFT of the home node.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -192,7 +180,7 @@
       <h4>Modify the <span class="cn">Clyde</span> class</h4>
       <h4>Create a new method called <span class="mn">setHomeNode</span></h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>Clyde starts the game on the node directly to the RIGHT of the home node.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -204,17 +192,6 @@
 	  </div>
 	</code>
       </div>
-      <hr/>
-
-      <div class="pseudoCode">
-
-      </div>
-      <div class="codeText">
-	<code>
-
-	</code>
-      </div>
-      <hr/>
 
     </div><!--End of container-->
 
@@ -267,25 +244,21 @@
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>We check to see how many pellets Pacman has eaten.</p>
+	<p>We check to see how many pellets Pacman has eaten.  We release Inky after Pacman has eaten 30 pellets, and we release Clyde after Pacman has eaten 60 pellets.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def checkGhostEvents(self, dt):
+	  if self.ghost is not None:
 	  <div class="tabLeft">
 	    <p>...</p>
-	    if self.ghost is not None:
-	    <div class="tabLeft">
-	      <p>...</p>
-	    </div>
-	    if self.pellets.numEaten &gt= 30 or self.idleTimer &gt= 10:
-	    <div class="tabLeft">
-	      self.ghosts.release("inky")
-	    </div>
-	    if self.pellets.numEaten &gt= 60 or self.idleTimer &gt= 10:
-	    <div class="tabLeft">
-	      self.ghosts.release("clyde")
-	    </div>
+	  </div>
+	  if self.pellets.numEaten &gt= 30 or self.idleTimer &gt= 10:
+	  <div class="tabLeft">
+	    self.ghosts.release("inky")
+	  </div>
+	  if self.pellets.numEaten &gt= 60 or self.idleTimer &gt= 10:
+	  <div class="tabLeft">
+	    self.ghosts.release("clyde")
 	  </div>
 	</code>
       </div>
@@ -385,7 +358,7 @@
       <h4>Modify the <span class="cn">Ghost</span> class</h4>
       <h4>Create a new method called <span class="mn">trapInHome</span></h4>
       <div class="pseudoCode">
-	<p>This isn't new code.  We just moved this bit out of the <span class="mn">getValidDirections</span> method and put it into it's own method.  </p>
+	<p>This isn't new code.  We just moved this bit out of the <span class="mn">getValidDirections</span> method and put it into it's own method.  Delete this code from the <span class="mn">getValidDirections</span> method.  It's the code that's within the 'if self.exitHome' statement.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -491,12 +464,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def setRespawnMode(self):
-	  <div class="tabLeft">
 	    <p>...</p>
 	    self.setGuideStack()<br>
 	    self.leftHome = False
-	  </div>
 	</code>
       </div>
       <hr/>
@@ -507,10 +477,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def setSpawnGoal(self):
-	  <div class="tabLeft">
-	    self.goal = self.homeNode.position
-	  </div>
+	  self.goal = self.homeNode.position
 	</code>
       </div>
 

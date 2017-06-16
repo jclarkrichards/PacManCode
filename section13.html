@@ -43,7 +43,6 @@
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
 	  MAZEDATA[0]["start"] = {"pacman":(15*WIDTH, 26*HEIGHT), "ghost":(216, 272)}
 	</code>
       </div>
@@ -56,12 +55,8 @@
       </div>
       <div class="codeText">
 	<code>
-	  def startGame(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.pacman = Pacman(self.nodes, self.level)<br>
-	    self.ghost = Ghost(self.nodes, self.level)
-	  </div>
+	  self.pacman = Pacman(self.nodes, self.level)<br>
+	  self.ghost = Ghost(self.nodes, self.level)
 	</code>
       </div>
 
@@ -114,11 +109,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, nodes, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.setStartPosition()
-	  </div>
+	  self.setStartPosition()
 	</code>
       </div>
 
@@ -149,11 +140,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, nodes, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.setStartPosition()
-	  </div>
+	  self.setStartPosition()
 	</code>
       </div>
 
@@ -170,11 +157,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def startGame(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.paused = True
-	  </div>
+	  self.paused = True
 	</code>
       </div>
       <hr/>
@@ -185,20 +168,14 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkEvents(self):
+	  for event in pygame.event.get():
 	  <div class="tabLeft">
-	    for event in pygame.event.get():
+	    <p>...</p>
+	    if event.type == KEYDOWN:
 	    <div class="tabLeft">
-	      if event.type == QUIT:
+	      if event.key == K_SPACE:
 	      <div class="tabLeft">
-		exit()
-	      </div>
-	      if event.type == KEYDOWN:
-	      <div class="tabLeft">
-		if event.key == K_SPACE:
-		<div class="tabLeft">
-		  self.paused = not self.paused
-		</div>
+		self.paused = not self.paused
 	      </div>
 	    </div>
 	  </div>
@@ -208,7 +185,7 @@
       <hr/>
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We just check to see if the game is paused or not.  If it is not paused, then it will run as normal.  If it is paused, then we don't update Pacman or the ghost or check for their events.  But we still want to check for key presses and we still want to draw them to the screen.  So we do not include those two in the <span class="kw">if</span> statement.</p>
+	<p>We just check to see if the game is paused or not.  If it is not paused, then it will run as normal.  If it is paused, then we don't update Pacman or the ghost or check for their events.  But we still want to check for key presses and we still want to draw them to the screen.  So we do not include those two in the <span class="kw">if</span> statement.  Don't inlcude the call to the <span class="mn">checkEvents</span> method in the <span class="kw">if</span> statement or we won't be able to unpause the game.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -239,16 +216,12 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletEvents(self):
+	  if pellet:
 	  <div class="tabLeft">
-	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
-	    if pellet:
+	    <p>...</p>
+	    if self.pellets.isEmpty():
 	    <div class="tabLeft">
-	      <p>...</p>
-	      if self.pellets.isEmpty():
-	      <div class="tabLeft">
-		self.startGame()
-	      </div>
+	      self.startGame()
 	    </div>
 	  </div>
 	</code>
@@ -277,19 +250,13 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkGhostEvents(self):
+	  if self.ghost.mode.name == "FREIGHT":
 	  <div class="tabLeft">
-	    if self.pacman.eatGhost(self.ghost):
-	    <div class="tabLeft">
-	      if self.ghost.mode.name == "FREIGHT":
-	      <div class="tabLeft">
-		<p>...</p>
-	      </div>
-	      elif self.ghost.mode.name != "SPAWN":
-	      <div class="tabLeft">
-		self.restartLevel()
-	      </div>
-	    </div>
+	    <p>...</p>
+	  </div>
+	  elif self.ghost.mode.name != "SPAWN":
+	  <div class="tabLeft">
+	    self.restartLevel()
 	  </div>
 	</code>
       </div>
@@ -305,11 +272,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.lives = 5
-	  </div>
+	  self.lives = 5
 	</code>
       </div>
       <hr/>
@@ -320,19 +283,15 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkGhostEvents(self):
+	  elif self.ghost.mode.name != "SPAWN":
 	  <div class="tabLeft">
-	    <p>...</p>
-	    elif self.ghost.mode.name != "SPAWN":
+	    self.lives -= 1<br>
+	    if self.lives == 0:
 	    <div class="tabLeft">
-	      self.lives -= 1<br>
-	      if self.lives == 0:
-	      <div class="tabLeft">
-		self.lives = 5<br>
-		self.startGame()
-	      </div>
-	      self.restartLevel()
+	      self.lives = 5<br>
+	      self.startGame()
 	    </div>
+	    self.restartLevel()
 	  </div>
 	</code>
       </div>
@@ -344,15 +303,11 @@
       </div>
       <div class="codeText">
 	<code>
-	  def render(self):
+	  for i in range(self.lives - 1):
 	  <div class="tabLeft">
-	    <p>...</p>
-	    for i in range(self.lives - 1):
-	    <div class="tabLeft">
-	      y = HEIGHT * (NROWS - 1)<br>
-	      x = 5 + self.pacman.radius + (2*self.pacman.radius + 5)*i<br>
-	      pygame.draw.circle(self.screen, self.pacman.color, (x, y), self.pacman.radius)
-	    </div>
+	    y = HEIGHT * (NROWS - 1)<br>
+	    x = 5 + self.pacman.radius + (2*self.pacman.radius + 5)*i<br>
+	    pygame.draw.circle(self.screen, self.pacman.color, (x, y), self.pacman.radius)
 	  </div>
 	</code>
       </div>

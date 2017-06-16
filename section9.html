@@ -38,7 +38,7 @@
       <h3>Modify the <span class="filenames">pacman.py</span> file</h3>
       <h4>Make a new method alled <span class="mn">eatPellets</span></h4>
       <div class="pseudoCode">
-	<p>Since Pacman is the one who eats the pellets, we'll add a method in the <span class="cn">Pacman</span> class that takes care of the pellet eating.  We pass in the list of pellets so that we can loop through them until we come across with a pellet that Pacman is colliding with.  Once we detect that Pacman is colliding with a pellet we just return the pellet to whoever was requestingthis, otherwise we return <span class="py">None</span> if Pacman is not colliding with any pellets.  Notice that we get the square of the distnaces to avoid taking a square root.  But why are we using the pellet's radius twice when getting the sum of the two radii?  We can use whatever radius we want, depending on when we want to detet the collision.  We want to make it look like Pacman is eating the pellet so we don't want to detect a collision until Pacman is already overlapping the pellet rather than have him detect a pellet as soon as he touches one.  Why do we just return the pellet instead of deleting it?  We will delete it, but we first need to extract some information from it that Pacman doesn't need to concern himself with.  We'll deal with that in the next part below.</p>
+	<p>Since Pacman is the one who eats the pellets, we'll add a method in the <span class="cn">Pacman</span> class that takes care of the pellet eating.  We pass in the list of pellets so that we can loop through them until we come across with a pellet that Pacman is colliding with.  Once we detect that Pacman is colliding with a pellet we just return the pellet to whoever was requesting this, otherwise we return <span class="py">None</span> if Pacman is not colliding with any pellets.  Notice that we get the square of the distances to avoid taking a square root.  But why are we using the pellet's radius twice when getting the sum of the two radii?  We can use whatever radius we want, depending on when we want to detet the collision.  We want to make it look like Pacman is eating the pellet so we don't want to detect a collision until Pacman is already overlapping the pellet rather than have him detect a pellet as soon as he touches one.  Why do we just return the pellet instead of deleting it?  We will delete it, but we first need to extract some information from it that Pacman doesn't need to concern himself with.  We'll deal with that in the next part below.</p>
 	
       </div><!--End of pseudoCode-->
       <div class="codeText">
@@ -70,11 +70,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.score = 0
-	  </div>
+	  self.score = 0
 	</code>
       </div>
       <hr/>
@@ -99,17 +95,11 @@
 
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We just call the method we just created at some point in this method.  </p>
+	<p>We just call the method we just created at some point in this method.  I placed it after the call to the <span class="mn">checkEvents</span> method.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def update(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.checkEvents()<br>
-	    self.checkPelletEvents()
-	    <p>...</p>
-	  </div>
+	  self.checkPelletEvents()
 	</code>
       </div>
     </div><!--End of container-->

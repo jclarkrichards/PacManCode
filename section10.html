@@ -42,23 +42,18 @@
     
     <div class="container">
       <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
-      <h4>Modify the <span class="mn">checkPelletDrivenEvents</span> method</h4>
+      <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
 	<p>Here we just check to see if the pellet we just ate happened to be a power pellet.  If it is then we tell the ghost to go into FREIGHT mode.  If it isn't then we do nothing different.  The last two lines here are the new lines.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletDrivenEvents(self):
+	  if pellet:
 	  <div class="tabLeft">
-	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
-	    if pellet:
+	    <p>...</p>
+	    if pellet.name == "powerpellet":
 	    <div class="tabLeft">
-	      self.score += pellet.value<br>
-	      self.pellets.pelletList.remove(pellet)<br>
-	      if pellet.name == "powerpellet":
-	      <div class="tabLeft">
-		self.ghost.setFreightMode()
-	      </div>
+	      self.ghost.setFreightMode()
 	    </div>
 	  </div>
 	</code>
@@ -89,7 +84,7 @@
 	      self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
 	      self.modeTimer = 0
 	    </div>
-	    elif self.mode.name == "FREIGHT":
+	    else:
 	    <div class="tabLeft">
 	      self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
 	      self.modeTimer = 0
@@ -106,15 +101,10 @@
       </div>
       <div class="codeText">
 	<code>
-	  def update(self, dt, pacman):
+	  <p>...</p>  
+	  elif self.mode.name == "FREIGHT":
 	  <div class="tabLeft">
-	    <p>...</p>
-	    
-	    elif self.mode.name == "FREIGHT":
-	    <div class="tabLeft">
-	      self.setRandomGoal()
-	    </div>
-	    self.moveBySelf()
+	    self.setRandomGoal()
 	  </div>
 	</code>
       </div>

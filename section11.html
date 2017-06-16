@@ -59,13 +59,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.homeList = []<br>
-	    self.createMainList()<br>
-	    self.createHomeList()
-	  </div>
+	  self.homeList = []<br>
+	  self.createMainList()<br>
+	  self.createHomeList()
 	</code>
       </div>
       <hr/>
@@ -74,7 +70,7 @@
 
       <h4>Create a new method called <span class="mn">createMainList</span></h4>
       <div class="pseudoCode">
-	<p>This is just the main node list that we've been creating.  It just calls the <span class="mn">createNodeList</span> and <span class="mn">setupPortalNodes</span> methods.  The reason is because we need to call <span class="mn">createNodeList</span> twice, once to create the main nodes, and once to create the home nodes. </p>
+	<p>This is just the main node list that we've been creating.  It just calls the <span class="mn">createNodeList</span> and <span class="mn">setupPortalNodes</span> methods.  The reason is because we need to call <span class="mn">createNodeList</span> twice, once to create the main nodes, and once to create the home nodes. Don't forget to remove the call to the <span class="mn">setupPortalNodes</span> from the end of the <span class="mn">createNodeList</span> method.  We don't want to call it twice.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -135,16 +131,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def render(self, screen):
+	  for node in self.homeList:
 	  <div class="tabLeft">
-	    for node in self.nodeList:
-	    <div class="tabLeft">
-	      node.render(screen)
-	    </div>
-	    for node in self.homeList:
-	    <div class="tabLeft">
-	      node.render(screen)
-	    </div>
+	    node.render(screen)
 	  </div>
 	</code>
       </div>
@@ -157,7 +146,6 @@
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
 	  MAZEDATA[0]["home"] = (15*WIDTH, 14*HEIGHT)
 	</code>
       </div>

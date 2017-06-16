@@ -39,7 +39,10 @@
       <h3>Modify the <span class="filenames">ghosts.py</span> file</h3>
       <h4>Create a new class called <span class="cn">GhostGroup</span></h4>
       <div class="pseudoCode">
-	<p>We want to create this class after the <span class="cn">Ghost</span> class.  </p>
+	<p>We want to create this class after the <span class="cn">Ghost</span> class.  When we initialize this class we create four copies of the same <span class="cn">Ghost</span> object and place them in a list.  The rest of these methods deal with the ghosts in the list.  Some of these methods just iterate over the ghost and call the method of the same name for each ghost.</p>
+	<p>The <span class="mn">__iter__</span> method makes the <span class="cn">GhostGroup</span> class iterable.  It's not necessary, but it allows us to more easily iterate over all of the ghosts.</p>
+	<p>The <span class="mn">anyInFreight</span>, <span class="mn">anyInSpawn</span>, and <span class="mn">anyInFreightOrSpawn</span> methods check to see if any of the ghosts are in FREIGHT or SPAWN mode and returns <span class="py">True</span> if any of the ghosts are.  We have them separated and we also have them together in one method for convenience and flexibility.  </p>
+	<p>The <span class="mn">getGhost</span> method looks through the list of ghosts and returns the <span class="cn">Ghost</span> object of the same name as the one we are looking for.  This is nice because we don't want to keep track of where each ghost is located in the list.  The ghost we're looking for can be anywhere in the list.  </p>
       </div>
       <div class="codeText">
 	<code>
@@ -173,7 +176,7 @@
 
       <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>This has a couple of calls to the <span class="cn">Ghost</span> object so we replace them all with the calls to the <span class="cn">GhostGroup</span> class instead.  </p>
+	<p>This has a couple of calls to the <span class="cn">Ghost</span> object so we replace them all with the calls to the <span class="cn">GhostGroup</span> class instead.  There are also two places where we check to see if the ghosts are in FREIGHT or SPAWN mode.  We just replace the previous code with this new method.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -183,8 +186,8 @@
 	  <div class="tabLeft">
 	    if pellet.name == "powerpellet":
 	    <div class="tabLeft">
-	      self.ghostScore = 200<br>
 	      self.ghosts.setFreightMode()
+	      self.ghostScore = 200<br>
 	    </div>
 	    <p>...</p>
 	    if self.ghosts.anyInFreightOrSpawn():
@@ -207,7 +210,7 @@
 
       <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>We have more than one ghost to deal with, so we need to know which ghost Pacman is coming into contact with.  We'll also need to modify Pacman's <span class="mn">eatGhost</span> method as well.  Just rewrite this whole method as you see it here.  </p>
+	<p>We have more than one ghost to deal with, so we need to know which ghost Pacman is coming into contact with.  We'll also need to modify Pacman's <span class="mn">eatGhost</span> method as well.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -216,22 +219,7 @@
 	    ghost = self.pacman.eatGhost(self.ghosts)<br>
 	    if ghost is not None:
 	    <div class="tabLeft">
-	      if ghost.mode.name == "FREIGHT":
-	      <div class="tabLeft">
-		self.score += self.ghostScore<br>
-		self.ghostScore *= 2<br>
-		ghost.setRespawnMode()
-	      </div>
-	      elif ghost.mode.name != "SPAWN":
-	      <div class="tabLeft">
-		self.lives -= 1<br>
-		if self.lives == 0:
-		<div class="tabLeft">
-		  self.lives = 5<br>
-		  self.startGame()
-		</div>
-		self.restartLevel()
-	      </div>
+	      <p>...</p>
 	    </div>
 	  </div>
 	</code>
@@ -350,7 +338,7 @@
 	    <br>
 	    def setScatterGoal(self):
 	    <div class="tabLeft">
-	      self.goal = Vector2D(0, HEIGHT*NROWS)
+	      self.goal = Vector2D(WIDTH*NCOLS, HEIGHT*NROWS)
 	    </div>
 	  </div>
 	  <br><br>
@@ -366,7 +354,7 @@
 	    <br>
 	    def setScatterGoal(self):
 	    <div class="tabLeft">
-	      self.goal = Vector2D(WIDTH*NCOLS, HEIGHT*NROWS)
+	      self.goal = Vector2D(0, HEIGHT*NROWS)
 	    </div>
 	  </div>
 	  <br>
@@ -514,7 +502,6 @@
 	  </div>
 	</code>
       </div>
-      <hr/>
       
     </div><!--End of container-->
 

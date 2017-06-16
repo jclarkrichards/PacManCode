@@ -55,26 +55,19 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.home = False
-	  </div>
+	  self.home = False
 	</code>
       </div>
 
       <hr/>
+      <h4>Modify the <span class="cn">NodeGroup</span></h4>
       <h4>Modify the <span class="mn">moveHomeNodes</span> method</h4>
       <div class="pseudoCode">
 	<p>We define the home node to be the node that represents the entrance to the ghost home nodes.  It is guaranteed that this node will always be the first node in the <span class="var">homeList</span> list because it's always the first node found in the <span class="filenames">home.txt</span> file.  This will never change in any of the mazes we make.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def moveHomeNodes(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.homeList[0].home = True
-	  </div>
+	  self.homeList[0].home = True
 	</code>
       </div>
 
@@ -87,27 +80,19 @@
       </div>
       <div class="codeText">
 	<code>
-	  def moveByKey(self, direction):
+	  if self.direction is STOP:
 	  <div class="tabLeft">
-	    if self.direction is STOP:
+	    <p>...</p>
+	  </div>
+	  else:
+	  <div class="tabLeft">
+	    <p>...</p>
+	    if self.overshotTarget():
 	    <div class="tabLeft">
 	      <p>...</p>
-	    </div>
-	    else:
-	    <div class="tabLeft">
-	      <p>...</p>
-	      if self.overshotTarget():
+	      if (self.node.neighbors[direction] is not None and not self.node.home):
 	      <div class="tabLeft">
 		<p>...</p>
-		if (self.node.neighbors[direction] is not None and not self.node.home):
-		<div class="tabLeft">
-		  <p>...</p>
-		  <!--if not self.node.home and direction is not DOWN:
-		  <div class="tabLeft">
-		    self.target=  self.node.neighbors[direction]
-		    <p>...</p>
-		  </div>-->
-		</div>
 	      </div>
 	    </div>
 	  </div>
@@ -122,13 +107,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def getValidDirections(self):
+	  if (self.node.home and DOWN in validDirections and self.mode.name != "SPAWN"):
 	  <div class="tabLeft">
-	    <p>...</p>
-	    if (self.node.home and DOWN in validDirections and self.mode.name != "SPAWN"):
-	    <div class="tabLeft">
-	      validDirections.remove(DOWN)
-	    </div>
+	    validDirections.remove(DOWN)
 	  </div>
 	</code>
       </div>
@@ -146,11 +127,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, row, column, respawn=False):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.nowayUp = False
-	  </div>
+	  self.nowayUp = False
 	</code>
       </div>
       <hr/>
@@ -158,7 +135,7 @@
       <h4>Modify the <span class="cn">NodeGroup</span> class</h4>
       <h4>Create a new method called <span class="mn">checkIfOnRestriction</span></h4>
       <div class="pseudoCode">
-	<p>We want to loop through the positions that we added to the MAZEDATA dictionary and see if the node we're currently working on is one of those.</p>
+	<p>We want to loop through the positions that we added to the MAZEDATA dictionary and see if the node we're currently on is one of those.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -182,16 +159,11 @@
 
       <h4>Modify the <span class="mn">getPathNode</span> method</h4>
       <div class="pseudoCode">
-	<p>This is where we call the method we just created above.</p>
+	<p>This is where we call the method we just created above.  Call this method right before we return from this method.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def getPathNode(self, direction, row, col, nodeList):
-	  <div class="tabLeft">
-	    tempNode = self.followPath(direction, row, col)<br>
-	    self.checkIfOnRestriction(tempNode)<br>
-	    return self.getNodeFromNode(tempNode, nodeList)
-	  </div>
+	  self.checkIfOnRestriction(tempNode)<br>
 	</code>
       </div>
       <hr/>
@@ -203,13 +175,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def getValidDirections(self):
+	  if self.node.nowayUp and UP in validDirections:
 	  <div class="tabLeft">
-	    <p>...</p>
-	    if self.node.nowayUp and UP in validDirections:
-	    <div class="tabLeft">
-	      validDirections.remove(UP)
-	    </div>
+	    validDirections.remove(UP)
 	  </div>
 	</code>
       </div>
@@ -225,16 +193,11 @@
       <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We may want to modify the speed further in the future so let's put the speed modification stuff in its own method.  </p>
+	<p>We may want to modify the speed further in the future so let's put the speed modification stuff in its own method.  This replaces the first line with the same variable name.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def update(self, dt, pacman):
-	  <div class="tabLeft">
-	    speedMod = self.modifySpeed()<br>
-	    self.position += self.direction * speedMod * dt
-	    <p>...</p>
-	  </div>
+	  speedMod = self.modifySpeed()<br>
 	</code>
       </div>
       <hr/>
@@ -310,30 +273,22 @@
       </div>
       <div class="codeText">
 	<code>
-	  def update(self):
-	  <div class="tabLeft">
-	    dt = self.clock.tick(30) / 1000.0<br>
-	    if not self.paused:
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.checkGhostEvents(dt)<br>
-	      self.checkPelletEvents(dt)<br>
-	    </div>
-	  </div>
+	  self.checkPelletEvents(dt)<br>
+	  self.checkGhostEvents(dt)<br>
 	</code>
       </div>
       <hr/>
 
-      <h4>Modify the <span class="filenames">checkGhostEvents</span> method</h4>
+      <h4>Modify the <span class="filenames">checkGhostEvents</span> and <span class="filenames">checkPelletEvents</span> methods</h4>
       <div class="pseudoCode">
 	<p>Just adding the dt to the inputs.</p>
       </div>
       <div class="codeText">
 	<code>
+	  def checkPelletEvents(self, dt):
+	  <p>...</p>
 	  def checkGhostEvents(self, dt):
-	  <div class="tabLeft">
-	    <p>...</p>
-	  </div>
+	  
 	</code>
       </div>
       <hr/>
@@ -351,39 +306,35 @@
       <hr/>
       <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>In the end Pacman's speed depends on whether he is eating pellets or not and if the ghost is in FREIGHT or SPAWN mode or not.  If the ghost is in FREIGHT or SPAWN mode, then we increase Pacman's speed whether he's eating pellets or not.  If the ghost is not either of these modes then we reduce Pacman's speed if he is eating pellets, and set his speed to normal if it has been at least half a second since he last ate a pellet.  We have an idleTimer that we use to check to see how long Pacman has not eaten any pellets.  This way we reduce the choppiness that would happen if we were constantly telling him to reduce speed, normal speed, reduce speed, normal speed, ... etc everytime he eats a pellet.  There are other things we'll need the idleTimer for in the future.</p>
+	<p>In the end Pacman's speed depends on whether he is eating pellets or not and if the ghost is in FREIGHT or SPAWN mode or not.  If the ghost is in FREIGHT or SPAWN mode, then we increase Pacman's speed whether he's eating pellets or not.  If the ghost is not in either of these modes then we reduce Pacman's speed if he is eating pellets, and set his speed to normal if it has been at least half a second since he last ate a pellet.  We have an idleTimer that we use to check to see how long Pacman has not eaten any pellets.  This way we reduce the choppiness that would happen if we were constantly telling him to reduce speed, normal speed, reduce speed, normal speed, ... etc everytime he eats a pellet.  There are other things we'll need the idleTimer for in the future.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletEvents(self, dt):
+	  if pellet:
 	  <div class="tabLeft">
-	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
-	    if pellet:
+	    self.idleTimer = 0<br>
+	    <p>...</p>
+	    if (self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN"):
 	    <div class="tabLeft">
-	      self.idleTimer = 0<br>
-	      <p>...</p>
-	      if (self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN"):
-	      <div class="tabLeft">
-		self.pacman.boostSpeed()
-	      </div>
-	      else:
-	      <div class="tabLeft">
-		self.pacman.reduceSpeed()
-	      </div>
+	      self.pacman.boostSpeed()
 	    </div>
 	    else:
 	    <div class="tabLeft">
-	      self.idleTimer += dt<br>
-	      if (self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN"):
+	      self.pacman.reduceSpeed()
+	    </div>
+	  </div>
+	  else:
+	  <div class="tabLeft">
+	    self.idleTimer += dt<br>
+	    if (self.ghost.mode.name == "FREIGHT" or self.ghost.mode.name == "SPAWN"):
+	    <div class="tabLeft">
+	      self.pacman.boostSpeed()
+	    </div>
+	    else:
+	    <div class="tabLeft">
+	      if self.idleTimer &gt= 0.5:<br>
 	      <div class="tabLeft">
-		self.pacman.boostSpeed()
-	      </div>
-	      else:
-	      <div class="tabLeft">
-		if self.idleTimer &gt= 0.5:<br>
-		<div class="tabLeft">
-		  self.pacman.normalSpeed()
-		</div>
+		self.pacman.normalSpeed()
 	      </div>
 	    </div>
 	  </div>

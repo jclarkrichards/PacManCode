@@ -206,25 +206,11 @@
       <h3>Modify the <span class="filenames">nodes.py</span></h3>
       <h4>Modify the <span class="mn">findFirstNode</span> method</h4>
       <div class="pseudoCode">
-	<p>We just need to modify this method so that it will know what the new node symbols mean since we now have 3 symbols for a node depending on whether no pellet, a regular pellet, or a power pellet is on that node.</p>
+	<p>We just need to modify this method so that it will know what the new node symbols mean since we now have 3 symbols for a node depending on whether no pellet, a regular pellet, or a power pellet is on that node.  </p>
       </div><!--End of pseudoCode-->
       <div class="codeText">
 	<code>
-	  def findFirstNode(self, rows, cols):
-	  <div class="tabLeft">
-	    nodeFound = False<br>
-	    for row in range(rows):
-	    <div class="tabLeft">
-	      for col in range(cols):
-	      <div class="tabLeft">
-		if (self.grid[row][col] == "+" or self.grid[row][col] == "n" or self.grid[row][col] == "N"):
-		<div class="tabLeft">
-		  return Node(row, col)
-		</div>
-	      </div>
-	    </div>
-	    return None
-	  </div>
+	  if (self.grid[row][col] == "+" or self.grid[row][col] == "n" or self.grid[row][col] == "N"):
 	</code>
       </div><!--End of codeText-->
       <hr/>
@@ -235,15 +221,9 @@
       </div><!--End of pseudoCode-->
       <div class="codeText">
 	<code>
-	  def pathToFollow(self, direction, row, col, path):
+	  if (self.grid[row][col] == path or self.grid[row][col] == "+" or self.grid[row][col] == "p" or self.grid[row][col] == "P"):
 	  <div class="tabLeft">
-	    if (self.grid[row][col] == path or self.grid[row][col] == "p" or self.grid[row][col] == "P" or self.grid[row][col] == "+"):
-	    <div class="tabLeft">
-	      while (self.grid[row][col] != "+" and self.grid[row][col] != "N" and self.grid[row][col] != "n"):
-	      <div class="tabLeft">
-		<p>...</p>
-	      </div>
-	    </div>
+	    while (self.grid[row][col] != "+" and self.grid[row][col] != "N" and self.grid[row][col] != "n"):
 	  </div>
 	</code>
       </div><!--End of codeText-->
@@ -255,7 +235,6 @@
     
     <div class="container">
       <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
-      <h4>Modify the <span class="mn">startGame</span> method</h4>
       <div class="pseudoCode">
 	<p>We just need to add the pellets in this method so that they get created.  It doesn't matter when we create them since nothing depends on them.  We just need to make sure we import them at the top of the file.</p>
       </div><!--End of pseudoCode-->
@@ -263,14 +242,18 @@
       <div class="codeText">
 	<code>
 	  from pellets import PelletGroup<br><br>
-	  <p>...</p>
-	  def startGame(self):
-	  <div class="tabLeft">
-	    self.nodes = NodeGroup(self.level)<br>
-	    self.pellets = PelletGroup(self.level)<br>
-	    self.pacman = Pacman(self.nodes)<br>
-	    self.ghost = Ghost(self.nodes)
-	  </div>
+	</code>
+      </div><!--End of codeText-->
+      <hr/>
+      
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p>You can add this anywhere in this method.  I placed it right after the line where I created the nodes.  </p>
+      </div><!--End of pseudoCode-->
+      
+      <div class="codeText">
+	<code>
+	  self.pellets = PelletGroup(self.level)<br>
 	</code>
       </div><!--End of codeText-->
       <hr/>
@@ -281,12 +264,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def render(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.pellets.render(self.screen)
-	    <p>...</p>
-	  </div>
+	  self.pellets.render(self.screen)
 	</code>
       </div>
  

@@ -122,20 +122,24 @@
 
     <div class="container">
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
-      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <h4>Import the fruit</h4>
       <div class="pseudoCode">
-	<p>We want to create an empty list that will eventually contain the fruit we need to display in the lower right corner of the screen.  We also need to import the classes we created at the beginning of the file.</p>
+	<p>We need to import the fruit classes we just created if we want to use them</p>
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
 	  from fruit import CollectedFruit, DisplayedFruit<br><br>
-	  
-	  def __init__(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.displayedFruits = []
-	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We want to create an empty list that will eventually contain the fruit we need to display in the lower right corner of the screen.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.displayedFruits = []
 	</code>
       </div>
 
@@ -146,12 +150,8 @@
       </div>
       <div class="codeText">
 	<code>
-	  def startGame(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.fruit = None<br>
-	    self.fruitTimer = 0
-	  </div>
+	  self.fruit = None<br>
+	  self.fruitTimer = 0
 	</code>
       </div>
 
@@ -159,16 +159,12 @@
       
       <h4>Modify the <span class="mn">restartLevel</span> method</h4>
       <div class="pseudoCode">
-	<p>If we have to restart the level in the middle of the level then Pacman loses the chance to get the fruit if it already appeared.</p>
+	<p>If we have to restart the level in the middle of the level then Pacman loses the chance to get the fruit if it already appeared.  This is the same code as above.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def restartLevel(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.fruit = None<br>
-	    self.fruitTimer = 0
-	  </div>
+	  self.fruit = None<br>
+	  self.fruitTimer = 0
 	</code>
       </div>
 
@@ -180,18 +176,12 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletEvents(self, dt):
+	  if pellet:
 	  <div class="tabLeft">
-	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
-	    if pellet:
+	    self.pellets.numEaten += 1<br>
+	    if (self.pellets.numEaten == 70 or self.pellets.numEaten == 140):
 	    <div class="tabLeft">
-	      self.pellets.numEaten += 1
-	      <p>...</p>
-	      if (self.pellets.numEaten == 70 or self.pellets.numEaten == 140):
-	      <div class="tabLeft">
-		self.fruit = CollectedFruit(self.nodes, self.level)
-	      </div>
-	      <p>...</p>
+	      self.fruit = CollectedFruit(self.nodes, self.level)
 	    </div>
 	  </div>
 	</code>
@@ -233,19 +223,11 @@
 
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>We just add the method we just created with the other event checks</p>
+	<p>We just add the method we just created with the other event checks.  I added mine after checking for the ghost events.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def update(self):
-	  <div class="tabLeft">
-	    dt = self.clock.tick(30) / 1000.0<br>
-	    if not self.paused:
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.checkFruitEvents(dt)
-	    </div>
-	  </div>
+	  self.checkFruitEvents(dt)
 	</code>
       </div>
 
@@ -253,7 +235,7 @@
 
       <h4>Create a new method called <span class="mn">addDisplayedFruit</span></h4>
       <div class="pseudoCode">
-	<p>We just add the method we just created with the other event checks</p>
+	<p>This method adds a <span class="cn">DisplayedFruit</span> object to our list of fruits that Pacman has collected.  This list only contains unique items, so if there's a fruit that we've already collected, then we just ignore it.  Remember that these fruit go in the bottom right corner of the screen.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -380,11 +362,11 @@
 
       <h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>When the pellets are empty, then Pacman has eaten them all and we need to increase the level and start the game again.  </p>
+	<p>When the pellets are empty, then Pacman has eaten them all and we need to increase the level and start the game again.  Add this at the end of this if statement.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletEvents(self, dt):
+	  if pellet:
 	  <div class="tabLeft">
 	    <p>...</p>
 	    if self.pellets.isEmpty():
@@ -412,11 +394,8 @@
 	<code>
 	  def __init__(self, nodes, level, displayedLevel):
 	  <div class="tabLeft">
-	    MazeMouse.__init__(self, nodes, level)<br>
 	    <p>...</p>
 	    self.chooser(displayedLevel)<br>
-	    self.setStartPosition()
-	    <p>...</p>
 	  </div>
 	</code>
       </div>
@@ -494,13 +473,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletEvents(self, dt):
+	  if self.pellets.numEaten == 70 or self.pellets.numEaten == 140:
 	  <div class="tabLeft">
-	    <p>...</p>
-	    if self.pellets.numEaten == 70 or self.pellets.numEaten == 140:
-	    <div class="tabLeft">
-	      self.fruit = CollectedFruit(self.nodes, self.level, self.displayedLevel)
-	    </div>
+	    self.fruit = CollectedFruit(self.nodes, self.level, self.displayedLevel)
 	  </div>
 	</code>
       </div>

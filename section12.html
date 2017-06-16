@@ -83,16 +83,11 @@
 
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>Just need to make sure we call the method we just created above in the <span class="mn">update</span> method.</p>
+	<p>Just need to make sure we call the method we just created above in the <span class="mn">update</span> method.  I placed it after the call to the <span class="mn">checkPelletEvents()</span> method.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def update(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.checkGhostEvents()<br>
-	    self.render()
-	  </div>
+	  self.checkGhostEvents()<br>
 	</code>
       </div>
     </div><!--End of container-->
@@ -120,13 +115,9 @@
       </div>
       <div class="codeText">
 	<code>
-	  def update(self, dt, pacman):
+	  elif self.mode.name == "SPAWN":
 	  <div class="tabLeft">
-	    <p>...</p>
-	    elif self.mode.name == "SPAWN":
-	    <div class="tabLeft">
-	      self.setSpawnGoal()
-	    </div>
+	    self.setSpawnGoal()
 	  </div>
 	</code>
       </div>
@@ -153,11 +144,8 @@
       </div>
       <div class="codeText">
 	<code>
-	  def setFreightMode(self):
-	  <div class="tabLeft">
-	    if self.mode.name != "FREIGHT" and self.mode.name != "SPAWN":
-	    <p>...</p>
-	  </div>
+	  if self.mode.name != "FREIGHT" and self.mode.name != "SPAWN":
+	  <p>...</p>
 	</code>
       </div>
       <hr/>
@@ -167,17 +155,14 @@
       </div>
       <div class="codeText">
 	<code>
-	  def moveBySelf(self):
+	  if self.overshotTarget():
 	  <div class="tabLeft">
-	    if self.overshotTarget():
+	    <p>...</p>
+	    if self.mode.name == "SPAWN":
 	    <div class="tabLeft">
-	      <p>...</p>
-	      if self.mode.name == "SPAWN":
+	      if self.position == self.goal:
 	      <div class="tabLeft">
-		if self.position == self.goal:
-		<div class="tabLeft">
-		  self.mode = self.modeStack.pop()
-		</div>
+		self.mode = self.modeStack.pop()
 	      </div>
 	    </div>
 	  </div>
@@ -195,7 +180,6 @@
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
 	  self.ghostScore = 200
 	</code>
       </div>
@@ -207,17 +191,11 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkGhostEvents(self):
+	  if ghost.mode.name == "FREIGHT":
 	  <div class="tabLeft">
-	    if self.pacman.eatGhost(self.ghost):
-	    <div class="tabLeft">
-	      if ghost.mode.name == "FREIGHT":
-	      <div class="tabLeft">
-		self.score += self.ghostScore<br>
-		self.ghostScore *= 2<br>
-		ghost.setRespawnMode()
-	      </div>
-	    </div>
+	    self.score += self.ghostScore<br>
+	    self.ghostScore *= 2<br>
+	    ghost.setRespawnMode()
 	  </div>
 	</code>
       </div>
@@ -229,18 +207,10 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkPelletEvents(self):
+	  if pellet.name == "powerpellet":
 	  <div class="tabLeft">
-	    pellet = self.pacman.eatPellets(self.pellets.pelletList)<br>
-	    if pellet:
-	    <div class="tabLeft">
-	      <p>...</p>
-	      if pellet.name == "powerpellet":
-	      <div class="tabLeft">
-		self.ghostScore = 200<br>
-		self.ghosts.setFreightMode()
-	      </div>
-	    </div>
+	    self.ghostScore = 200<br>
+	    self.ghosts.setFreightMode()
 	  </div>
 	</code>
       </div>
