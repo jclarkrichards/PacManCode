@@ -46,7 +46,7 @@
 
     <div class="container">
       <h3>Modifying the Scatter Goals</h3>
-      <p>So why isn't Blinky going to the upper right corner like he was before?  When we play the game as it now is, he just circles the ghost home.  Don't worry, there isn't anything wrong with the code.  Blinky is just following instructions.  At the start of the game we're forcing him to move LEFT.  He can't move UP at the first node he comes to because we're restricing that direction on that node for all of the ghosts.  So he has to go straight until he gets to the next node, which only has one possible direction which is DOWN.  At this point Pinky correctly moves to the LEFT, then UP and to his corner, but Blinky continues moving DOWN.  It's just that he has determined that moving DOWN will get him closer to his goal than moving LEFT.  It seems wrong, but if we actually calculate it, it's true.  </p>
+      <p>So why isn't Blinky going to the upper right corner like he was before?  When we play the game as it now is, he just circles the ghost home.  Don't worry, there isn't anything wrong with the code.  Blinky is just following instructions.  At the start of the game we're forcing him to move LEFT.  He can't move UP at the first node he comes to because we're restricting that direction on that node for all of the ghosts.  So he has to continue LEFT until he gets to the next node, which only has one possible direction which is DOWN.  At this point Pinky correctly moves to the LEFT, then UP and to his corner, but Blinky continues moving DOWN.  It's just that he has determined that moving DOWN will get him closer to his goal than moving LEFT.  It seems wrong, but if we actually calculate it, it's true.  </p>
       <p>Let's do it ourselves.  Blinky's scatter goal in (column, row) format is (28, 0).  That's the upper right corner of the screen because the screen is 28 columns wide.  The node where he moves DOWN instead of moving LEFT is at (9, 17).  When Blinky gets to this point he needs to figure out which direction will get hime closer to his goal.  Remember we do that by hypothetically asking ourselves if we were to move one unit in each direction, and then comparing the distances from all of those positions to the goal, which distance is the shortest?  We only have two directions here:  DOWN and LEFT.  One unit DOWN is (9, 18) and one unit LEFT is (8, 17).  Checking the DOWN direction, the distance from (9, 18) to (28, 0) is 685.  The actual distance is the square root of 685, but we're comparing distances so there's no point in taking the square root.  Checking the LEFT direction, the distance from (8, 17) to (28, 0) is 689.  So that's why Blinky chooses the DOWN direction because 685 &lt 689.  But we would like him to move LEFT at this node so we need to adjust his scatter goal.  We can try (27, 0), (26, 0) and so on until we find a point where moving LEFT at that node is the shorter distance.  You can do it yourself, it's not hard and won't take that long, but I'll just go ahead and tell you that that position is (22, 0).  </p>
       <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
       <h4>Modify the <span class="cn">Blinky</span> class</h4>
@@ -56,16 +56,15 @@
       </div>
       <div class="codeText">
 	<code>
-	  def setScatterGoal(self):
-	  <div class="tabLeft">
-	    self.goal = Vector2D(WIDTH * (NCOLS-6), 0)
-	  </div>
+	  self.goal = Vector2D(WIDTH * (NCOLS-6), 0)
 	</code>
       </div>
     </div><!--End of container-->
     
     <div class="container">
       <h3>Reversing Direction For the Ghosts</h3>
+      <h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
+      <h4>Modify the <span class="cn">Ghost</span> class</h4>
       <h4>Create a new method called <span class="mn">reverseGhostDirection</span></h4>
       <div class="pseudoCode">
 	<p>There is already a method called <span class="mn">reverseDirection</span> that the ghosts inherited, so we don't want to overwrite that.  So that's why we call it <span class="mn">reverseGhostDirection</span> even though it is redundant.  We only want to reverse the direction of the ghosts that have left the home.  Ignore any ghosts still trapped in the ghost home.  Looking at you Inky and Clyde!</p>
@@ -89,17 +88,11 @@
       </div>
       <div class="codeText">
 	<code>
-	  def modeUpdate(self, dt):
+	  <p>...</p>
+	  if self.modeTimer >= self.mode.time:
 	  <div class="tabLeft">
-	    self.modeTimer += dt<br>
-	    if self.mode.time is not None:
-	    <div class="tabLeft">
-	      if self.modeTimer >= self.mode.time:
-	      <div class="tabLeft">
-		self.reverseGhostDirection()<br>
-		<p>...</p>
-	      </div>
-	    </div>
+	    self.reverseGhostDirection()<br>
+	    <p>...</p>
 	  </div>
 	</code>
       </div>
@@ -107,21 +100,18 @@
 
       <h4>Modify the <span class="mn">setFreightMode</span> method</h4>
       <div class="pseudoCode">
-	<p>This is called when Pacman eats a power pellet and we change the ghost's mode to FREIGHT.  We only reverse their direction if their previous mode was SCATTER or CHASE.  </p>
+	<p>This is called when Pacman eats a power pellet and we change the ghost's mode to FREIGHT.  We only reverse their direction if their previous mode was SCATTER or CHASE.  We are only adding the reverseGhostDirection line as the other ones are just there to show you the placement of this line.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def setFreightMode(self):
+	  if self.mode.name != "FREIGHT" and self.mode.name != "SPAWN":
 	  <div class="tabLeft">
-	    if self.mode.name != "FREIGHT" and self.mode.name != "SPAWN":
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.reverseGhostDirection()<br>
-	      self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
-	      self.modeTimer = 0
-	    </div>
 	    <p>...</p>
+	    self.reverseGhostDirection()<br>
+	    self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
+	    self.modeTimer = 0
 	  </div>
+	  <p>...</p>
 	</code>
       </div>
       
@@ -153,21 +143,17 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkEvents(self):
+	  if event.key == K_SPACE:
 	  <div class="tabLeft">
-	    <p>...</p>
-	    if event.key == K_SPACE:
+	    if self.paused:
 	    <div class="tabLeft">
-	      if self.paused:
-	      <div class="tabLeft">
-		self.playerPaused = False
-	      </div>
-	      else:
-	      <div class="tabLeft">
-		self.playerPaused = True
-	      </div>
-	      self.paused = not self.paused
+	      self.playerPaused = False
 	    </div>
+	    else:
+	    <div class="tabLeft">
+	      self.playerPaused = True
+	    </div>
+	    self.paused = not self.paused
 	  </div>
 	</code>
       </div>
@@ -179,16 +165,13 @@
       </div>
       <div class="codeText">
 	<code>
-	  def checkGhostEvents(self, dt):
+	  <p>...</p>
+	  if ghost.mode.name == "FREIGHT":
 	  <div class="tabLeft">
 	    <p>...</p>
-	    if ghost.mode.name == "FREIGHT":
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.paused = True<br>
-	      self.pauseTime = 0.5<br>
-	      self.pauseTimer = 0
-	    </div>
+	    self.paused = True<br>
+	    self.pauseTime = 0.5<br>
+	    self.pauseTimer = 0
 	  </div>
 	</code>
       </div>
@@ -200,22 +183,18 @@
       </div>
       <div class="codeText">
 	<code>
-	  def update(self):
+	  if not self.paused:
 	  <div class="tabLeft">
-	    dt = self.clock.tick(30) / 1000.0<br>
-	    if not self.paused:
+	    <p>...</p>
+	  </div>
+	  else:
+	  <div class="tabLeft">
+	    if not self.playerPaused:
 	    <div class="tabLeft">
-	      <p>...</p>
-	    </div>
-	    else:
-	    <div class="tabLeft">
-	      if not self.playerPaused:
+	      self.pauseTimer += dt<br>
+	      if self.pauseTimer >= self.pauseTime:
 	      <div class="tabLeft">
-		self.pauseTimer += dt<br>
-		if self.pauseTimer >= self.pauseTime:
-		<div class="tabLeft">
-		  self.paused = False
-		</div>
+		self.paused = False
 	      </div>
 	    </div>
 	  </div>
@@ -229,65 +208,34 @@
       <h3>Pausing When Pacman Dies</h3>
       <p>This will be easy because we already took care of setting up the neccessary variables above.  </p>
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
-      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <h4>Modify the <span class="mn">startGame</span> and <span class="mn">restartLevel</span> methods</h4>
       <div class="pseudoCode">
-	<p>If we want to delay the start and restart of the game, then these variables will be set to <span class="py">True</span> instead of calling the required methods first.  </p>
+	<p>If we want to delay the start and restart of the game, then these variables will be set to <span class="py">True</span>.  </p>
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
 	  self.startDelay = False<br>
 	  self.restartDelay = False
 	</code>
       </div>
       <hr/>
 
-      <h4>Modify the <span class="mn">startGame</span> method</h4>
-      <div class="pseudoCode">
-	<p>If we want to delay the start and restart of the game, then these variables will be set to <span class="py">True</span>.  </p>
-      </div>
-      <div class="codeText">
-	<code>
-	  <p>...</p>
-	  self.startDelay = False
-	</code>
-      </div>
-      <hr/>
-
-      <h4>Modify the <span class="mn">restartLevel</span> method</h4>
-      <div class="pseudoCode">
-	<p>If we want to delay the start and restart of the game, then these variables will be set to <span class="py">True</span>.  </p>
-      </div>
-      <div class="codeText">
-	<code>
-	  <p>...</p>
-	  self.restartDelay = False
-	</code>
-      </div>
-      <hr/>
-
-      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
       <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>So instead of calling <span class="mn">restartLevel</span> method directly as we've been doing we just set the <span class="var">restartDelay</span> variable to <span class="py">True</span>.  If we called the <span class="mn">restartLevel</span> method here, then the game wouldn't pause like we want it to.  We'll need to call that method after the pause period has finished.  Remember to remove the call to the <span class="mn">restartLevel</span> method here.</p>
+	<p>So instead of calling <span class="mn">restartLevel</span> method directly as we've been doing we just set the <span class="var">restartDelay</span> variable to <span class="py">True</span>.  If we called the <span class="mn">restartLevel</span> method here, then the game wouldn't pause like we want it to.  We'll need to call that method after the pause period has finished.  Remember to remove the call to the <span class="mn">restartLevel</span> and <span class="mn">startGame</span> methods here.  </p>
       </div>
       <div class="codeText">
 	<code>
-	  def checkGhostEvents(self, dt):
+	  elif ghost.mode.name != "SPAWN":
 	  <div class="tabLeft">
-	    <p>...</p>
-	    if ghost.mode.name == "FREIGHT":
+	    self.paused = True<br>
+	    self.pauseTime = 1<br>
+	    self.pauseTimer = 0<br>
+	    self.restartDelay = True<br>
+	    if self.lives == 0:
 	    <div class="tabLeft">
-	      <p>...</p>
-	    </div>
-	    elif ghost.mode.name != "SPAWN":
-	    <div class="tabLeft">
-	      self.paused = True<br>
-	      self.pauseTime = 1<br>
-	      self.pauseTimer = 0<br>
-	      self.restartDelay = True
-	      <p>...</p>
-	      
+	      self.lives = 5<br>
+	      self.startDelay = True
 	    </div>
 	  </div>
 	</code>
@@ -300,36 +248,87 @@
       </div>
       <div class="codeText">
 	<code>
-	  def update(self):
+	  if not self.paused:
 	  <div class="tabLeft">
 	    <p>...</p>
-	    if not self.paused:
+	  </div>
+	  else:
+	  <div class="tabLeft">
+	    if not self.playerPaused:
 	    <div class="tabLeft">
-	      <p>...</p>
-	    </div>
-	    else:
-	    <div class="tabLeft">
-	      if not self.playerPaused:
+	      self.pauseTimer += dt<br>
+	      if self.pauseTimer >= self.pauseTime:
 	      <div class="tabLeft">
-		self.pauseTimer += dt<br>
-		if self.pauseTimer >= self.pauseTime:
+		self.paused = False<br>
+		if self.startDelay == True:
 		<div class="tabLeft">
-		  self.paused = False<br>
-		  if self.startDelay == True:
-		  <div class="tabLeft">
-		    self.startGame()
-		  </div>
-		  if self.restartDelay == True:
-		  <div class="tabLeft">
-		    self.restartLevel()
-		  </div>
-		  
+		  self.startGame()
 		</div>
+		if self.restartDelay == True:
+		<div class="tabLeft">
+		  self.restartLevel()
+		</div>		
 	      </div>
 	    </div>
 	  </div>
 	</code>
       </div>
+      <hr/>
+
+      <h4>Create a new method called <span class="mn">commonSetup</span></h4>
+      <div class="pseudoCode">
+	<p>So I noticed that there was a lot of common code between the <span class="mn">startGame</span> and the <span class="mn">restartLevel</span> methods so instead of writing stuff twice let's create a new method that will have all the things that both methods need.  That way we only write this once and both methods can just call it.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def commonSetup(self):
+	  <div class="tabLeft">
+	     self.pacman = Pacman(self.nodes, self.level)<br>
+             self.ghosts = GhostGroup(self.nodes, self.level)<br>
+             self.paused = True<br>
+             self.fruit = None<br>
+             self.fruitTimer = 0<br>
+             self.pauseTimer = 0<br>
+             self.pauseTime = 0<br>
+             self.playerPaused = True<br>
+             self.startDelay = False<br>
+             self.restartDelay = False<br>
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">startGame</span> method</h4>
+      <div class="pseudoCode">
+	<p>We need to call the <span class="mn">commonSetup</span> method after we create the nodes.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def startGame(self):
+	  <div class="tabLeft">
+	    self.nodes = NodeGroup(self.level)<br>
+	    self.pellets = PelletGroup(self.level)<br>
+	    self.commonSetup()
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">restartLevel</span> method</h4>
+      <div class="pseudoCode">
+	<p>Why did we create a new method and move everything out of this method into it?  Wouldn't it have just been easier to call this method instead?  For now yes, but we can't guarantee that in the future.  </p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def restartLevel(self):
+	  <div class="tabLeft">
+	    self.commonSetup()
+	  </div>
+	  </code>
+      </div>
+      <hr/>
+
+
       
     </div><!--End of container-->
 
@@ -351,8 +350,8 @@
 	      self.paused = True<br>
 	      self.pauseTime = 3<br>
 	      self.pauseTimer = 0<br>
-	      self.startDelay = True
-	      <p>...</p>
+	      self.startDelay = True<br>
+	      self.increaseLevel()
 	    </div>
 	  </div>
 	</code>
@@ -463,7 +462,8 @@
 	    <div class="tabLeft">
 	      <p>...</p>
 	    </div>
-	    self.updateMazeData(self.grid[row][col])
+	    self.updateMazeData(self.grid[row][col], row, col)<br>
+	    return Node(row, col)
 	  </div>
 	</code>
       </div>
@@ -475,7 +475,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def updateMazeData(self, symbol):
+	  def updateMazeData(self, symbol, row, col):
 	  <div class="tabLeft">
 	    if symbol == "M":
 	    <div class="tabLeft">
@@ -561,18 +561,14 @@
       <h3>Gaining Extra Lives</h3>
       <p>We want to give the player an extra life every time they gain 10,000 points.  However, they can still never have more than 5 extra lives at any one time.  So if they already have 5 extra lives by the time they reach 10,000 points, then they won't get a sixth extra life.  The first chance at an extra life should come at the 10,000 point mark.  The second chance for an extra life should come at the 20,000 point mark and so on.  The difficulty comes when we realize that the player may not land exactly on the 10,000 point mark, but will most likely jump past it.  For example, the player at one point may have 9,900 points, then the player eats a fruit worth 1000 points which will make the player's score jump to 10,900 points.  What we need to do is check the score before and after in order to see exactly when the player passes the 10,000 point mark.  In order to do that we'll need to have a score accumulator which will gather the points earned in any one frame. </p>
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
-      <h4>Modify the <span class="mn">__init__</span>, <span class="mn">startGame</span>, and <span class="mn">restartLevel</span> methods</h4>
+      <h4>Modify the <span class="mn">commonSetup</span> method</h4>
       <div class="pseudoCode">
 	<p>We are going to add a new variable which will gather all of the points earned during any one frame.  There are only three ways the player can gain points:  eating pellets, eating fruit, and eating ghosts.  So, when those situations occur, instead of adding those points to the score variable directly, we'll add those points to this variable.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.scoreAccumulator = 0<br>
-	    self.maxLives = 5
-	  </div>
+	  self.scoreAccumulator = 0<br>
+	  self.maxLives = 5
 	</code>
       </div>
       <hr/>
@@ -650,7 +646,7 @@
       
       <h4>Modify the <span class="mn">update</span> method</h4>
       <div class="pseudoCode">
-	<p>After we check the pellet, ghost,, and fruit events we call this method which will apply all of the accumulated points to the player's score.  </p>
+	<p>After we check the pellet, ghost, and fruit events we call this method which will apply all of the accumulated points to the player's score.  </p>
       </div>
       <div class="codeText">
 	<code>

@@ -27,13 +27,9 @@
     <hr/>
 
     <h2>Section 24:  Applying the Animation</h2>
-    <div class="container">
-      <h3>Setup</h3>
-
-      </div><!--End of container-->
 
       <div class="container">
-	<h3>Applying Animation to Pacman</h3>
+
 	<h4>Modify the <span class="filenames">pacman.py</span> file</h4>
 	<div class="pseudoCode">
 	  <p>You need to import the animation classes we created in the last section.  We start by creating an AnimateGroup object that starts off as empty.  We'll populate it in a bit.  We then define a variable called <span class="var">animateName</span> which will basically just hold a string representation of the direction we are traveling.  We want Pacman to start moving left so that's the initial value for this variable.  We then call a method that we haven't created yet which will create all of the animations and populate the <span class="cn">animate</span> object.  We the set the initial animation which will be the "left" animation.  We then define a couple more variables that will help us know when Pacman dies and when his death animation is finished.  We'll see the importance of these when we get to that point.</p>
@@ -47,13 +43,14 @@
 	      def __init__(self, nodes, level, spritesheet):
 	      <div class="tabLeft">
 		<p>...</p>
-		self.animate = AnimateGroup()<br>
+		self.animate = AnimationGroup()<br>
 		self.animateName = "left"<br>
 		self.defineAnimations()<br>
 		self.animate.setAnimation(self.animateName, 0)<br>
 		self.image = self.animate.getImage(0)<br>
 		self.alive = True<br>
-		self.deathSequenceFinished = False
+		self.deathSequenceFinished = False<br>
+		self.previousDirection = self.direction
 		
 	      </div>
 	    </div>
@@ -98,8 +95,8 @@
 	      self.animate.add(anim)<br><br>
 
 
-	      anim = Animation("death")
-              anim.speed = 10
+	      anim = Animation("death")<br>
+              anim.speed = 10<br>
               anim.addFrame(self.spritesheet.getImage(0, 7, 32, 32))<br>
               anim.addFrame(self.spritesheet.getImage(1, 7, 32, 32))<br>
               anim.addFrame(self.spritesheet.getImage(2, 7, 32, 32))<br>
@@ -119,6 +116,7 @@
 
 	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
 	<div class="pseudoCode">
+	  <p>We need to know when Pacman changes direction so that we can change the animation.</p>
 	</div>
 	<div class="codeText">
 	  <code>
@@ -188,25 +186,18 @@
       <div class="container">
 
 	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+	<h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
 	<div class="pseudoCode">
 	  <p>When Pacman collides with a ghost and the ghost is not in SPAWN or FREIGHT mode, then he needs to die.  We already had him losing a life and pausing the game for about 1 second.  We still pause the game, but we don't need to specify for how long because the game will remain paused until Pacman's death sequence is complete.  We decrement his lives counter, say he is not alive, and change his animation to the "death" animation we defined above.</p>
 	</div>
 	<div class="codeText">
 	  <code>
-	    def checkGhostEvents(self, dt):
+	    <p>...</p>
+	    elif ghost.mode.name != "SPAWN":
 	    <div class="tabLeft">
 	      <p>...</p>
-	      if ghost is not None:
-	      <div class="tabLeft">
-		<p>...</p>
-	      </div>
-	      elif ghost.mode.name != "SPAWN":
-	      <div class="tabLeft">
-		self.paused = True<br>
-		self.lives -= 1<br>
-		self.pacman.alive = False<br>
-		self.pacman.animate.setAnimation("death", 0)
-	      </div>
+	      self.pacman.alive = False<br>
+	      self.pacman.animate.setAnimation("death", 0)
 	    </div>
 	  </code>
 	</div>
@@ -214,6 +205,7 @@
 
 	<h4>Modify the <span class="mn">update</span> method</h4>
 	<div class="pseudoCode">
+	  <p>If the player did not pause the game we check to see if Pacman is still alive.  If he is not alive then we still call his update method since he needs to perform his death animation.  Once that animation is finished we restart the level.  If he is still alive then the game paused for some other reason and all of the previous code remains the same.</p>
 	</div>
 	<div class="codeText">
 	  <code>
@@ -244,18 +236,6 @@
 	    </div>
 	  </code>
 	</div>
-	<hr/>
-
-	<h4></h4>
-	<div class="pseudoCode">
-	</div>
-	<div class="codeText">
-	  <code>
-	  </code>
-	</div>
-	<hr/>
-
-
       </div><!--End of container-->
       
 
@@ -265,7 +245,9 @@
 
 
       <div class="container">
+	<p>We want the ghosts to change their images based on the direction they're moving as well.  The only difference in their images is the direction their eyes are looking.  So this doesn't have to be as involved as defining the animations for the Pacman class.  In fact we're not going to define any animations yet.  We're just going to check for any direction changes and then switch out their images when we detect a direction change.  </p>
 	<h3>Modify the <span class="filenames">ghost.py</span> file</h3>
+	<h4>Modify the <span class="cn">Ghost</span> class</h4>
 	<h4>Modify the <span class="mn">__init__</span> method</h4>
 	<div class="pseudoCode">
 	  <p></p>
@@ -295,7 +277,7 @@
       
 	<h4>Create a new method called <span class="mn">checkDirectionChange</span></h4>
 	<div class="pseudoCode">
-	  <p></p>
+	  <p>We only check for a change in direction if the ghost is in any mode other that FREIGHT.</p>
 	</div>
 	<div class="codeText">
 	  <code>
@@ -305,33 +287,28 @@
 	      <div class="tabLeft">
 		self.previousDirection = self.direction<br>
 		row = self.imageRow<br>
-		col = 0
+		col = 0<br>
 		if self.mode.name == "SPAWN":
 		<div class="tabLeft">
 		  row, col = self.setSpawnImages()
 		</div>
-		elif self.mode.name == "FREIGHT":
-		<div class="tabLeft">
-		  row = 6<br>
-		  col = 0
-		</div>
-		else:
+		elif self.mode.name != "FREIGHT":
 		<div class="tabLeft">
 		  if self.direction == LEFT:
 		  <div class="tabLeft">
-		    self.imageCol = 4
+		    col = 4
 		  </div>
 		  elif self.direction == RIGHT:
 		  <div class="tabLeft">
-		    self.imageCol = 6
+		    col = 6
 		  </div>
 		  elif self.direction == DOWN:
 		  <div class="tabLeft">
-		    self.imageCol = 2
+		    col = 2
 		  </div>
 		  elif self.direction == UP:
 		  <div class="tabLeft">
-		    self.imageCol = 0
+		    col = 0
 		  </div>
 		</div>
 		self.setImage(row, col)
@@ -385,6 +362,31 @@
 	</div>
 	<hr/>
 
+	<h4>Modify the <span class="mn">update</span> method</h4>
+	<div class="pseudoCode">
+	  <p>Always be checking for any direction changes</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    if self.mode.name != "FREIGHT":
+	    <div class="tabLeft">
+	      self.checkDirectionChange()
+	    </div>
+	  </code>
+	</div>
+
+	<h4>Modify the <span class="mn">setFreightMode</span> method</h4>
+	<div class="pseudoCode">
+	  <p>Change the image to the FREIGHT image which is the same for all of the ghosts.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    self.setImage(6, 0)
+	  </code>
+	</div>
+
       </div><!--End of container-->
 
       <div class="container">
@@ -395,13 +397,8 @@
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 2<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
-	    </div>
+	    self.imageRow = 2<br>
+	    self.setStartPosition()
 	  </code>
 	</div>
       </div><!--End of container-->
@@ -414,13 +411,8 @@
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 3<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
-	    </div>
+	    self.imageRow = 3<br>
+	    self.setStartPosition()
 	  </code>
 	</div>
       </div><!--End of container-->
@@ -433,13 +425,8 @@
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 4<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
-	    </div>
+	    self.imageRow = 4<br>
+	    self.setStartPosition()
 	  </code>
 	</div>
       </div><!--End of container-->
@@ -452,31 +439,16 @@
 	</div>
 	<div class="codeText">
 	  <code>
-	    def __init__(self, nodes, level, spritesheet):
-	    <div class="tabLeft">
-	      <p>...</p>
-	      self.imageRow = 5<br>
-	      self.imageCol = 0<br>
-	      self.setStartPosition()
-	    </div>
+	    self.imageRow = 5<br>
+	    self.setStartPosition()
 	  </code>
 	</div>
       </div><!--End of container-->
 
-
-      <div class="container">
-	<div class="pseudoCode">
-	</div>
-	<div class="codeText">
-	  <code>
-	    
-	  </code>
-	</div>
-      </div><!--End of container-->
 
     <div class="container">  
       <h3>Conclusion</h3>
-
+      <p>We now have Pacman and the Ghosts with their proper animations.  The Ghosts really don't have any animations, just basic image switching depending on which mode they are in and which direction they are moving in.  Pacman has several animations including a death sequence.  In the next section let's replace these nodes with a map using the map sprites.</p>
 
 
     </div> <!--End of the conclusion container-->

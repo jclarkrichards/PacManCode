@@ -40,15 +40,11 @@
       <h4>Modify the <span class="filenames">spritesheet.py</span> file</h4>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>We just need to reference the new sheet that we just downloaded.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self):
-	  <div class="tabLeft">
-	    self.sheet = pygame.image.load("Images/spritesheet.png").convert()
-	    <p>...</p>
-	  </div>
+	  self.sheet = pygame.image.load("Images/spritesheet.png").convert()
 	</code>
       </div>
       <hr/>
@@ -70,20 +66,6 @@
       </div>
       <hr/>
       
-      <h4>Modify the <span class="filenames">pacman.py</span> file</h4>
-      <div class="pseudoCode">
-	<p>Replace the previous code where we got the images with this line.  I'm just getting the 32x32 image at the spritesheets top left corner to represent our Pacman character.</p>
-      </div>
-      <div class="codeText">
-	<code>
-	  def __init__(self, nodes, level, spritesheet):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.image = spritesheet.getImage(0, 0, 32, 32)
-	  </div>
-	</code>
-      </div>
-      <hr/>
       
       <h4>Modify the <span class="filenames">fruit.py</span> file</h4>
       <div class="pseudoCode">
@@ -143,16 +125,17 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.lifeIcons = Lives(self.sheet)
-	  </div>
+	  self.lifeIcons = Lives(self.sheet)
 	</code>
       </div>
-      <hr/>
+    </div><!--End of container-->
 
-      <h4>Modify the <span class="mn">startGame</span> and <span class="mn">restartLevel</span> methods</h4>
+    <div class="container">
+      <h3>Add Images for Pacman and the Ghosts</h3>
+      
+
+      <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+      <h4>Modify the <span class="mn">commonSetup</span> method</h4>
       <div class="pseudoCode">
 	<p>We just need to modify this so we pass in the sprite sheet.  Notice that we are also passing it into the GhostGroup object as well.  So we'll need to modify that object to accept the sprite sheet.  We're adding it now because we're about to do the same thing to the ghosts as what we did to Pacman.  </p>
       </div>
@@ -168,7 +151,7 @@
       <h4>Modify the <span class="cn">GhostGroup</span> class</h4>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-
+	<p>We need to pass the spritesheet along to all of our Ghost objects.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -187,7 +170,7 @@
       <h4>Modify the <span class="cn">Blinky</span> class</h4>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-	<p></p>
+	<p>Pass in the spritesheet and pass it on to the Ghost class as well.  For all of the ghosts here and below we'll just use one of the images on the sheet.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -261,8 +244,53 @@
 	<code>
 	  def __init__(self, nodes, level, spritesheet):
 	  <div class="tabLeft">
-	    <p>...</p>
+	    MazeMouse.__init__(self, nodes, level, spritesheet)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">pacman.py</span> file</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>Right now we'll just use a single image to represent Pacman.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
+	    MazeMouse.__init__(self, nodes, level, spritesheet)<br>
+	    self.image = self.spritesheet.getImage(0, 0, 32, 32)
+	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="filenames">entities.py</span> file</h4>      
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p></p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, level, spritesheet):
+	  <div class="tabLeft">
 	    self.spritesheet = spritesheet
+	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="filenames">fruit.py</span> file</h4>      
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>Before we just passing in the smaller sprite sheet into this class and not passing it on to the <span class="cn">MazeMouse</span> class.  But since the Pacman and the Ghost classes are passing it to the <span class="cn">MazeMouse</span> class, then so should this class.  I changed the name from sheet to spritesheet and removed the self.sheet = sheet from this method as well.  Because of that we'll have to replace anywhere we have self.sheet with self.spritesheet.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  def __init__(self, nodes, displayedLevel, spritesheet):
+	  <div class="tabLeft">
+	    MazeMoouse.__init__(self, nodes, level, spritesheet)
 	  </div>
 	</code>
       </div>
@@ -302,7 +330,7 @@
 	  <li>vectors.py</li>
 	  <li>Images</li>
 	  <ul>
-	    <li>pacman.png</li>
+	    <li>spritesheet.png</li>
 	  </ul>
 	</ul>
       </ul>

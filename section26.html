@@ -52,7 +52,7 @@
 
       <div class="container">
 	<h3>Pygame Text Basics</h3>
-	<p>Getting text to display on the screen is pretty easy.  The first thing we need is a font to use.  We can use built-in fonts that are installed on most computers, but those fonts are pretty basic, and we can't guarantee that a user will have any particular font.  So instead we'll download a specific font and include it in our folder structure.  The font that I'm using is called <span class="filenames">PressStart2P.ttf</span> and can be found at <a href="http://www.fontspace.com/codeman38/press-start-2p" target="_blank">fontspace.com/codeman38/press-start-2p</a>.  You can use any font you want, this is just the font that I will be using.  So download it, and place it in the same folder as our .py files.  </p>
+	<p>Getting text to display on the screen is pretty easy.  The first thing we need is a font to use.  We can use built-in fonts that are installed on most computers, but those fonts are pretty basic, and we can't guarantee that a user will have any particular font.  So instead we'll download a specific font and include it in our folder structure.  The font that I'm using is called <span class="filenames">PressStart2P.ttf</span> and can be found at <a href="http://www.fontspace.com/codeman38/press-start-2p" target="_blank">fontspace.com/codeman38/press-start-2p</a>.  You can use any font you want, this is just the font that I will be using.  So download it, unzip it, and place the .ttf file in the same folder as our .py files.  </p>
 	<p>Once we have a font downloaded we can use it by doing the following:</p>
 	<div class="pseudoCode">
 	  <p>We're not adding the code yet, this is just the basic structure of using the font.  The first thing we need to do is define the font we want to use and the height of the font in pixels.  We store this in a variable called <span class="var">font</span>.  Once we have that defined we can create any text labels by using the font.render.  Don't confuse this with drawing the text to the screen, this just creates the label that we will eventually draw to the screen.  All we do here is define the actual text we want to display and the color of that text.  Finally, when we are ready to display the text to the screen we use the blit and define where we want to draw the text on the screen in pixels.</p>
@@ -121,6 +121,7 @@
 		</div>
 		if align == "left":
 		<div class="tabLeft">
+		  x = 0
 		</div>
 		elif align == "center":
 		<div class="tabLeft">
@@ -139,7 +140,7 @@
 		word = self.findWord(name)<br>
 		if word is not None:
 		<div class="tabLeft">
-		  self.words.remove(word)
+		  self.words.remove(word)<br><br>
 		</div>
 	      </div>
 
@@ -260,7 +261,15 @@
 			</div>
 		      </div>
 		    </div>
-		    
+		    else:
+		    <div class="tabLeft">
+		      if self.pauseTimer >= self.pauseTime:
+		      <div class="tabLeft">
+			<p>...</p>
+			self.allText.remove("ghost_score")
+			<p>...</p>
+		      </div>
+		    </div>
 		  </div>
 		</div>
 	      </div>
@@ -373,7 +382,7 @@
 
     <div class="container">  
       <h3>Conclusion</h3>
-      <p></p>
+      <p>So if you've made it this far then give yourself a hand because we've accomplished a lot.  We're not finished yet though.  There are still some touchups that we need to do before we can say that we have a complete game.  We'll go over all of that in the next section.</p>
 
 
     </div> <!--End of the conclusion container-->

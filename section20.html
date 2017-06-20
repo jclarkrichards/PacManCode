@@ -30,7 +30,7 @@
     <div class="container">
       <h3>Setup</h3>
       <p>Alright, so at this point, if you've been following along, you have a version of Pacman that you can play.  Sure, it may not be the most fun version of the game you've played, but it works.  From here on out we don't want to change anything we've done so far.  We don't want to change the way the game is played or anything.  All we want to do now is make it look good.  In order to do that we'll have to use graphics other than the primitives we've been using.  Circles and lines are great for prototyping, but now that we have a working version of Pacman, we can use actual images.  In order to use images, we'll have to understand how images work within pygame.</p>
-<p><img src="Images/pacmanSprite.png" alt=""/>We'll use the image on the right to replace the life icons in the lower left corner of the screen.  We'll keep things simple for now.  You can just right-click the image and save it to your computer.  Name it something like <span class="filenames">pacman.png</span>.</p>
+<p><img src="Images/pacmanSprite.png" alt=""/>We'll use the image on the right to replace the life icons in the lower left corner of the screen.  We'll keep things simple for now.  You can just right-click the image and save it to your computer.  Save it in a folder called Images in the same directory as your other code.  Name it something like <span class="filenames">pacman.png</span>.  That's the name I'm going to use.</p>
 <hr/>
 <h3>Positioning of Images</h3>
 <p>The first thing we need to understand when we're drawing images to the screen is how they are positioned.  We were using pygames circle to draw most of our graphics before.  The position of a circle is measured from the center of the circle.  For all of the images we're going to use, the position of the image is measured from the top left corner of the image.  This is because all images are rectangles.  It doesn't matter if you have an image of a circle, the computer will just see it as a rectangle.  For now we just need to remember that images aren't positioned on the screen using the center of the image, but rather the top left corner of the image.  When we start using images to draw Pacman and the ghosts, we need to remember this so we can make adjustments.  I'll bring it up again when we get there.  Also notice that the background of the image is a pink color.  This particular pink corresponds to RGB value (255, 0, 255).  Like I just said, all images are rectangles, but Pacman isn't.  So the rest of the image that isn't Pacman needs to disappear during gameplay.  We do that by defining a color to be transparent.  I chose this color because it's a color that I pretty much never use.  You can define any color really, it doesn't have to be this color.  But just know that all of my images will have this background color.  </p>
@@ -89,19 +89,23 @@
     
     <div class="container">
       <h3>Modify the <span class="filenames">gamecontrol.py</span> file</h3>
-      <h3>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
 	<p>Import the class we just made and make an object of that class.</p>
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
 	  from lifeicons import Lives
-	  def __init__(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.lifeIcons = Lives()
-	  </div>
+	</code>
+      </div>
+      <hr/>
+
+      <h3>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>Make an object out of the class we just imported.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.lifeIcons = Lives()
 	</code>
       </div>
       <hr/>

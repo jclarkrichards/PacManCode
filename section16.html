@@ -210,7 +210,7 @@
 
       <h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
       <div class="pseudoCode">
-	<p>We have more than one ghost to deal with, so we need to know which ghost Pacman is coming into contact with.  We'll also need to modify Pacman's <span class="mn">eatGhost</span> method as well.</p>
+	<p>We have more than one ghost to deal with, so we need to know which ghost Pacman is coming into contact with.  We'll also need to modify Pacman's <span class="mn">eatGhost</span> method as well.  Instead of saying self.ghost, just say ghost.</p>
       </div>
       <div class="codeText">
 	<code>
@@ -219,7 +219,15 @@
 	    ghost = self.pacman.eatGhost(self.ghosts)<br>
 	    if ghost is not None:
 	    <div class="tabLeft">
-	      <p>...</p>
+	      if ghost.mode.name == "FREIGHT":
+	      <div class="tabLeft">
+		ghost.setRespawnMode()<br>
+		<p>...</p>
+	      </div>
+	      elif ghost.mode.name == "SPAWN":
+	      <div class="tabLeft">
+		<p>...</p>
+	      </div>
 	    </div>
 	  </div>
 	</code>

@@ -26,10 +26,296 @@
       </div><!--End of navigation-->
     <hr/>
 
-    <h2>Section 27:  Jumping Pac Flash</h2>
+    <h2>Section 27:  Final Touches</h2>
     <div class="container">
       <h3>Setup</h3>
+      <p>So is this the final section or not?  I don't know yet, but all I do know is that there are still plenty of things to do to make our game better.  </p>
+      <p>Things to do checklist:
+      <ul>
+	<li>Reduce the size of the pellets</li>
+	<li>Make the power pellets flash</li>
+	<li>Make the level flash when the level is complete</li>
+	<li>Make the ghosts flash when they leave FREIGHT</li>
+	<li>When the player pauses the game Pacman, the ghosts, and the displayed fruit disappear.</li>
+	<li>When Pacman eats a ghost, both Pacman and the eaten ghost disappear during the pause time.</li>
+	<li></li>
+      </ul>
+      </p>
       <p>This section is more than just a clever title, there are things in games that flash.  A good reason to make items flash in a game is to get the player's attention.  If you want the player to be aware of something, then make that thing flash.  Making something flash is easy.  You just periodically switch between drawing that object and not drawing that object.  Or you can make something flash by periodically changing the image that represents that object.  In Pacman, we need to make the power pellets flash continuously by turning the drawing of the power pellets on and off.  Also, when the ghosts are in FREIGHT mode we need to let the player know that they are about to leave FREIGHT mode by making them flash for about 1 second before they turn back to normal.  That way the player knows when to get away from them.  When the player finishes a level, the background images of the level flash white a few times before moving on to the next level.  Those are the only two instances in Pacman where things flash, but you can make other items flash.  Maybe you can make the fruit flash before it's about to disappear.  The point is we want to make something pretty general that any object can use instead of making it specific for the two cases described above.    </p>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h3>Modify the <span class="filenames">pellets.py</span> file</h3>
+	<h4>Modify the <span class="cn">Pellet</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>This is the easiest change and you don't need to make it if you don't want to.  I just like to have the pellets smaller, I think it looks better.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.radius = 2
+	  </code>
+	</div>
+	<hr/>
+      </div><!--End of container-->
+
+      <div class="container">
+	<h3>Flashing the Power Pellets</h3>
+	<p>The power pellets need to flash in order to make it clear to the player how many power pellets are left.  The power pellets are easier to notice while they are flashing on the screen.  We basically just periodically draw the pellets and not draw the pellets.  </p>
+
+	<h4>Modify the <span class="cn">Pellet</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We're going to include a new variable called draw which is defaulted to True.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.draw = True
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">render</span> method</h4>
+	<div class="pseudoCode">
+	  <p>This way we can draw or not draw any pellet just by setting the pellets variable to draw.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if self.draw:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="cn">PowerPellet</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We want the power pellets to turn off and on every half a second.  You can modify this depending on how fast or slow you want the power pellets to flash.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.flashtime = 0.5<br>
+	    self.dt = 0
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Create a new method called <span class="mn">update</span></h4>
+	<div class="pseudoCode">
+	  <p>We are going to include an update method that will determine when to turn the drawing of the power pellets on and off.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def update(self, dt):
+	    <div class="tabLeft">
+	      self.dt += dt<br>
+	      if self.dt >= self.flashtime:
+	      <div class="tabLeft">
+		self.dt = 0<br>
+		self.draw = not self.draw
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="cn">PelletGroup</span> class</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>This is just for convenience, but we're going to store the power pellets in their own list so we don't have to loop through the entire pellet list to find the power pellets.  We need to define this before creating the pellets.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.powerPellets = []<br>
+	    self.createPelletList(level)
+	  </code>
+	</div>
+	<hr/>
+
+	
+	<h4>Modify the <span class="mn">createPelletList</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We're basically just adding the power pellets to two lists:  the main pellet list which we loop through to determine if we've eaten a pellet or not, and the power pellet list which we use to loop through only the power pellets.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    if (grid[row][col] == "P" or grid[row][col] == "N"):
+	    <div class="tabLeft">
+	      pellet = PowerPellet(col*WIDTH, row*HEIGHT)<br>
+	      self.pelletList.append(pellet)<br>
+	      self.powerPellets.append(pellet)
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+	<h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+	<div class="pseudoCode">
+	  <p>So when we eat a power pellet we want to remove it from the power pellet list because we no longer care about it.  If there are any power pellets in the list then we also want to call its update method which just update the draw variable so it knows to draw the power pellet or not.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if pellet:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if pellet.name == "powerpellet":
+	      <div class="tabLeft">
+		self.pellets.powerPellets.remove(pellet)
+		<p>...</p>
+	      </div>
+	    </div>
+
+	    for pellet in self.pellets.powerPellets:
+	    <div class="tabLeft">
+	      pellet.update(dt)
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+      </div><!--End of container-->
+
+
+
+
+      <div class="container">
+	<h3>Disappear During Player Pause</h3>
+	<p>When the player pauses the game everything freezes in place and the word "PAUSE" appears in the middle of the screen.  This is how things currently are.  This if fine, but when the player pauses the game I don't want to have Pacman, the ghosts, or the fruit (if on screen) to be displayed.  This is a common thing to prevent people from planning out a strategy while the game is paused.  My main motivation is that since I'm displaying text on the screen in the play area while the game is paused it seems kind of sloppy if there's another object in that same play area which makes it hard to read the text.  </p>
+
+	<h4>Modify the <span class="filenames">gamecontrol.py</span> method</h4>
+	<h4>Modify the <span class="mn">render</span> method</h4>
+	<div class="pseudoCode">
+	  <p>The variable playerPaused is True whenever the player pauses the game by pressing the space bar.  Right now the game starts with this set to True.  That means when the game starts you won't see Pacman or the ghosts.  I want the player to see Pacman and the ghosts so that's why we have the next part.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if not self.playerPaused:
+	    <div class="tabLeft">
+	      if self.fruit is not None:
+	      <div class="tabLeft">
+		self.fruit.render(self.screen)
+	      </div>
+	      self.ghosts.render(self.screen)<br>
+	      self.pacman.render(self.screen)
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">commonSetup</span> method</h4>
+	<div class="pseudoCode">
+	  <p>Instead of starting the game with playerPaused set to True we set it to False.  But we still want the game to be paused when it first starts because it gives the player some time to look around the maze.  So we set the pauseTime to 5 seconds.  Maybe during those 5 seconds we want to play a little jingle as well.  You can still start the game at any time within those 5 seconds by pressing the space bar, otherwise the game will start after 5 seconds.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.playerPaused = False<br>
+	    self.pauseTime = 5
+	  </code>
+	</div>
+      </div><!--End of container-->
+
+
+
+      <div class="container">
+	<h3>Disappear During Eating</h3>
+	<p>When Pacman eats a ghost the game pauses for a specified length of time.  During this time a value appears where Pacman and the ghost are.  But right now it's hard to see what that value is so we'll need to remove Pacman and the ghost being eaten during this pause time so we can see what the value is.  </p>
+
+	<h4>Modify the <span class="filenames">entities.py</span> file</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>Just like we did with the pellets we're going to add a variable called draw and have the default value set to True.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.draw = True
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">render</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We draw the entity if the draw variable is set to True.  This makes it easy for us to draw the entity or not just by setting the draw variable to True or False</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if self.draw:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+	<h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
+	<div class="pseudoCode">
+	  <p>This is where we have detected that Pacman has eaten a ghost.  So we simply set Pacman's and that ghost's draw variable to False.  We'll need to set them back to True after the pause has finished though.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if ghost.mode.name == "FREIGHT":
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.pacman.draw = False<br>
+	      ghost.draw = False
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+
+	<h4>Modify the <span class="mn">update</span> method</h4>
+	<div class="pseudoCode">
+	  <p>As we just mentioned, we want to draw Pacman and the ghost to the screen after the pause has finished.  At this point we don't know which ghost was eaten so we'll just set all of the ghost's draw variables to True.  </p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if not self.paused:
+	    <div class="tabLeft">
+	      <p>...</p>
+	    </div>
+	    else:
+	    <div class="tabLeft">
+	      if not self.playerPaused:
+	      <div class="tabLeft">
+		<p>...</p>
+	      </div>
+	      else:
+	      <div class="tabLeft">
+		if self.pauseTimer >= self.pauseTime:
+		<div class="tabLeft">
+		  <p>...</p>
+		  self.pacamn.draw = True<br>
+		  for ghost in self.ghosts:
+		  <div class="tabLeft">
+		    ghost.draw = True
+		  </div>
+		</div>
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+
+      </div><!--End of container-->
+
+      <div class="container">
+	<h3></h3>
+
+	<div class="pseudoCode">
+
+	</div>
+	<div class="codeText">
+	  <code>
+
+	  </code>
+	</div>
+	<hr/>
       </div><!--End of container-->
 
       <div class="container">

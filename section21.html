@@ -29,7 +29,7 @@
     <h2>Section 21:  Introducing Spritesheets</h2>
     <div class="container">
       <h3>Setup</h3>
-      <p>As we saw in the last section, drawing an image to the screen using an image file is really easy.  We can go ahead and make all of the image files we want for all of our objects.  Nothiing wrong with that, it's just that's not the best practice.  Even the simplest of games use a lot of images for various things.  Not only that, but a lot of images have animation.  If your character has 8 frames of animation while walking, then that's 8 separate images just for your one character, and that's just for walking.  If you want to animate your character running, or jumping, or anything else, then that's even more images just for one character.  Add up all of the animations you want to do for all of the characters in the game, and you're looking at possibly hundreds of images.  That's a lot, and it's not very efficient to handle images as separate files because you have to open and close every image.  It's better to group all of the images into one file, and just extract the image you want from this file.  This file is refered to as a spritesheet, because it's a sheet that contains sprites.  </p>
+      <p>As we saw in the last section, drawing an image to the screen using an image file is really easy.  We can go ahead and make all of the image files we want for all of our objects.  Nothing wrong with that, it's just that's not the best practice.  Even the simplest of games use a lot of images for various things.  Not only that, but a lot of images have animation.  If your character has 8 frames of animation while walking, then that's 8 separate images just for your one character, and that's just for walking.  If you want to animate your character running, or jumping, or anything else, then that's even more images just for one character.  Add up all of the animations you want to do for all of the characters in the game, and you're looking at possibly hundreds of images.  That's a lot, and it's not very efficient to handle images as separate files because you have to open and close every image.  It's better to group all of the images into one file, and just extract the image you want from this file.  This file is refered to as a spritesheet, because it's a sheet that contains sprites.  </p>
 <p><img src="Images/fruit.png" alt=""/>The image on the right shows a small example of a spritesheet.  This sheet just shows three images of fruit.  These are just three of the fruits that we'll use in the game: an apple, banana, and cherries.  It's up to you how you want to organize the sprites in your spritesheet.  Just as long as you know how to extract them, which we'll get into in a bit.  You can have them scattered, but it's better to use as less space as possible so grouping sprites of similar size together in rows and columns is usually how I do it.  In the image on the right, the sprites are arranged in 1 row and three columns and they are all the same size.  In this section we're going to write up code that extracts the images from this spritesheet and displays it in the game.  The code that we write here will be used when dealing with much larger spritesheets later.</p>
     </div><!--End of Setup container-->
 
@@ -42,11 +42,7 @@
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, nodes, level):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.image = None
-	  </div>
+	  self.image = None
 	</code>
       </div>
       <hr/>
@@ -91,6 +87,8 @@
 	    </div>
 	    def getImage(self, x, y, width, height):
 	    <div class="tabLeft">
+	      x *= width<br>
+	      y *= height<br>
 	      self.sheet.set_clip(pygame.Rect(x, y, width, height))<br>
 	      return self.sheet.subsurface(self.sheet.get_clip())
 	    </div>
@@ -105,20 +103,23 @@
     <div class="container">
       <h3></h3>
       <h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
-      <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
-	<p>We need to import the class we just created and make an instance of it.  We only need one sprite sheet.</p>
+	<p>We need to import the class we just created and make an instance of it.</p>
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
 	  from spritesheet import SpriteSheet
-	  <p>...</p>
-	  def __init__(self):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.sheet = SpriteSheet()
-	  </div>
+	</code>
+      </div>
+      <hr/>
+      
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
+      <div class="pseudoCode">
+	<p>We only need one sprite sheet.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  self.sheet = SpriteSheet()
 	</code>
       </div>
       <hr/>
@@ -147,15 +148,13 @@
     <div class="container">
       <h3></h3>
       <h4>Modify the <span class="filenames">fruit.py</span> file</h4>
+      <h4>Modify the <span class="cn">CollectedFruit</span> class</h4>
       <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
 	<p>We need to modify this so that the fruit can accept the sprite sheet.  All of the fruit images will be 32x32 pixels so we can hard-code that in here.  </p>
       </div>
       <div class="codeText">
 	<code>
-	  <p>...</p>
-	  from utils import getImage
-	  <p>...</p>
 	  def __init__(self, nodes, level, displayedLevel, sheet):
 	  <div class="tabLeft">
 	    self.name = "fruit"<br>
@@ -202,50 +201,45 @@
     
     <div class="container">
       <h4>Modify the <span class="cn">DisplayedFruit</span> class</h4>
+      <h4>Modify the <span class="mn">__init__</span> method</h4>
       <div class="pseudoCode">
+	<p>We get the image from the <span class="cn">CollectedFruit</span> class.</p>
       </div>
       <div class="codeText">
 	<code>
-	  def __init__(self, fruit):
-	  <div class="tabLeft">
-	    <p>...</p>
-	    self.image = fruit.image<br>
-	    self.width = fruit.width
-	  </div>
-	</code>
-      </div>
-      <hr/>
-      
-      <div class="pseudoCode">
-      </div>
-      <div class="codeText">
-	<code>
-	  self.setPosition(self, index):
-	  <div class="tabLeft">
-	    x = WIDTH*NCOLS - (5 + self.width) * (index + 1)<br>
-	    y = HEIGHT*(NROWS - 2)
-	    <p>...</p>
-	  </div>
+	  self.image = fruit.image<br>
+	  self.width = fruit.width
 	</code>
       </div>
       <hr/>
 
+      <h4>Modify the <span class="mn">setPosition</span> method</h4>      
       <div class="pseudoCode">
+	<p>We need to modify the positions of the displayed fruit because of the difference in drawing images and drawing circles to the screen.  </p>
       </div>
       <div class="codeText">
 	<code>
-	  def render(self, screen):
+	  x = WIDTH*NCOLS - (5 + self.width) * (index + 1)<br>
+	  y = HEIGHT*(NROWS - 2)
+	</code>
+      </div>
+      <hr/>
+
+      <h4>Modify the <span class="mn">render</span> method</h4>      
+      <div class="pseudoCode">
+	<p>Similar to how we modified the <span class="cn">MazeMouse</span> class.</p>
+      </div>
+      <div class="codeText">
+	<code>
+	  x = int(self.position.x)<br>
+	  y = int(self.position.y)<br>
+	  if self.image is not None:
 	  <div class="tabLeft">
-	    x = int(self.position.x)<br>
-	    y = int(self.position.y)<br>
-	    if self.image is not None:
-	    <div class="tabLeft">
-	      screen.blit(self.image, (x, y))
-	    </div>
-	    else:
-	    <div class="tabLeft">
-	      pygame.draw.circle(screen, self.color, (x, y), self.radius)
-	    </div>
+	    screen.blit(self.image, (x, y))
+	  </div>
+	  else:
+	  <div class="tabLeft">
+	    pygame.draw.circle(screen, self.color, (x, y), self.radius)
 	  </div>
 	</code>
       </div>

@@ -29,7 +29,7 @@
     <h2>Section 25:  Drawing the Maze with Sprites</h2>
     <div class="container">
       <h3>Setup</h3>
-      <p><img src="Images/spritesheet.png" alt="" />It is time that we replaced the nodes and lines connectin the nodes with an actual maze.  We have all of the sprites we need to draw the maze in our spritesheet already.  We just need to figure out a way to draw it.  Looking at the spritesheet again we can see that the images that make up the mazes are on the bottom of the sheet.  The bottom five rows in fact because we want to define 5 different maze styles.  Right now we'll just deal with the first row of that group.  It's the row with blue on the left and white on the right.  I'll explain that in a bit too, but for now just concentrate on the blue portion of that row.  You'll notice that these sprites are smaller than the ones above it.  All of the sprites on a sprite sheet don't have to be the same size.  They can be whatever size you want them to be.  On this sprite sheet I have two different sprite sizes:  32x32 pixels and 16x16 pixels.  Everything on the sprite sheet is 32x32 pixels except for the numbers, letters, and the maze sprites.  </p>
+      <p><img src="Images/spritesheet.png" alt="" />It is time that we replaced the nodes and lines connecting the nodes with an actual maze.  We have all of the sprites we need to draw the maze in our spritesheet already.  We just need to figure out a way to draw it.  Looking at the spritesheet again we can see that the images that make up the mazes are on the bottom of the sheet.  The bottom five rows in fact because we want to define 5 different maze styles.  Right now we'll just deal with the first row of that group.  It's the row with blue on the left and white on the right.  I'll explain that in a bit too, but for now just concentrate on the blue portion of that row.  You'll notice that these sprites are smaller than the ones above it.  All of the sprites on a sprite sheet don't have to be the same size.  They can be whatever size you want them to be.  On this sprite sheet I have two different sprite sizes:  32x32 pixels and 16x16 pixels.  Everything on the sprite sheet is 32x32 pixels except for the maze sprites which are 16x16 pixels.  </p>
       <p>There are 10 sprites that define a maze layout.  Each of those 10 sprites can also be rotated 90, 180 and 270 degrees.  For example, the first sprite is a corner piece that defines the top left outer corner of the maze.  However, we can rotate that same sprite 90, 180, and 270 degrees to define the other three corners.  All of the other pieces can be rotated to define other parts of the maze as well.  So basically the maze is made up of 10 unique pieces.  All of those 10 pieces will be rotated four ways to make up a total of 40 pieces that define a maze.  </p>
       <p>Anyways, the goal here is to try and find a way to represent each piece and it's orientation in a txt file so I can write a program that reads that txt file and figures out which piece and how many times to rotate that piece at any particular location.  I need to be able to define 40 unique characters.  I can use the alphabet with upper and lower case symbols since there are 52 of those characters minus the ones I'm already using taking it down to 44.  But that will just make the whole txt file really hard to read for a human.  Not that it has to be easy for a human to read, a human does have to create it.  Another method is to use two digits for each piece.  Since there are 10 unique pieces I can label each piece from 0 to 9 with the first digit.  The second digit can be how that piece is oriented.  0 means not rotations, 1 means rotated 90 degrees, 2 means rotated 180 degrees and 3 means rotated 270 degrees or -90 degrees.  That can work but then my maze txt files won't be neatly lined up when reading them unless I make all of the characters double digits.  There's no perfect solution for this as far as I can tell, we'll just have to use the best solution we can think of.  Right now the best solution I can think of is using the double digits for the maze sprites.  </p>
       </div><!--End of container-->
@@ -74,7 +74,7 @@
 	    <div class="tabLeft">
 	      for i in range(10):
 	      <div class="tabLeft">
-		offset = self.level % self.numMazes
+		offset = self.level % self.numMazes<br>
 		self.pieces.append(self.spritesheet.getImage(i, self.skin+offset, 16, 16))
 	      </div>
 	    </div>
@@ -259,18 +259,6 @@
 	    <p>...</p>
 	  </code>
 	</div>
-	<hr/>
-
-	<h4>Create a new class called <span class="cn">Maze</span></h4>
-	<div class="pseudoCode">
-	  <p></p>
-	</div>
-	<div class="codeText">
-	  <code>
-	  </code>
-	</div>
-	<hr/>
-
 
 
       </div><!--End of container-->

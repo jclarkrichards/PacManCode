@@ -192,10 +192,11 @@
       
 
       <div class="container">
-	<p>An object may have multiple animations for different situations.  For example, you may have walking, running, squatting, jumping, shooting, and idle animations for a single character.  We'll use this class to store all of those animations for that character.  It just helps to make the code cleaner and more manageable.  It also helps to link animations together.  For example, let's say we have a walking animation.  If we switch to a running animation in the middle of the walking animation, then we want to start the running animation at the same <span class="var">col</span> position instead of starting the running animation from the start.  Assuming that the walking and running animations have the same number of frames.  It just makes for smoother transitions between animations.  That's what I mean by linking animations together.  It doesn't make a difference in Pacman, but it's good to have and understand so we'll implement it.  The <span class="var">animations</span> variable is just a list of <span class="cn">Animation</span> objects that we've already defined.  The <span class="var">animation</span> variable stores the active animation that the character is using.  The <span class="var">col</span> variable helps link the animations together as I mentioned before.</p>
+	<p>An object may have multiple animations for different situations.  For example, you may have walking, running, squatting, jumping, shooting, and idle animations for a single character.  We'll use this class to store all of those animations for that character.  It just helps to make the code cleaner and more manageable.  It also helps to link animations together.  For example, let's say we have a walking animation.  If we switch to a running animation in the middle of the walking animation, then we want to start the running animation at the same <span class="var">col</span> position instead of starting the running animation from the start.  Assuming that the walking and running animations have the same number of frames.  It just makes for smoother transitions between animations.  That's what I mean by linking animations together.  It doesn't make a difference in Pacman, but it's good to have and understand so we'll implement it.</p>
 	<h4>Create a new class called <span class="cn">AnimationGroup</span></h4>
 	<div class="pseudoCode">
-	  
+	  <p>  The <span class="var">animations</span> variable is just a list of <span class="cn">Animation</span> objects that we've already defined.  The <span class="var">animation</span> variable stores the active animation that the character is using.  The <span class="var">col</span> variable helps link the animations together as I mentioned before.</p>
+
 	</div>
 	<div class="codeText">
 	  <code>
@@ -278,7 +279,7 @@
 
 	<h4>Create a new method called <span class="mn">loop</span></h4>
 	<div class="pseudoCode">
-	  <p></p>
+	  <p>We call this if we want to use the loop style of animation as we defined earlier.</p>
 	</div>
 	<div class="codeText">
 	  <code>
@@ -293,7 +294,7 @@
 
 	<h4>Create a new method called <span class="mn">onePass</span></h4>
 	<div class="pseudoCode">
-	  <p></p>
+	  <p>We call this if we just want our images to animate once.</p>
 	</div>
 	<div class="codeText">
 	  <code>
@@ -308,7 +309,7 @@
 
 	<h4>Create a new method called <span class="mn">ping</span></h4>
 	<div class="pseudoCode">
-	  <p></p>
+	  <p>We call this if our animation is moving forward and backward as we defined earlier.</p>
 	</div>
 	<div class="codeText">
 	  <code>
