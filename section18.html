@@ -100,18 +100,21 @@
 
       <h4>Modify the <span class="mn">setFreightMode</span> method</h4>
       <div class="pseudoCode">
-	<p>This is called when Pacman eats a power pellet and we change the ghost's mode to FREIGHT.  We only reverse their direction if their previous mode was SCATTER or CHASE.  We are only adding the reverseGhostDirection line as the other ones are just there to show you the placement of this line.</p>
+	<p>This is called when Pacman eats a power pellet and we change the ghost's mode to FREIGHT.  We only reverse their direction if their previous mode was SCATTER or CHASE.  We are only adding the reverseGhostDirection line as the other ones are just there to show you the placement of this line.  We also do not put the ghost in FREIGHT mode if he is in SPAWN mode.</p>
       </div>
       <div class="codeText">
 	<code>
-	  if self.mode.name != "FREIGHT" and self.mode.name != "SPAWN":
+	  if self.mode.name != "SPAWN":
 	  <div class="tabLeft">
+	    if self.mode.name != "FREIGHT":
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.reverseGhostDirection()<br>
+	      self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
+	      self.modeTimer = 0
+	    </div>
 	    <p>...</p>
-	    self.reverseGhostDirection()<br>
-	    self.mode = Mode("FREIGHT", time=7, speedMult=0.5)<br>
-	    self.modeTimer = 0
 	  </div>
-	  <p>...</p>
 	</code>
       </div>
       

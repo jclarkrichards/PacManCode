@@ -38,7 +38,8 @@
 	<li>Make the ghosts flash when they leave FREIGHT</li>
 	<li>When the player pauses the game Pacman, the ghosts, and the displayed fruit disappear.</li>
 	<li>When Pacman eats a ghost, both Pacman and the eaten ghost disappear during the pause time.</li>
-	<li></li>
+	<li>When Pacman dies the ghosts should disappear so the player can see the death animation.</li>
+	
       </ul>
       </p>
       <p>This section is more than just a clever title, there are things in games that flash.  A good reason to make items flash in a game is to get the player's attention.  If you want the player to be aware of something, then make that thing flash.  Making something flash is easy.  You just periodically switch between drawing that object and not drawing that object.  Or you can make something flash by periodically changing the image that represents that object.  In Pacman, we need to make the power pellets flash continuously by turning the drawing of the power pellets on and off.  Also, when the ghosts are in FREIGHT mode we need to let the player know that they are about to leave FREIGHT mode by making them flash for about 1 second before they turn back to normal.  That way the player knows when to get away from them.  When the player finishes a level, the background images of the level flash white a few times before moving on to the next level.  Those are the only two instances in Pacman where things flash, but you can make other items flash.  Maybe you can make the fruit flash before it's about to disappear.  The point is we want to make something pretty general that any object can use instead of making it specific for the two cases described above.    </p>
@@ -221,7 +222,7 @@
 
 
       <div class="container">
-	<h3>Disappear During Eating</h3>
+	<h3>Disappear During Eating and Death</h3>
 	<p>When Pacman eats a ghost the game pauses for a specified length of time.  During this time a value appears where Pacman and the ghost are.  But right now it's hard to see what that value is so we'll need to remove Pacman and the ghost being eaten during this pause time so we can see what the value is.  </p>
 
 	<h4>Modify the <span class="filenames">entities.py</span> file</h4>
@@ -253,7 +254,7 @@
 	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
 	<h4>Modify the <span class="mn">checkGhostEvents</span> method</h4>
 	<div class="pseudoCode">
-	  <p>This is where we have detected that Pacman has eaten a ghost.  So we simply set Pacman's and that ghost's draw variable to False.  We'll need to set them back to True after the pause has finished though.</p>
+	  <p>This is where we have detected that Pacman has eaten a ghost.  So we simply set Pacman's and that ghost's draw variable to False.  We'll need to set them back to True after the pause has finished though.  Also when Pacman dies we don't want to draw the ghosts because we want the center of attention to be on Pacman dying.  So we'll call a new method called noDraw.  We'll need to create it as well.</p>
 	</div>
 	<div class="codeText">
 	  <code>
@@ -262,6 +263,11 @@
 	      <p>...</p>
 	      self.pacman.draw = False<br>
 	      ghost.draw = False
+	    </div>
+	    elif ghost.mode.name != "SPAWN":
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.ghosts.noDraw()
 	    </div>
 	  </code>
 	</div>
@@ -301,18 +307,168 @@
 	</div>
 	<hr/>
 
+	<h4>Modify the <span class="filenames">ghosts.py</span> file</h4>
+	<h4>Modify the <span class="cn">GhostGroup</span> class</h4>
+	<h4>Create a new method called <span class="mn">noDraw</span></h4>
+	<div class="pseudoCode">
+	  <p>We just tell the ghosts not to draw themselves.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def noDraw(self):
+	    <div class="tabLeft">
+	      for ghost in self:
+	      <div class="tabLeft">
+		ghost.draw = False
+	      </div>
+	    </div>
+	  </code>
+	</div>
 
       </div><!--End of container-->
 
       <div class="container">
-	<h3></h3>
-
+	<h3>Make the Level Flash When a Level is Completed</h3>
+	<p>When you eat all of the pellets you need a way to let the player know that he did it and the level is complete.  Right now the game just pauses when the last pellet is eaten before moving on to the next level.  We actually want the level to flash a few times before moving on to the next level.  What do I mean by having the level flash?  Well if you look on the spritesheet you'll notice that for every level (the bottom rows of the spritesheet) you'll notice that there are two sets of level images.  There's a set on the left half of the sheet and on the right half.  We've been using the sets on the left half of the sheet to draw our mazes.  We can just as easily use the sets on the right half, though they'll look slightly different.  When we flash the maze at the completion of the level we will basically just flip between these two different versions of the maze background.</p>
+	<p><img src="Images/spritesheet.png" alt=""/>Looking at the spritesheet on the right you'll see what I mean by the two sets of maze images per row.  Remember that in order to draw the maze sprites we pass in the background and just draw the maze sprites directly to the background.  That way, during gameplay, we just need to worry about drawing the background instead of each individual maze sprite.  So why don't we just make a second background and draw the second set of maze sprites to that background?  There's no reason why we can't.  During normal gameplay we just don't draw that background to the screen.  But when the player completes the level we'll just flip between the two backgrounds every half a second or so.  </p>
+	<hr/>
+	<h4>Modify the <span class="filenames">gamecontrol.py</span> file</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
 	<div class="pseudoCode">
-
+	  <p>Let's first add the necessary variables.  </p>
 	</div>
 	<div class="codeText">
 	  <code>
+	    self.levelFlashTime = 0.3<br>
+	    self.levelFlashTimer = 0<br>
+	    self.drawBackgroundFlash = False<br>
+	    self.flashLevel = False
+	  </code>
+	</div>
+	<hr/>
 
+	<h4>Modify the <span class="mn">setBackGround</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We are going to create another background the same way we created the original background.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.backgroundFlash = pygame.surface.Surface(SCREENSIZE).convert()<br>
+            self.backgroundFlash.fill(BLACK)
+	  </code>
+	</div>
+	<hr/>
+	
+	<h4>Modify the <span class="mn">commonSetup</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We want to reset some variables when we go on to another level.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.flashLevel = False<br>
+	    self.drawBackgroundFlash = False<br>
+	    self.levelFlashTimer = 0
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">update</span> method</h4>
+	<div class="pseudoCode">
+	  <p>This code just flips the drawBackgroundFlash variable between True and False periodically.  We've written this same code for the power pellets so it shouldn't look new.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    <p>...</p>
+	    if self.flashLevel:
+	    <div class="tabLeft">
+	      self.levelFlashTimer += dt<br>
+	      if self.levelFlashTimer >= self.levelFlashTime:
+	      <div class="tabLeft">
+		self.levelFlashTimer = 0<br>
+		self.drawBackgroundFlash = not self.drawBackgroundFlash
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">checkPelletEvents</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We set the flashLevel variable to True only when Pacman has eaten all of the pellets.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if pellet:
+	    <div class="tabLeft">
+	      <p>...</p>
+	      if self.pellets.isEmpty():
+	      <div class="tabLeft">
+		<p>...</p>
+		self.flashLevel = True
+	      </div>
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">render</span> method</h4>
+	<div class="pseudoCode">
+	  <p>Here is where we actually draw the background.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    if self.drawBackgroundFlash:
+	    <div class="tabLeft">
+	      self.screen.blit(self.backgroundFlash, (0, 0))
+	    </div>
+	    else:
+	    <div class="tabLeft">
+	      self.screen.blit(self.background, (0, 0))
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">startGame</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We create another Maze object which basically just lives to draw the maze sprites to whatever background we want.  We probably don't need to create multiple Maze objects for this, but oh well.  It doesn't really matter at this point.  We will need to modify the Maze class though.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    self.mazeFlash = Maze(self.level, self.sheet, startcol=11)<br>
+            self.mazeFlash.fillMaze(self.backgroundFlash)
+
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="filenames">maze.py</span> file</h4>
+	<h4>Modify the <span class="mn">__init__</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We need to modify this to accept a new variable called startcol which will tell the Maze class from where on the spritesheet to start pulling the maze sprites.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def __init__(self, level, spritesheet, startcol=0):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.extractMazeSprites(startcol=startcol)
+	    </div>
+	  </code>
+	</div>
+	<hr/>
+
+	<h4>Modify the <span class="mn">extractMazeSprites</span> method</h4>
+	<div class="pseudoCode">
+	  <p>We just need to add the new startcol variable here.  Normally it's value is equal to 0.</p>
+	</div>
+	<div class="codeText">
+	  <code>
+	    def extractMazeSprites(self, startcol=0):
+	    <div class="tabLeft">
+	      <p>...</p>
+	      self.pieces.append(self.spritesheet.getImage(i+startcol, self.skin+offset, 16, 16))
+	    </div>
 	  </code>
 	</div>
 	<hr/>
