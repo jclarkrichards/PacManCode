@@ -30,7 +30,7 @@ function pacman(radius, color, x, y)
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.setAttribute("id", "gamebody");
+        //this.canvas.setAttribute("id", "gamebody");
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
         this.context = this.canvas.getContext("2d");
