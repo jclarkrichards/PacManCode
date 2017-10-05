@@ -22,4 +22,16 @@ function openBlankWindow1()
     var popup = window.open("popups/blankwindow1.html", "BLANK", "width="+WIDTH+" , height="+HEIGHT+" , left=400, top=400");
 }
 
+//Open window in section2.html
+function openWindow2()
+{
+    var width = 16;
+    var height = 16;
+    var nrows = 36;
+    var ncols = 28;
+    var WIDTH = width * ncols;
+    var HEIGHT = height * nrows;
+    var popup = window.open("popups/window2.html", "BLANK", "width="+WIDTH+" , height="+HEIGHT+" , left=400, top=400");
+}
+
 
