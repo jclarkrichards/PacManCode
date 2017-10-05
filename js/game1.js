@@ -1,9 +1,10 @@
 var myGamePiece;
+var show_grid = false;
 
 function startGame()
 {
     myGameArea.start();
-    myGamePiece = new pacman(20, "yellow", 30, 120);
+    myGamePiece = new pacman(8, "yellow", 30, 120);
 }
 
 function pacman(radius, color, x, y)
@@ -55,6 +56,23 @@ function updateGameArea()
     if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1;}
     if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1;}
     if (myGameArea.key && myGameArea.key == 40) {myGamePiece.speedY = 1;}
+    showGrid();
     myGamePiece.newPos();
     myGamePiece.update();
+}
+
+function toggleGrid()
+{
+    show_grid = !show_grid;
+}
+
+function showGrid()
+{
+    if(show_grid) {
+        drawGrid(myGameArea.context);
+    }
+    else {
+        myGameArea.context.clearRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+    }
+	
 }
